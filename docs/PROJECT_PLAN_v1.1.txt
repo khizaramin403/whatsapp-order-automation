@@ -1,0 +1,1593 @@
+ WhatsApp Order Automation
+ for Restaurants and Hotels
+
+ Project Plan v1.1: Tech Stack, Design System, Multi-language Support, Architecture,
+ Phases and Launch
+
+
+
+ Item                     Decision
+
+ Product                  Multi-tenant WhatsApp ordering bot plus owner, kitchen and delivery dashboard, sold as a service to
+                          many hotels
+
+ Languages                English, Arabic (right-to-left) and Roman Urdu, in both the dashboard and the WhatsApp bot
+
+ Frontend                 Next.js, React, TypeScript, Tailwind CSS, shadcn/ui, Zustand, TanStack Query, next-intl
+
+ Backend                  Node.js, Express, TypeScript, REST APIs, JWT auth, BullMQ
+
+ Database                 PostgreSQL with Prisma ORM, Redis for queue and cache
+
+ Alerts                   Live dashboard (SSE), Web Push, email to owner
+
+ Design                   Midnight Blue #10202D, Muted Gold #C7A667, Soft White #F7F7F7. Classic, minimal, premium
+
+ Version                  1.1 (for your review)
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                            Page 1
+ What Changed in v1.1
+ Area                                Change
+
+ Language of this document           Now fully in English.
+
+ Languages in the product            English, Arabic (RTL) and Roman Urdu for both the dashboard and the WhatsApp bot.
+                                     Urdu script is not included.
+
+ Component library                   shadcn/ui is the single component source: Sidebar, Table, Tabs, Sheet, Skeleton, Spinner,
+                                     Alert, Sonner toast, Chart, Avatar, Select and more.
+
+ Design system (new, Section 7)      Colors, fonts, sidebar behaviour, buttons and hover states, forms, tables, loading and alert
+                                     states, icons, avatars, login screen, charts, with mockups.
+
+ Owner email alerts (new)            Instant email on every new order, plus an optional daily summary. Runs as a queue job with
+                                     retries.
+
+ Long lists                          Server-side pagination first, TanStack Virtual only for very long lists. Narrow selectors are
+                                     used for re-render control, not for list visibility.
+
+ Setup guide (new, Section 5)        What to install: Node, pnpm, Docker Desktop, tunnel tool, database client. Why each one is
+                                     needed.
+
+ Glossary (new, Section 16)          Plain explanations of pnpm, Docker, docker compose, tunnel, Helmet, tenant isolation,
+                                     pg_dump, virtualization and more.
+
+ Phases                              Re-ordered: design system and app shell first, then screens, backend, WhatsApp
+                                     automation, integration, hardening, launch.
+
+
+
+ 1. Project Overview
+ A customer messages the hotel on WhatsApp, asks for the menu, orders food, chooses delivery or dine-in, and
+ picks Cash on Delivery or online payment. The owner sees the order instantly on a dashboard (and by email),
+ accepts it, and passes it to the kitchen and the rider. Every status change sends the customer a WhatsApp
+ update. One system serves many hotels (multi-tenant).
+
+ 1.1 Goals
+  • 24/7 instant customer replies in English, Arabic or Roman Urdu.
+  • Owner sees each order with customer name, number, payment type, screenshot and address, and gets an
+    alert immediately.
+  • Separate screens for owner, manager, chef and rider.
+  • One codebase and one database for all hotels, with strict data isolation.
+  • Premium, calm, professional look. No flashy gradients, no clutter.
+  • Free tools to start, with a clear upgrade path when clients grow.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                 Page 2
+ 2. Final Decisions
+ Question                   Decision                          Reason
+
+ REST or FastAPI?           Express + REST                    FastAPI is Python. Your stack is Node.js, so a second
+                                                              language adds work with no benefit.
+
+ Redux or Zustand?          Zustand + TanStack Query          Less code. Zustand holds UI and auth state, TanStack Query
+                                                              holds server data. Redux would also work, but needs more
+                                                              boilerplate for no gain here.
+
+ Context API?               Not for shared data               Context re-renders every consumer when its value changes.
+                                                              Zustand selectors re-render only what changed.
+
+ shadcn/ui or Ant           shadcn/ui                         Built on Tailwind, the code lives in your repo, so your palette
+ Design?                                                      and minimal look are fully controllable. Ant Design is heavier
+                                                              and has its own recognizable look.
+
+ pnpm or npm?               pnpm                              Faster, saves disk space and handles monorepo workspaces
+                                                              well. npm also works if you prefer it.
+
+ Authentication             JWT, short access token +         Details in Section 10.3.
+                            rotating refresh token
+
+ Languages                  English, Arabic, Roman Urdu       Dashboard and bot. Arabic needs right-to-left layout (Section
+                                                              8).
+
+ Color scheme               Midnight Blue, Muted Gold, Soft   Dark neutral base with one accent. Premium and classic. The
+                            White                             other two schemes were too grey or too warm and clashed
+                                                              with error colors.
+
+ Owner alerts               Dashboard push + email            WhatsApp alerts to the owner are limited by the 24-hour
+                                                              window and may cost money, so they are not the main
+                                                              channel.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                             Page 3
+ 3. Complete Tech Stack
+ 3.1 Frontend
+ Technology                       What it is                                     Why we use it
+
+ Next.js (App Router)             React framework with routing and server        Pages, layouts, fonts, good performance
+                                  rendering
+
+ React + TypeScript               UI library, typed JavaScript                   Component-based UI, fewer bugs
+
+ Tailwind CSS                     Utility-first CSS                              Fast, consistent styling driven by design tokens
+
+ shadcn/ui + Radix                Accessible components copied into your         All UI: sidebar, tables, drawers, toasts, charts
+                                  project
+
+ lucide-react                     Icon set                                       One consistent outline icon style
+
+ Zustand                          Small global store                             UI state (sidebar, filters, sound) and auth state,
+                                                                                 no prop drilling
+
+ TanStack Query                   Server-data cache                              Orders, menu, caching, refetch, loading and
+                                                                                 error states
+
+ TanStack Table                   Headless table logic                           Sorting, filtering, pagination for shadcn tables
+
+ TanStack Virtual (when           Renders only visible rows                      Only for very long lists (200+ rows)
+ needed)
+
+ React Hook Form + Zod            Forms + validation                             Login, menu, settings forms
+
+ next-intl                        Translations                                   English, Arabic, Roman Urdu with RTL support
+
+ Recharts via shadcn Chart        Charts                                         Bar, line and donut charts
+
+ Sonner                           Toast notifications                            Success and error messages
+
+ SSE + Web Push + PWA             Live updates, notifications, installable app   New-order alert even when the tab is closed
+
+
+
+ 3.2 Backend
+ Technology                       What it is                             Why we use it
+
+ Node.js LTS + TypeScript         Runtime                                Your stack, easy webhook handling
+
+ Express                          Web framework                          REST APIs and the WhatsApp webhook
+
+ Zod                              Validation                             Validate every request
+
+ Prisma                           ORM                                    Type-safe database access and migrations
+
+ jsonwebtoken + bcrypt            JWT and password hashing               Login and roles
+
+ helmet, cors                     Security headers, origin control       Basic protection
+
+ express-rate-limit               Request limiting                       Stops login brute force and spam
+
+ BullMQ + Redis                   Job queue                              Fast webhook, retries, background work
+
+ pino (+ Sentry later)            Logs, error alerts                     Find and fix problems
+
+ web-push                         Push sender                            Browser notifications to the owner
+
+ nodemailer + Resend or           Email sending                          Owner email alerts and daily summary
+ Brevo
+
+ WhatsApp Cloud API               Official Meta API                      Receive and send WhatsApp messages
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                 Page 4
+ 3.3 Database and DevOps
+ Technology                             Purpose                                      Free option
+
+ PostgreSQL                             Main database                                Docker locally, Neon or Supabase free
+                                                                                     tier online
+
+ Redis                                  Queue, cache, rate-limit counters            Docker locally, Upstash free tier online
+
+ Docker Desktop + docker compose        Run Postgres and Redis locally               Free for personal and small business use
+                                                                                     (check Docker's terms)
+
+ Cloudflare Tunnel or ngrok             Public HTTPS link to localhost for webhook   Free tiers
+                                        testing
+
+ Git + GitHub, GitHub Actions           Version control, automated checks            Free
+
+ ESLint, Prettier, Vitest, Supertest    Quality and tests                            Free
+
+ Sentry, UptimeRobot                    Error and uptime alerts                      Free tiers
+
+ DBeaver or Prisma Studio               Look at database tables                      Free
+
+
+  Free-tier limits change often (sleep, pause, message counts). Check each service's current limits before launch. Vercel's
+  Hobby plan is for non-commercial use, so for client work prefer Cloudflare Pages or your own VM.
+
+
+
+ 4. System Architecture
+    Customer (WhatsApp)
+          |
+          v
+    Meta WhatsApp Cloud API
+          | webhook (HTTPS POST)
+          v
+    +-----------------------------+        +-----------------------+
+    | Express API server          | -----> | Redis (BullMQ queue) |
+    | - verify signature          |        +-----------+-----------+
+    | - save raw message          |                    |
+    | - return 200 OK fast        |                    v
+    | - REST APIs for dashboard |          +-----------------------+
+    +--------------+--------------+        | Worker process        |
+                   |                       | - bot state machine |
+                   v                       | - send WA replies     |
+          +------------------+             | - create orders       |
+          |   PostgreSQL     | <-----------+ - email + push alerts|
+          | (restaurant_id) |              +-----------------------+
+          +--------+---------+
+                   ^
+                   | REST + SSE
+          +--------+---------+
+          | Next.js Dashboard|   Owner / Manager / Chef / Rider
+          +------------------+   (browser or installed PWA)
+
+
+
+ 4.1 Order data flow
+  • Customer writes. Meta calls the webhook. Express verifies the signature, saves the message (unique
+    wa_message_id), queues a job, returns 200 OK.
+  • The worker finds the hotel from phone_number_id, loads the customer's conversation state and language, and
+    decides the next reply.
+  • The bot sends the reply through the WhatsApp API in the customer's language.
+  • When the order is confirmed it is saved in orders and order_items.
+  • The server pushes a live event (SSE) to the dashboard, sends Web Push, and queues the owner email.
+  • The owner presses Accept. Status changes, the customer gets a WhatsApp update, and the kitchen and rider
+    screens update.
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                              Page 5
+ 5. What to Install (Setup Guide)
+ Tool                                       Needed?            Why
+
+ Node.js LTS                                Yes                Runs the backend and builds the frontend
+
+ pnpm                                       Yes (or npm)       Installs packages and manages the monorepo
+
+ Git + GitHub account                       Yes                Version control and CI
+
+ Docker Desktop                             Recommended        Runs PostgreSQL and Redis in containers, so you do not
+                                                               install them separately
+
+ PostgreSQL (without Docker)                Only if you skip   Install PostgreSQL 16 or newer. Redis does not run
+                                            Docker             natively on Windows, so use Docker, WSL or Upstash
+
+ DBeaver or Prisma Studio                   Recommended        A window into your database tables
+
+ Cloudflare Tunnel or ngrok                 Development only   Meta must reach your local webhook over public HTTPS
+
+ VS Code + ESLint, Prettier, Tailwind       Recommended        Editor and helpers
+ IntelliSense
+
+ Meta for Developers account                Yes                WhatsApp Cloud API access and a test number
+
+ With Docker, one command starts both databases: docker compose up -d. The docker-compose.yml file
+ lists the services (Postgres, Redis), their ports and passwords.
+
+ 6. Monorepo Folder Structure
+ whatsapp-order-automation/
+   apps/
+     web/                        # Next.js dashboard
+       messages/                 # en.json, ar.json, ur-Latn.json (Roman Urdu)
+       src/
+          app/                   # routes: login, orders, kitchen, delivery, menu, analytics, team, settings
+          components/
+            ui/                  # shadcn components (button, input, table, sheet, sidebar...)
+            layout/              # AppSidebar, Topbar, LanguageSwitcher, UserMenu
+            orders/              # OrderBoard, OrderCard, OrderDetailSheet, StatusButtons
+            menu/                # MenuItemForm, CategoryList
+            charts/              # SalesChart, PaymentDonut
+          stores/                # auth.store.ts, ui.store.ts
+          lib/                   # api client, query client, sse hook, i18n config
+          hooks/                 # useOrders, useMenu, useLiveOrders
+          styles/                # globals.css (design tokens)
+     api/                        # Express backend
+       src/
+          config/ routes/ controllers/ services/ repositories/
+          middleware/            # auth, role, tenant, rateLimit, error
+          queues/                # BullMQ producers and workers
+          whatsapp/              # send client, signature verify, parser
+          bot/                   # state machine, i18n texts, aliases
+          email/                 # templates, sender
+       prisma/                   # schema.prisma, migrations
+   packages/shared/              # shared types and Zod schemas
+   docker-compose.yml .github/workflows/ README.md
+
+ Rule: controllers handle request and response only. Business logic lives in services. Database queries live in
+ repositories.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                    Page 6
+ 7. Design System
+ This section is the single source of truth for how the dashboard looks. Build the UI from it, and any new screen
+ should follow it without guessing.
+
+ 7.1 Design principles
+  • Calm and premium: a dark midnight base, soft white surfaces, and gold used sparingly.
+  • Minimal: thin borders, light shadows, generous spacing. No gradients, glows, neon, or decorative blobs.
+  • Classic: restrained type, a serif only for the brand name and login heading.
+  • Operational first: restaurant staff are busy. Large tap targets, clear status colors, readable on a phone in a
+    bright kitchen.
+  • One accent: gold means 'important or active'. If everything is gold, nothing is.
+
+
+ 7.2 Color palette
+        Name                    Hex             Used for
+
+        Midnight Blue           #10202D         Sidebar, primary buttons, headings and main text
+
+        Muted Gold              #C7A667         Accent: active marker, key button, badges on dark, focus on dark
+
+        Soft White              #F7F7F7         Page background, text on dark
+
+        White                   #FFFFFF         Cards, topbar, tables, inputs
+
+        Midnight 800            #1B2D3B         Sidebar hover and active background
+
+        Midnight 700            #22394B         Sidebar borders, avatar fallback on dark
+
+        Midnight Deep           #0B1620         Tooltips
+
+        Slate Text              #4A5865         Secondary text (about 6.8:1 on soft white)
+
+        Muted Text              #5F6C79         Labels, captions, placeholders (about 5:1)
+
+        Sidebar Text            #A9B4BE         Inactive sidebar labels and icons
+
+        Border                  #E2E5E9         Card and table borders
+
+        Input Border            #D5DAE0         Inputs and secondary buttons
+
+        Hover Fill              #F2F4F6         Row, menu and ghost-button hover on light
+
+        Gold Tint               #F4ECDC         Selected row, soft highlights, avatar fallback on light
+
+        Gold Text               #7D6228         Links and gold-colored text on light backgrounds (about 5.4:1)
+
+        Gold Hover              #B5964F         Gold button hover
+
+        Gold Pressed            #A3853F         Gold button pressed
+
+
+ How much of each color (the 60 / 30 / 10 rule)
+ • About 60 percent soft white and white (page and cards).
+ • About 30 percent midnight (sidebar, text, primary buttons).
+ • About 10 percent gold (accent only).
+
+ Where gold is allowed
+ • Active sidebar marker (3px bar) and active icon.
+ • One accent button per screen at most (for example 'Accept order').
+ • New-order count badge on the dark sidebar.
+ • Focus ring on dark surfaces, chart highlight, selected-row tint.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                      Page 7
+  • Never as body text on light backgrounds. Gold on soft white is only about 2.2:1 contrast, which is hard to read.
+    Use Gold Text #7D6228 or midnight instead.
+
+ Status colors (separate from brand colors, muted)
+ Meaning               Fill                Text               Used for
+
+ Success               #E6F2EC             #1F5C42            Ready, Delivered ok, Payment verified (solid #2F7D5B for icons
+                                                              and dots)
+
+ Warning               #FBF0DA             #7A4E0B            Pending, Payment awaiting check
+
+ Danger                #F8E4E1             #8E2A22            Rejected, Cancelled, errors (solid #B3392F, hover #9C2F26)
+
+ Info                  #E3EDF5             #1F4C73            Preparing, informational notes
+
+ Gold                  #F4ECDC             #7D6228            Accepted
+
+ Midnight tint         #E3E8EE             #10202D            Out for delivery
+
+ Neutral               #ECEEF1             #3A4651            Delivered (history), COD tag, inactive
+
+
+  Contrast ratios above were calculated by hand and are approximate. During Phase 1, check every text and background
+  pair in the browser DevTools contrast checker (target 4.5:1 for text, 3:1 for icons and focus rings).
+
+
+
+ 7.3 Design tokens (CSS variables for shadcn)
+ :root {
+   --background: #F7F7F7;      --foreground: #10202D;
+   --card: #FFFFFF;            --card-foreground: #10202D;
+   --popover: #FFFFFF;         --popover-foreground: #10202D;
+   --primary: #10202D;         --primary-foreground: #F7F7F7;
+   --secondary: #ECEEF1;       --secondary-foreground: #10202D;
+   --muted: #ECEEF1;           --muted-foreground: #5F6C79;
+   --accent: #F2F4F6;          --accent-foreground: #10202D;    /* shadcn 'accent' = hover fill */
+   --destructive: #B3392F;     --border: #E2E5E9;
+   --input: #D5DAE0;           --ring: #10202D;
+   --gold: #C7A667;            --gold-foreground: #10202D;
+   --gold-hover: #B5964F;      --gold-tint: #F4ECDC;   --gold-text: #7D6228;
+   --success: #2F7D5B; --warning: #B7791F; --info: #2F6690;
+   --sidebar: #10202D;         --sidebar-foreground: #A9B4BE;
+   --sidebar-accent: #1B2D3B; --sidebar-accent-foreground: #F7F7F7;
+   --sidebar-primary: #C7A667; --sidebar-border: #22394B; --sidebar-ring: #C7A667;
+   --sidebar-width: 16.5rem;   --sidebar-width-icon: 4.5rem;
+   --radius: 0.5rem;
+ }
+
+
+
+ 7.4 Typography
+ Role                          Font                                          Where
+
+ UI and body (Latin)           Inter, weights 400, 500, 600                  Everything in English and Roman Urdu
+
+ Arabic                        IBM Plex Sans Arabic, weights 400, 500,       Everything when the language is Arabic. Pairs well
+                               600                                           with Inter in proportion
+
+ Brand and login heading       Playfair Display, weight 600                  Wordmark and login greeting only (the classic
+                                                                             touch). Never in tables or forms
+
+ Numbers                       Inter with tabular numerals                   Prices, order numbers, totals, so digits align in
+                                                                             columns
+
+ Fonts load through next/font, which self-hosts them (fast, no external request). The font changes by language
+ through html[lang]. The Arabic interface uses Western digits (0-9) by default because they are clearer for
+ prices and phone numbers; an Arabic-Indic digit option can be added later in settings.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                Page 8
+ Style                               Size / line height                           Weight         Color
+
+ Page title                          24 / 32                                      600            #10202D
+
+ Section title                       18 / 28                                      600            #10202D
+
+ Card title                          16 / 24                                      600            #10202D
+
+ Body and table text                 14 / 20                                      400            #10202D (primary),
+                                                                                                 #4A5865 (secondary)
+
+ Label (forms)                       13 / 18                                      500            #10202D
+
+ Caption and helper text             12 / 16                                      400            #5F6C79
+
+ Table header                        12 / 16, uppercase, letter-spacing 0.04em    600            #5F6C79
+
+ KPI number                          28 / 36                                      600            #10202D
+
+ Login heading (Playfair)            34 / 40                                      600            #10202D
+
+ Arabic text                         Add 1px to size, line height 1.7             400 to 600     Same colors
+
+
+ Text colors by background
+ Background                    Heading              Body                Secondary                Link
+
+ Soft white / White            #10202D              #10202D             #4A5865, #5F6C79         #7D6228, hover #5F4A1C
+                                                                                                 underlined
+
+ Midnight (sidebar)            #F7F7F7              #F7F7F7             #A9B4BE                  #C7A667, hover #E8D9B5
+
+ Gold button                   -                    #10202D             -                        -
+
+ Midnight button               -                    #F7F7F7             -                        -
+
+
+
+ 7.5 Spacing, radius, shadow and motion
+ Item                       Value
+
+ Spacing scale              4px base: 4, 8, 12, 16, 24, 32, 48. Page padding 32px on desktop, 16px on mobile. Card padding
+                            20px.
+
+ Radius                     Inputs and buttons 8px, cards 12px, drawers and dialogs 12px, badges fully rounded, avatars
+                            circular.
+
+ Shadow                     Card: 0 1px 2px rgba(16,32,45,0.06). Popover, drawer, toast: 0 8px 24px rgba(16,32,45,0.12). No
+                            colored shadows.
+
+ Borders                    1px #E2E5E9. Prefer borders over heavy shadows.
+
+ Motion                     150 to 200ms ease-out for hover, sidebar width and drawers. No bouncing. Respect
+                            prefers-reduced-motion by turning animations off.
+
+ Tap targets                Minimum 40px height for buttons and inputs, 44px on mobile.
+
+
+
+ 7.6 App layout
+ The app shell has a dark sidebar on the left (right side in Arabic), a white topbar, and a soft white content area.
+ The sidebar is built with the shadcn Sidebar component using collapsible='icon', which gives the expand
+ and collapse behaviour and the Ctrl/Cmd+B shortcut.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                             Page 9
+    Y     Your Brand                               Orders                                                                                                                            Live                       EN        AR
+
+
+
+
+    OPERATIONS
+
+                                                        New orders                              In kitchen                                   Out for delivery                                Today's sales
+          Orders                       3
+                                                        3                                       5                                            2                                               Rs 48,200
+          Kitchen
+
+
+          Delivery                                 New 3                                                     Preparing     5                                            Ready 2
+
+
+    CATALOG                                             #45 Ali Raza                            2 min          #47 Ali Raza                                 9 min          #49 Ali Raza                              16 min
+
+                                                        2x Zinger Burger, 1x Fries                             2x Zinger Burger, 1x Fries                                  2x Zinger Burger, 1x Fries
+          Menu
+
+                                                         COD      Rs 1,800                                      COD      Rs 1,800                                            COD      Rs 1,800
+    INSIGHTS
+                                                        House 12, Street 4                                     House 12, Street 4                                          House 12, Street 4
+          Analytics
+                                                                             Accept                                             Mark ready                                                   Out for delivery
+    MANAGE
+
+
+          Team
+
+                                                        #46 Ali Raza                            5 min          #48 Ali Raza                                12 min
+          Settings
+                                                        2x Zinger Burger, 1x Fries                             2x Zinger Burger, 1x Fries
+
+                                                         COD      Rs 1,800                                      COD      Rs 1,800
+
+                                                        House 12, Street 4                                     House 12, Street 4
+
+
+                                                                             Accept                                             Mark ready
+
+
+
+
+            Ali Raza
+     AR                                    v
+            Owner
+
+
+
+ Figure 1. Dashboard with the sidebar expanded (264px). The first order card shows the hover state (gold border). Brand name and
+ copy are placeholders.
+
+
+                    Orders                                                                                                                                                           Live                       EN        AR
+
+
+
+
+                      New orders                                         In kitchen                                       Out for delivery                                       Today's sales
+
+                      3                                                  5                                                2                                                      Rs 48,200
+                    Kitchen
+
+                    New 3                                                             Preparing     5                                                       Ready 2
+
+
+                      #45 Ali Raza                                           2 min      #47 Ali Raza                                             9 min          #49 Ali Raza                                         16 min
+
+                      2x Zinger Burger, 1x Fries                                        2x Zinger Burger, 1x Fries                                              2x Zinger Burger, 1x Fries
+
+                        COD     Rs 1,800                                                 COD      Rs 1,800                                                       COD      Rs 1,800
+
+                      House 12, Street 4                                                House 12, Street 4                                                      House 12, Street 4
+
+
+                                               Accept                                                          Mark ready                                                            Out for delivery
+
+
+
+
+                      #46 Ali Raza                                           5 min      #48 Ali Raza                                          12 min
+
+                      2x Zinger Burger, 1x Fries                                        2x Zinger Burger, 1x Fries
+
+                        COD     Rs 1,800                                                 COD      Rs 1,800
+
+                      House 12, Street 4                                                House 12, Street 4
+
+
+                                               Accept                                                          Mark ready
+
+
+
+
+    AR
+
+
+
+ Figure 2. Same screen with the sidebar collapsed (72px, icons only). Hovering an icon shows a tooltip with its name.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                                                                                                        Page 10
+ Sidebar specification
+ Property                  Specification
+
+ Widths                    Expanded 264px, collapsed 72px, transition 200ms ease-out. Content area resizes with it.
+
+ Toggle                    An icon button at the very top of the sidebar, in the header row (lucide PanelLeftClose when
+                           expanded, PanelLeftOpen when collapsed). Expanded: brand mark and wordmark on one side, toggle
+                           on the other. Collapsed: only the toggle, centered. Shortcut Ctrl/Cmd+B. State is saved per user in
+                           Zustand (persisted) so it is remembered after reload.
+
+ Header                    64px tall, same height as the topbar so the two line up.
+
+ Groups                    Operations (Orders, Kitchen, Delivery), Catalog (Menu), Insights (Analytics), Manage (Team,
+                           Settings). Group labels 10.5px uppercase #7F8C98. When collapsed, labels become thin dividers.
+                           Items are hidden by role (a chef only sees Kitchen).
+
+ Item                      40px tall, 8px radius, icon 20px (stroke 1.75), 12px gap, label 14px.
+
+ Default item              Icon and label #A9B4BE.
+
+ Hover item                Background #1B2D3B, label and icon #F7F7F7.
+
+ Active item               Background #1B2D3B, label #F7F7F7 semibold, icon #C7A667, 3px gold bar on the inline-start edge.
+
+ Focus (keyboard)          2px gold ring #C7A667 with 2px offset.
+
+ Badge                     New-order count: gold pill with midnight text. When collapsed it becomes a small gold dot on the icon.
+
+ Tooltips                  Collapsed only. Background #0B1620, text #F7F7F7, 13px, 6px radius, 150ms delay.
+
+ Footer                    Separator line #22394B, then avatar, name (14px semibold) and role (12px #A9B4BE) with a chevron
+                           that opens the user menu: profile, language, sign out. Collapsed: avatar only.
+
+ Mobile (under 768px)      The sidebar becomes an off-canvas sheet opened by a menu button in the topbar. Orders also get a
+                           bottom shortcut for fast access.
+
+ Arabic (RTL)              Sidebar sits on the right, the gold bar on the right edge, toggle icons mirror.
+
+
+ Topbar specification
+ • 64px, white background, 1px bottom border #E2E5E9.
+ • Inline-start: menu button (mobile only) and the page title (24px semibold).
+ • Inline-end, in order: Live connection dot (green when SSE is connected, amber when reconnecting) with the
+    word 'Live', sound toggle, notification bell, language switcher (EN, Roman Urdu, AR), avatar with user menu.
+  • On mobile only the title, live dot, bell and avatar remain.
+
+
+ 7.7 Buttons
+ Variant                        Default                Hover                Pressed              Disabled              Focus
+
+ Primary (Save, Sign in)             #10202D               #1B3345              #0B1620             #AEB7C0             Navy + ring
+
+                                                                                                                        Gold + navy
+ Accent (Accept order)               #C7A667               #B5964F              #A3853F             #E6D9BB
+                                                                                                                           ring
+
+                                  White, border                                                     White, text
+ Secondary                                                 #F2F4F6             #E2E5E9                                   Navy ring
+                                   #D5DAE0                                                          #AEB7C0
+
+ Ghost / icon button               Transparent            #ECEEF1              #E2E5E9           Text #AEB7C0            Navy ring
+
+ Destructive (Reject)                #B3392F               #9C2F26              #852720             #E3B8B3              Red + ring
+
+ Each cell shows the fill color. Text color is shown inside the cell. Secondary and Ghost buttons use midnight text.
+
+  • Height 40px (44px on mobile), horizontal padding 16px, radius 8px, font 14px weight 600. Small variant 32px.
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                  Page 11
+  • Focus ring on light surfaces: 2px #10202D with 2px offset. On dark surfaces: 2px #C7A667.
+  • Hover transition 150ms. No scale or lift effects.
+  • Loading: the label stays, a small spinner appears before it, and the button is disabled. Example: 'Signing in...'.
+  • At most one Accent (gold) button per screen. Use Primary for ordinary actions.
+
+
+ 7.8 Form controls
+ Control                     Default                      Hover            Focus                            Error / Disabled
+
+ Input and Select            White fill, 1px              Border           Border #10202D plus soft         Error: border #B3392F,
+ (40px)                      #D5DAE0, text                #AEB7C0          3px ring                         message 12px #8E2A22
+                             #10202D, placeholder                          rgba(199,166,103,0.35)           below. Disabled: fill
+                             #66737F                                                                        #F2F4F6, text #AEB7C0
+
+ Label                       13px 500 #10202D,            -                -                                Required marker is a small
+                             above the field                                                                gold-text asterisk
+
+ Checkbox and Switch         Border #AEB7C0, white        Border           Navy ring                        Checked: navy fill, white
+                                                          #10202D                                           check. Switch on: navy track
+
+ Dropdown and Select         White, border, radius 8,     Item fill        Item fill #F2F4F6                Selected item: gold-tint fill
+ list                        shadow                       #F2F4F6                                           with a check icon
+
+
+
+ 7.9 Tables, cards and badges
+  • Tables (shadcn Table + TanStack Table): white rows, 1px #E2E5E9 row dividers, header row soft white
+    #F7F7F7 with 12px uppercase #5F6C79 text, row height 52px. Row hover #F2F4F6. Selected row: Gold Tint
+    fill with a 3px gold bar on the inline-start. Sticky header, pagination at the bottom (20 rows per page).
+  • Cards: white, 1px #E2E5E9 border, 12px radius, 20px padding, light shadow. Clickable cards (order cards) get
+    a 1px gold border and a slightly stronger shadow on hover.
+  • Badges: fully rounded, 22px tall, 12px semibold, using the status color pairs from 7.2. Each status has a text
+    label plus color, never color alone.
+  • Tabs: inactive text #5F6C79, hover #10202D, active text #10202D with a 2px gold underline.
+  • Drawer (Sheet): order details open in a side sheet 480px wide (bottom sheet on mobile) with a title, status
+    badge, timeline, and sticky action buttons.
+
+
+ 7.10 Loading, empty and feedback states
+ Situation                             Component                   Specification
+
+ Page or list is loading               Skeleton (shadcn)           Shapes match the final layout (cards, rows). Base #ECEEF1 with
+                                                                   a soft shimmer sweep of #F7F7F7 every 1.4 seconds. Shimmer is
+                                                                   turned off for reduced motion.
+
+ Button action in progress             Spinner (shadcn)            16px spinner inside the button using the button's text color. Never
+                                                                   full-screen blocking.
+
+ Short result (saved, accepted,        Sonner toast                Bottom end (bottom left in Arabic), white card, status icon on the
+ failed)                                                           left, 4 second auto-dismiss, error toasts stay longer.
+
+ Persistent problem (connection        Alert (shadcn)              Tinted status fill, 1px border, icon, title and one line of text,
+ lost, token expired)                                              optional action ('Retry').
+
+ Page fails to load                    Next.js error.tsx + Alert   Friendly message and a Retry button.
+
+ No data                               Empty state                 Line icon, title, one sentence, and one button (for example 'Add
+                                                                   your first menu item').
+
+ New order arrives                     Toast + sound +             Gold dot, short chime (can be muted with the sound toggle), the
+                                       sidebar badge               card appears at the top of New.
+
+ Offline or reconnecting               Topbar Live dot             Amber dot and 'Reconnecting'. Data refetches when the
+                                                                   connection returns.
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                          Page 12
+ 7.11 Icons
+  • lucide-react, outline style only, stroke 1.75, 20px in navigation and buttons, 16px inline with text, 24px in
+    empty states.
+  • Icons inherit text color. Active sidebar icon is gold, status icons use the status color.
+  • Suggested set (verify exact names when installing): Orders ClipboardList, Kitchen ChefHat, Delivery Bike,
+    Menu UtensilsCrossed, Analytics ChartColumn, Team Users, Settings Settings, Notifications Bell, Sound
+    Volume2 and VolumeOff, Language Languages, Sidebar toggle PanelLeftClose and PanelLeftOpen, Sign out
+    LogOut, Password Eye and EyeOff, Phone Phone, Address MapPin, Time Clock, COD Banknote, Online
+    payment Smartphone, Screenshot Image, Success CircleCheck, Warning TriangleAlert, Error CircleAlert, Info
+    Info.
+  • In Arabic, directional icons (chevrons, arrows, panel toggle) flip automatically using the rtl: variant.
+
+
+ 7.12 Avatars
+
+
+
+        AR        AR            AR              AR                             AR          AR            AR        AR
+
+        24px      32px          40px              64px                        24px         32px          40px       64px
+
+ Figure 3. Avatar sizes 24, 32, 40 and 64px on light and dark surfaces, using the fallback style (initials)..
+
+ Item                       Specification
+
+ Shape and sizes            Circle. 24px (tables, timeline), 32px (topbar), 40px (team list, user menu), 64px (profile page). Hotel
+                            logo uses a rounded square (8px radius).
+
+ Image                      Uploaded profile photo, cropped square, shown with a 1px #E2E5E9 border. Stored in private
+                            storage.
+
+ Fallback (no photo)        Two initials, semibold. On light surfaces: fill #F4ECDC, text #7D6228. On the dark sidebar: fill
+                            #22394B, text #E8D9B5, border #3A5266. The same colors for everyone, so the interface does not
+                            turn into a rainbow.
+
+ Component                  shadcn Avatar with AvatarImage and AvatarFallback.
+
+ Where used                 Sidebar footer, topbar user menu, Team table, order timeline ('Accepted by Ali'), payment verification
+                            record. The hotel logo shows on the login card header and in the sidebar header.
+
+ Role label                 Role (Owner, Manager, Chef, Rider) is shown as small text or a neutral badge next to the name, not
+                            by changing the avatar color.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                 Page 13
+ 7.13 Login screen
+
+                                                                                                               EN       Roman Urdu           AR
+
+           Y     Your Brand
+
+
+
+                                                                                                                       Y
+
+                                                                                                      Welcome back
+                                                                                                        Sign in to manage your orders.
+
+          Every order,                                                                    Email
+
+
+          handled calmly.                                                                   name@hotel.com
+
+
+                                                                                          Password
+
+          Orders, kitchen and delivery in one place.                                        * * * * * * * *
+
+
+                                                                                             Remember me                              Forgot password?
+
+
+                                                                                                                    Sign in
+
+
+                                                                                                        Need access? Ask your hotel owner.
+
+
+
+          (placeholder copy)
+
+
+
+
+ Figure 4. Login screen: dark brand panel on one side, form on a soft white panel. Heading font is Playfair Display. Copy and brand
+ name are placeholders.
+
+ Element                            Specification
+
+ Layout                             Two panels on desktop: brand panel (midnight, 50 percent) and form panel (soft white, 50 percent).
+                                    On mobile only the form shows, with the brand mark above it.
+
+ Brand panel                        Wordmark top-left (Playfair), a large two-line serif statement, a 64px gold rule, one muted supporting
+                                    line. A faint line pattern (concentric circles, about 6 percent contrast). No photos, no gradients.
+
+ Form card                          Max width 400px, centered. Brand mark (40px rounded square), heading 'Welcome back' (Playfair
+                                    34), helper text (#5F6C79), Email field, Password field with show/hide eye icon, 'Remember me'
+                                    checkbox, 'Forgot password?' link in Gold Text #7D6228, full-width Primary button 'Sign in' (46px).
+
+ Language switcher                  Top corner of the form panel, a pill with EN, Roman Urdu, AR. The page flips to RTL immediately for
+                                    Arabic.
+
+ Loading                            Button shows a spinner and 'Signing in...', fields are disabled.
+
+ Errors                             A failed login shows an Alert: 'Invalid email or password' (never say which one is wrong). Too many
+                                    attempts shows a warning Alert with the wait time. Field errors appear under the field.
+
+ Accessibility                      Autofocus on email, Enter submits, visible focus rings, labels connected to inputs, password manager
+                                    friendly.
+
+ After login                        Owner and manager go to Orders, chef to Kitchen, rider to Delivery.
+
+
+
+ 7.14 Charts
+  • Built with shadcn Chart (Recharts). Used on the Analytics page and the dashboard header.
+  • Bar chart: orders per hour or per day. Bars midnight #10202D, the peak bar gold #C7A667.
+  • Line or area chart: sales over time. Line midnight, area fill gold tint #F4ECDC.
+  • Donut chart: COD versus online payment. Midnight and gold, with the percentage in the center and direct
+    labels (no legend hunting).
+  • Extra series colors if ever needed: slate blue #4F6D85, sage #6F9C8A, taupe #9A8F7A.
+  • Gridlines #E2E5E9, axis text 12px #5F6C79, tooltip is a white card with a light shadow. No 3D, no gradients,
+    no animation longer than 300ms.
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                                            Page 14
+  • In Arabic the chart axes must be tested for right-to-left behaviour.
+
+
+ 7.15 What keeps it from looking 'AI-generated'
+ Do                                                                 Do not
+
+ Midnight, gold and soft white only, plus muted status colors       Purple or blue-to-pink gradients, neon glows
+
+ Thin 1px borders and light shadows                                 Heavy shadows, glassmorphism, floating blobs
+
+ Real content and real numbers in cards                             Decorative illustrations and sparkle icons
+
+ Serif only for the brand and login heading                         Mixing many fonts or very large rounded headings
+
+ One gold accent per screen                                         Gold everywhere
+
+ Short, plain labels ('Accept', 'Mark ready')                       Marketing-style text inside the app
+
+
+
+ 8. Multi-language Support (English, Arabic, Roman
+ Urdu)
+ 8.1 Dashboard
+ Topic                     Approach
+
+ Library                   next-intl without locale in the URL (the dashboard is behind login). Language is stored on the user
+                           profile and in a cookie, and can be changed from the topbar.
+
+ Message files             messages/en.json, messages/ar.json, messages/ur-Latn.json (Roman Urdu is Urdu written in the
+                           Latin alphabet). Every text in the UI uses a key, never hard-coded strings.
+
+ Right-to-left             For Arabic set html dir='rtl'. Use Tailwind logical classes (ms-, me-, ps-, pe-, start-, end-, text-start)
+                           instead of left and right. After generating each shadcn component, scan it for left and right classes and
+                           convert them. Flip directional icons with the rtl: variant.
+
+ Fonts                     Inter for English and Roman Urdu, IBM Plex Sans Arabic for Arabic (Section 7.4).
+
+ Numbers, dates,           Use Intl formatting with the hotel's currency and timezone. Roman Urdu and English use a
+ currency                  Pakistan-style locale, Arabic uses Arabic locale with Western digits.
+
+ Text length               Arabic and Roman Urdu are often longer or shorter than English. Do not use fixed-width buttons, allow
+                           wrapping, and test every screen in all three languages.
+
+ Emails and push           Sent in the owner's language.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                 Page 15
+ 8.2 WhatsApp bot
+ Topic                       Approach
+
+ Choosing the language       On the first message the bot asks with buttons: English, Roman Urdu, Arabic. The choice is saved
+                             in customers.language. The customer can change it any time by sending 'language'. Automatic
+                             detection of Roman Urdu versus English is unreliable, so we ask once.
+
+ Bot texts                   Stored as keys with a translation per language (JSON files, and per-hotel overrides in the database
+                             so a hotel can edit its welcome and payment messages).
+
+ Menu translations           Table menu_item_translations (menu_item_id, language, name, description). Categories too. If a
+                             translation is missing, fall back to English.
+
+ Matching typed orders       Each menu item has aliases per language (for example burger, bargar, Arabic spelling). Normalize
+                             input first: lowercase, strip accents and extra spaces, convert Arabic-Indic digits to 0-9, unify Arabic
+                             letter variants (alef forms, ta marbuta). Buttons and lists are the main path, free text is a
+                             convenience.
+
+ Button and list limits      WhatsApp limits the length of button titles and list row titles (roughly 20 and 24 characters). Arabic
+                             labels must fit. Confirm the exact current limits in Meta's documentation.
+
+ Right-to-left in chat       WhatsApp handles direction automatically. Keep numbers, prices and addresses clean so mixed
+                             text does not scramble.
+
+ Order summary               Items, total and currency are formatted in the customer's language. The owner's dashboard always
+                             shows the original item names and the customer's language tag.
+
+ Owner notifications         Language follows the owner's profile, not the customer's.
+
+
+
+ 9. Frontend Architecture
+ 9.1 Component rules
+  • One component, one job. OrderCard only displays a card, data comes from hooks.
+  • Default to Server Components in Next.js. Add 'use client' only when a component needs state, effects or
+    events.
+  • Folders by feature (orders/, menu/), not by file type.
+  • All generic UI comes from shadcn (components/ui). Feature components compose them. Do not build one-off
+    buttons or inputs.
+
+
+ 9.2 State without prop drilling
+ Kind of data             Where it lives                                     Examples
+
+ Server data              TanStack Query, shared by query key                Orders, menu, team, settings
+
+ Global UI state          Zustand store                                      Sidebar open or collapsed, selected order, filters,
+                                                                             sound on or off, language
+
+ Auth state               Zustand (in memory)                                Access token, user, role, restaurant
+
+ Local state              useState                                           A form input value, a dropdown open state
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                 Page 16
+ // stores/ui.store.ts
+ import { create } from "zustand";
+ import { persist } from "zustand/middleware";
+
+ type UI = {
+    sidebarOpen: boolean; soundOn: boolean; filter: "all" | "cod" | "online";
+    toggleSidebar: () => void; toggleSound: () => void;
+    setFilter: (f: UI["filter"]) => void;
+ };
+
+ export const useUI = create<UI>()(persist((set) => ({
+   sidebarOpen: true, soundOn: true, filter: "all",
+   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
+   toggleSound: () => set((s) => ({ soundOn: !s.soundOn })),
+   setFilter: (filter) => set({ filter }),
+ }), { name: "ui" }));
+
+ // A component reads only what it needs (narrow selector):
+ const soundOn = useUI((s) => s.soundOn);   // re-renders only when soundOn changes
+
+
+
+ 9.3 Rendering performance and long lists
+ Technique                      What it does                                                     Where
+
+ Narrow selectors               A component re-renders only when its own slice of state          Every Zustand use
+                                changes
+
+ Server-side pagination         The server sends 20 orders at a time, so the browser never       First choice for every list
+                                receives thousands
+
+ Infinite scroll or Load more   Fetches the next page on demand                                  Order history, messages
+
+ TanStack Virtual               Only the rows visible on screen exist in the page. This is the   Only if a list truly reaches 200+
+                                technique that renders just what you can see                     rows
+
+ React.memo                     Skips re-rendering if props did not change                       OrderCard, MenuItemRow
+
+ Stable keys                    Only the changed item updates                                    All lists, use order.id
+
+ Query cache updates            On a live event, update the single order with setQueryData       SSE events
+                                instead of refetching the list
+
+ Dynamic import                 Loads heavy parts when needed                                    Charts, screenshot viewer
+
+
+  Narrow selectors and virtualization are different tools. Selectors decide which components re-render. Virtualization (and
+  pagination) decide how many rows exist in the page. Measure with the React DevTools Profiler before adding memo
+  everywhere.
+
+
+
+ 9.4 shadcn component map
+ Need                                           shadcn component
+
+ Sidebar, collapse, tooltips                    Sidebar (collapsible icon), Tooltip
+
+ Tables and tabs                                Table, Tabs, Pagination, Badge
+
+ Side panel and dialogs                         Sheet, Drawer, Dialog, AlertDialog (confirm reject or delete)
+
+ Forms                                          Form, Input, Textarea, Select, Combobox, Checkbox, Switch, Label
+
+ Feedback                                       Skeleton, Spinner, Alert, Sonner (toast), Progress
+
+ Menus                                          DropdownMenu, Popover, Command (search)
+
+ Identity                                       Avatar
+
+ Charts                                         Chart (Recharts): bar, line, area, donut
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                  Page 17
+ 9.5 Pages
+ Page                      Contents                                                                            Role
+
+ /login                    Login screen (Section 7.13)                                                         Everyone
+
+ /orders                   Live board: New, Accepted, Preparing, Ready, Out for delivery, Delivered.           Owner, manager
+                           Filters for today, COD and online
+
+ Order detail (Sheet)      Customer name and number, items, total, address, payment, screenshot,               Owner, manager
+                           timeline, status buttons
+
+ /kitchen                  Items and quantities only. Preparing and Ready buttons                              Chef
+
+ /delivery                 Address, customer number, cash to collect, Delivered button                         Rider
+
+ /menu                     Categories, items, prices, availability switch, translations per language           Owner, manager
+
+ /analytics                Sales, orders per hour, payment split, top items (charts)                           Owner
+
+ /team                     Staff users and roles                                                               Owner
+
+ /settings                 Hotel info, hours, delivery fee, payment account number, bot texts, notification    Owner
+                           and email settings
+
+
+
+ 10. Backend Architecture
+ 10.1 Layers
+ Request -> Route -> Middleware (auth, role, tenant, validate, rateLimit)
+         -> Controller (request and response only)
+         -> Service (business rules)
+         -> Repository (Prisma, always WHERE restaurant_id = ?)
+         -> PostgreSQL
+
+
+
+ 10.2 REST API (base path /api/v1)
+ Method            Endpoint                                             Purpose                               Role
+
+ POST              /auth/login, /auth/refresh, /auth/logout             Authentication                        Public or cookie
+
+ GET               /auth/me                                             Current user                          Any
+
+ GET               /orders, /orders/:id                                 List with filters and pagination,     Owner, manager
+                                                                        detail
+
+ PATCH             /orders/:id/status                                   Change status (rules enforced)        Owner, manager,
+                                                                                                              chef, rider (limited)
+
+ PATCH             /orders/:id/payment                                  Payment verified or not received      Owner, manager
+
+ CRUD              /menu/categories, /menu/items (with                  Menu                                  Owner, manager
+                   translations)
+
+ PATCH             /menu/items/:id/availability                         Item on or off                        Owner, manager
+
+ GET               /analytics/summary                                   Chart data                            Owner
+
+ GET, PATCH        /settings                                            Hotel and notification settings       Owner
+
+ CRUD              /team                                                Staff users                           Owner
+
+ GET               /events                                              SSE live stream                       Logged in
+
+ POST              /push/subscribe                                      Save a Web Push subscription          Logged in
+
+ GET, POST         /webhooks/whatsapp                                   Meta webhook (verify and              Meta, signature
+                                                                        messages)                             checked
+
+ POST              /admin/restaurants                                   Onboard a new hotel                   Super admin
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                    Page 18
+ // success                                                   // error
+ { "data": {...},                                             { "error": { "code": "ORDER_INVALID_TRANSITION",
+   "meta": { "page": 1, "pageSize": 20,                                     "message": "Cannot move DELIVERED to PREPARING",
+             "total": 134 } }                                               "requestId": "9f2c..." } }
+
+ Order status flow: PENDING, ACCEPTED, PREPARING, READY, OUT_FOR_DELIVERY, DELIVERED.
+ PENDING can also go to REJECTED, and early states can go to CANCELLED. Dine-in and pickup finish at
+ READY then COMPLETED.
+
+ 10.3 JWT authentication
+ Item                     Design
+
+ Password                 bcrypt hash (cost 10 to 12). Never stored in plain text.
+
+ Access token             15 minutes. Payload: userId, restaurantId, role. Kept in memory (Zustand), not localStorage.
+
+ Refresh token            7 to 30 days, httpOnly + Secure + SameSite cookie. Only a hash is stored in the database. It rotates
+                          on every use.
+
+ Stolen token             If an old refresh token is used again, all sessions of that user are revoked.
+
+ Roles                    super_admin, owner, manager, chef, rider. Middleware: requireRole('owner', 'manager').
+
+ Tenant                   restaurantId always comes from the token. The client never sends it.
+
+ Login limits             5 attempts per minute per IP and per email.
+
+ Cookie domains           Use one parent domain (app.example.com and api.example.com) or proxy /api through Next.js.
+
+
+
+ 10.4 Rate limiting
+ Where                             Idea                                                          Key
+
+ POST /auth/login                  5 per minute                                                  IP + email
+
+ Dashboard APIs                    100 per minute                                                User id
+
+ Webhook                           High limit, trust the Meta signature                          IP
+
+ Bot, each customer                About 20 messages per minute, then a temporary block          phone + restaurant
+
+ WhatsApp sending                  BullMQ limiter to stay within Meta throughput                 Queue
+
+ Counters live in Redis so the limit works across several servers. Start with express-rate-limit, move to
+ rate-limiter-flexible later if needed.
+
+ 10.5 Owner alerts: dashboard, push and email
+ Channel                    When                                          Notes
+
+ Live dashboard (SSE)       New order, payment screenshot received,       Sound, toast, sidebar badge
+                            status change
+
+ Web Push                   Same events, even if the tab is closed        Android works well. On iPhone the dashboard must be
+                                                                          added to the Home Screen
+
+ Email                      Instant email for each new order, and an      Sent from a BullMQ job with retries. Contains order
+                            optional daily summary                        summary, payment type and a button linking to the
+                                                                          order. Language follows the owner's profile
+
+ WhatsApp to owner          Optional backup only                          Limited by the 24-hour window and may be a paid
+                                                                          template. Not the main alert
+
+ Email providers such as Resend or Brevo have free tiers, and SMTP through a normal mailbox works for early
+ testing. Check their current free limits. Owners can switch each alert type on or off in Settings.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                             Page 19
+ 10.6 Scalability, Helmet and tenant isolation
+  • Stateless servers: sessions and bot state live in the database or Redis, so more servers can be added behind
+    a load balancer.
+  • Light webhook: verify, save, queue, return 200. All real work runs in workers.
+  • Cache: hotel settings and menu in Redis.
+  • Helmet: one line in Express that sets secure HTTP headers (blocks clickjacking, content sniffing and similar
+    browser-side attacks).
+  • Tenant isolation: a hotel's staff must never see another hotel's data. Every repository query filters by
+    restaurant_id taken from the token, PostgreSQL Row Level Security is added as a second lock, and automated
+    tests try to read across hotels and must fail.
+  • Pooling: use the connection pooler from Neon or Supabase, or PgBouncer.
+
+
+ 11. Database Design (PostgreSQL + Prisma)
+ Every business table has restaurant_id. Phone numbers are stored in E.164 (+923001234567). Money is stored
+ as integers (minor units), not floats.
+
+ Table                         Main columns                                                      Notes
+
+ restaurants                   id, name, timezone, currency, default_language, open_hours,       One row per hotel (tenant)
+                               delivery_fee, is_active
+
+ restaurant_whatsapp           restaurant_id, phone_number_id (unique), waba_id,                 Token encrypted
+                               access_token_enc
+
+ users                         id, restaurant_id, name, email (unique), password_hash, role,     Dashboard staff
+                               language, avatar_key, is_active
+
+ refresh_tokens                id, user_id, token_hash, expires_at, revoked_at                   Rotation
+
+ menu_categories,              id, restaurant_id, category_id, price, image_url, is_available,   Language-neutral data
+ menu_items                    sort_order
+
+ menu_translations             id, restaurant_id, entity_type, entity_id, language, name,        English, Arabic, Roman
+                               description, aliases                                              Urdu text and aliases
+
+ customers                     id, restaurant_id, phone, name, language, last_address            Unique (restaurant_id,
+                                                                                                 phone)
+
+ conversations                 id, restaurant_id, customer_id, state, cart_json, context_json,   Bot state
+                               human_until, updated_at
+
+ messages                      id, restaurant_id, customer_id, wa_message_id (unique),           Apply retention
+                               direction, type, body, created_at
+
+ orders                        id, restaurant_id, customer_id, number, type, status,             Per-hotel order number
+                               payment_method, payment_status, subtotal, delivery_fee, total,
+                               address, scheduled_for, created_at
+
+ order_items                   id, order_id, menu_item_id, name_snapshot, price_snapshot, qty    Snapshot keeps history
+                                                                                                 correct when the menu
+                                                                                                 changes
+
+ order_events                  id, order_id, status, by_user_id, created_at                      Timeline
+
+ payment_proofs                id, order_id, storage_key, created_at                             Screenshot in storage, not in
+                                                                                                 the database
+
+ push_subscriptions,           user_id, endpoint, keys, email_on_new_order, daily_summary        Alert preferences
+ notification_settings
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                          Page 20
+ 11.1 Indexes
+ CREATE INDEX orders_rest_status_created ON orders (restaurant_id, status, created_at DESC);
+ CREATE INDEX orders_rest_created        ON orders (restaurant_id, created_at DESC);
+ CREATE UNIQUE INDEX customers_rest_phone ON customers (restaurant_id, phone);
+ CREATE UNIQUE INDEX messages_wa_id       ON messages (wa_message_id);
+ CREATE INDEX messages_rest_created       ON messages (restaurant_id, created_at DESC);
+ CREATE INDEX menu_items_rest_cat         ON menu_items (restaurant_id, category_id);
+
+
+
+ 11.2 Maintenance
+  • Retention: delete or archive raw messages after about 90 days. Keep orders much longer.
+  • Partitioning: split the messages table by month only when it reaches many millions of rows. Not needed at the
+    start.
+  • Backups with pg_dump: a PostgreSQL tool that writes the whole database to a file. Example: pg_dump -Fc
+    mydb > backup.dump, restored with pg_restore. Run it daily, store the file in cloud storage, and test a
+    restore.
+  • Privacy: screenshots in private storage with expiring links, a way to delete a customer's data, minimal logging
+    of personal data.
+
+
+ 12. WhatsApp Bot Conversation Flow
+ FIRST MESSAGE -> LANGUAGE (English / Roman Urdu / Arabic)
+   -> MENU -> CART -> ORDER_TYPE (delivery / dine-in) -> ADDRESS -> PAYMENT_METHOD
+                                                             |
+              COD ------------------------------------------+--> CONFIRMED
+              ONLINE -> AWAITING_SCREENSHOT -------------------> CONFIRMED (payment pending check)
+ CONFIRMED -> owner actions -> status messages to the customer
+ Any state -> HUMAN (customer asks for an agent, or the owner replies from the Business app)
+
+  • Interactive lists and buttons first, free text as a convenience.
+  • Every step offers 'Cancel' and 'Talk to agent'.
+  • Outside opening hours the bot replies with the hotel's hours, using the hotel's timezone.
+  • Online payment: the bot sends the hotel's account number and asks for a screenshot. The bot cannot verify it,
+    the owner confirms in their bank or wallet app and presses Verified.
+  • If the owner replies directly (Coexistence mode), the bot pauses for that customer (human_until).
+  • Delivery area and minimum order checks.
+  • Never send marketing messages without the customer's consent.
+
+
+ 12.1 WhatsApp number and cost
+ Case                                      What happens
+
+ New number for the bot                    Cleanest. The number runs on the Cloud API only. The owner uses the dashboard for
+                                           orders.
+
+ Existing Business app number with         The owner keeps using the WhatsApp Business app (and WhatsApp Web or Mac)
+ Coexistence                               while the bot uses the API. WhatsApp for Windows is not supported. Linked devices
+                                           are logged out during setup. Check availability for the client's country.
+
+
+  Cost (as of late 2026, verify on Meta's pricing page): customer messages are free. Bot replies inside the 24-hour window
+  are free for the first 1,000 per number per month, then charged per delivered message (about 0.01 USD for Pakistan).
+  Templates sent outside the window are charged. Messages the owner types in the Business app are free. The client
+  pays Meta directly on their own WhatsApp account.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                          Page 21
+ 13. Phases
+ Time estimates assume one developer working 3 to 5 hours a day. Actual time depends on your speed.
+
+ Phase     Name                                       Time                  Result
+
+ 0         Setup and accounts                         1 to 2 days           Repo, tools, Docker database, Meta account
+
+ 1         Design system and app shell                1 week                Fonts, tokens, shadcn, i18n and RTL, sidebar,
+                                                                            topbar, login, avatar
+
+ 2         Frontend screens (mock data)               1.5 to 2 weeks        All pages working on fake data, in three
+                                                                            languages
+
+ 3         Backend: REST, DB, auth                    1.5 to 2 weeks        Login, menu, orders, team, settings APIs
+
+ 4         WhatsApp automation (multilingual bot)     2 to 2.5 weeks        Bot takes an order in any language and saves
+                                                                            it
+
+ 5         Integration and alerts                     1 week                Live dashboard, push, email, status messages
+
+ 6         Multi-tenant and hardening                 1 week                Second hotel, rate limits, backups, logs, tests
+
+ 7         Deploy, demo and launch                    3 to 5 days           Live system, demo number, first client
+
+
+
+ Phase 0: Setup and accounts
+  • Install Node LTS, pnpm, Git, Docker Desktop, VS Code.
+  • GitHub repo and the monorepo structure (Section 6).
+  • docker-compose.yml with Postgres and Redis, then docker compose up.
+  • Meta for Developers account, WhatsApp product, test number. Start Meta business verification now because it
+    can take days.
+  • Cloudflare Tunnel or ngrok for webhook testing.
+  • ESLint, Prettier, TypeScript, .env.example, README.
+
+
+ Phase 1: Design system and app shell
+  • Initialize Next.js, Tailwind and shadcn. Add the tokens from 7.3 to globals.css.
+  • Load Inter, Playfair Display and IBM Plex Sans Arabic with next/font.
+  • Set up next-intl with en, ar and ur-Latn files, the language switcher, and RTL switching.
+  • Build the shell: shadcn Sidebar (collapsible icon, toggle at the top, Ctrl/Cmd+B), Topbar, user menu, mobile
+    sheet.
+  • Build the login page and Avatar. Create the Zustand stores.
+  • Build the base component states: buttons, inputs, tables, badges, skeleton, spinner, alert, toast.
+  • Check contrast, keyboard focus and RTL on each piece.
+ Done when: the shell and login look like the mockups in all three languages, the sidebar expands and collapses,
+ and Arabic flips correctly.
+
+ Phase 2: Frontend screens with mock data
+  • Orders board and order detail Sheet, Kitchen, Delivery, Menu (with translations), Analytics (charts), Team,
+    Settings.
+  • TanStack Query with mock API functions, so swapping in the real API is simple.
+  • Pagination on lists, loading skeletons, empty states, error states.
+  • Narrow selectors and memoized cards from the start.
+ Done when: every screen works on fake data on desktop and mobile and you have reviewed the design.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                          Page 22
+ Phase 3: Backend REST, database and auth
+  • Prisma schema (Section 11), migrations, seed data (one hotel, menu, owner).
+  • Auth with JWT and refresh rotation. Role, tenant, validation, rate-limit and error middleware.
+  • Menu (with translations), orders, team, settings and analytics APIs. Status transition rules.
+  • pino logging, helmet, cors, environment validation.
+  • Tests for auth, tenant isolation and order transitions.
+ Done when: all APIs pass tests and the dashboard runs on the real API.
+
+ Phase 4: WhatsApp automation
+  • Webhook verification, signature check on the raw body, unique wa_message_id.
+  • BullMQ queue and a separate worker process.
+  • WhatsApp send client: text, interactive list, reply buttons, media and location receive.
+  • State machine with the language step, menu, cart, address, payment, screenshot, confirm.
+  • Translations, aliases and input normalization for English, Arabic and Roman Urdu.
+  • Business hours, human takeover, cancel flow, per-customer spam limit, hotel lookup by phone_number_id.
+ Done when: a full order is taken on the test number in each language and appears in the database.
+
+ Phase 5: Integration and alerts
+  • SSE live orders, sound, toast, sidebar badge. Web Push and PWA manifest.
+  • Owner email on new order, and the optional daily summary (BullMQ jobs).
+  • Status changes send WhatsApp updates. Payment verification buttons. Kitchen and rider screens live.
+ Done when: a WhatsApp order reaches the dashboard in 2 to 3 seconds, the owner gets an email, and a status
+ change reaches the customer.
+
+ Phase 6: Multi-tenant and hardening
+  • Onboard a second test hotel and prove isolation. Admin script or screen for onboarding.
+  • Encrypt WhatsApp tokens. Check indexes with EXPLAIN. Retention job and daily pg_dump backup.
+  • Tune rate limits, small load test, Sentry, uptime monitor, structured logs.
+
+
+ Phase 7: Deploy, demo and launch
+  • Deploy (Section 14), production environment variables, HTTPS, Meta webhook URL.
+  • Production WhatsApp number and business verification.
+  • Public demo number so prospects can message the bot, then a pilot hotel and outreach.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                             Page 23
+ 14. Free Hosting Plan
+ Part                    Development            Production (free start)                Watch out for
+
+ Dashboard               localhost              Cloudflare Pages or your own VM        Vercel Hobby is non-commercial
+
+ API and worker          localhost + tunnel     Oracle Cloud Always Free VM or         Render free sleeps when idle, so the first
+                                                Render                                 webhook may be slow. A VM means you
+                                                                                       maintain the server
+
+ PostgreSQL              Docker                 Neon or Supabase free                  Free tiers may pause or have limits
+
+ Redis                   Docker                 Upstash free                           Command limits
+
+ Files (screenshots)     Local folder           Cloudflare R2 or Supabase Storage      Private buckets only
+                                                free tier
+
+ Monitoring              Console                Sentry and UptimeRobot free
+
+ Domain and HTTPS        -                      Domain costs a little, HTTPS is free   Meta needs HTTPS
+
+ Software and hosting can start free (the domain is the only certain cost). WhatsApp cost depends on message
+ volume. When clients grow, paid hosting is covered by your monthly fee.
+
+ 15. Security Checklist
+  • Verify X-Hub-Signature-256 on every webhook POST.
+  • Secrets (app secret, verify token, JWT secret) only in environment variables. Never commit .env.
+  • WhatsApp access tokens encrypted in the database.
+  • restaurant_id filter on every query, Row Level Security, and cross-tenant tests.
+  • bcrypt passwords, short access token, rotating refresh token, httpOnly cookies.
+  • Zod validation on all input. ORM prevents SQL injection.
+  • helmet, CORS limited to your domains, HTTPS everywhere.
+  • Rate limiting on login, APIs and each customer number.
+  • Screenshots in private storage with expiring links.
+  • Do not log passwords, tokens or full phone numbers (mask them).
+  • Keep dependencies updated (npm audit, Dependabot).
+  • Tell owners: the screenshot is only a hint, always confirm the money in the bank or wallet app.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                                Page 24
+ 16. Glossary
+ Term                                Plain explanation
+
+ pnpm                                A package manager like npm, faster and better at monorepos.
+
+ Docker Desktop                      App that runs small isolated 'containers'. We use it to run PostgreSQL and Redis without
+                                     installing them.
+
+ docker compose                      One file (docker-compose.yml) that describes several containers, started together with one
+                                     command.
+
+ Tunnel (ngrok, Cloudflare           Gives your local server a temporary public HTTPS address so Meta can call your webhook
+ Tunnel)                             during development. Not needed in production.
+
+ Webhook                             A URL on your server that Meta calls whenever a WhatsApp message arrives.
+
+ Helmet                              Express middleware that sets protective HTTP headers.
+
+ Tenant / multi-tenant               A tenant is one customer (a hotel). Multi-tenant means many hotels share one system,
+                                     each seeing only its own data.
+
+ Tenant isolation                    The guarantee that one hotel can never read or change another hotel's data.
+
+ Zustand                             A small global state library. Components read shared state directly, with no prop drilling.
+
+ TanStack Query                      Fetches and caches server data and tracks loading and error states.
+
+ Narrow selector                     Reading only the exact piece of state you need so the component re-renders only when
+                                     that piece changes.
+
+ Pagination                          Loading data in small pages (for example 20 rows) instead of all at once.
+
+ Virtualization (TanStack Virtual)   Rendering only the rows visible on screen for very long lists.
+
+ BullMQ                              A job queue. The webhook drops work into the queue and workers process it, with retries.
+
+ SSE (Server-Sent Events)            A one-way live connection from server to browser, used for instant new-order updates.
+
+ PWA                                 Progressive Web App: a website installable on the phone home screen that can send
+                                     notifications.
+
+ JWT                                 A signed token that proves who is logged in.
+
+ RTL                                 Right-to-left layout, needed for Arabic.
+
+ i18n                                Internationalization: translating the interface and formatting numbers and dates per
+                                     language.
+
+ pg_dump                             PostgreSQL tool that exports a database into a backup file.
+
+ Retention                           A rule for how long old data is kept before deleting or archiving it.
+
+ Coexistence                         Meta feature letting one number run on the WhatsApp Business app and the Cloud API at
+                                     once.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                               Page 25
+ 17. Day-1 Checklist
+ #      Task                                                                     Result
+
+ 1      Install Node LTS, pnpm, Git, Docker Desktop, VS Code                     Tools ready
+
+ 2      Create a private GitHub repo                                             Version control
+
+ 3      Create apps/web (Next.js, TypeScript, Tailwind) and apps/api (Express,   Both apps run
+        TypeScript)
+
+ 4      docker-compose.yml with Postgres and Redis                               Local databases running
+
+ 5      Install Prisma, first schema (restaurants, users), first migration       Tables created
+
+ 6      /health endpoint, pino, environment validation                           Backend base ready
+
+ 7      Meta for Developers account, WhatsApp app, test number                   Ready for Phase 4
+
+ 8      Start Meta business verification                                         Long wait started early
+
+ 9      Initialize shadcn, paste tokens (7.3), add fonts                         Phase 1 started
+
+
+
+ 18. Open Questions
+  • Brand name and logo: what is the product called, and is there a logo? The mockups use 'Your Brand'.
+  • First scope: delivery only, or dine-in and pickup too?
+  • Payments: COD plus Easypaisa or JazzCash screenshot only, or a payment gateway later?
+  • First clients: Pakistan or abroad? This affects currency, tax and WhatsApp rates.
+  • Hosting: Oracle VM (more control) or Render (easier, sleeps when idle)?
+  • Owner WhatsApp number: Coexistence with the existing number, or a new number?
+  • Dark mode: not in v1. The tokens make it possible later. Do you want it planned?
+  • Team: working alone or with other developers?
+ Please review and tell me what to change. After approval I can create the Phase 0 starter code: monorepo,
+ docker-compose, Prisma schema, health endpoint, and the shadcn plus design-token setup.
+
+
+
+
+WhatsApp Order Automation - Project Plan v1.1                                                                Page 26
+
