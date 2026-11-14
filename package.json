@@ -2,6 +2,23 @@
   "name": "whatsapp-order-automation",
   "private": true,
   "packageManager": "pnpm@12.18.0",
-  "scripts": {}
+  "scripts": {
+    "dev": "concurrently -k -p \"[{name}]\" -n \"web,api\" -c \"cyan,magenta\" \"pnpm run dev:web\" \"pnpm run dev:api\"",
+    "dev:web": "pnpm --filter @app/web dev",
+    "dev:api": "pnpm --filter @app/api dev",
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "test": "node -e \"console.log('No tests configured yet. Tests start in Phase 3.'); process.exit(0)\"",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "concurrently": "10.0.7",
+    "eslint": "9.39.5",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.10.1",
+    "typescript-eslint": "8.72.2"
+  }
 }
-

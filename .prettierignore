@@ -1,0 +1,12 @@
+node_modules
+.next
+dist
+build
+out
+coverage
+.turbo
+*.log
+pnpm-lock.yaml
+postgres_data
+redis_data
+docs
