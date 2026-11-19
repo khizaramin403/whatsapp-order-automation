@@ -332,3 +332,20 @@ html[lang="ar"] .text-kpi-number {
     scroll-behavior: auto !important;
   }
 }
+
+/* Interactive cursor rules */
+button,
+[role="button"],
+[type="button"],
+[type="submit"],
+[type="reset"] {
+  cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"],
+[type="button"]:disabled,
+[type="submit"]:disabled,
+[type="reset"]:disabled {
+  cursor: not-allowed;
+}
