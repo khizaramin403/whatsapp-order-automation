@@ -13,7 +13,7 @@ const rtlPlugin = {
         schema: [],
       },
       create(context) {
-        const physicalRegex = /\b(ml-|mr-|pl-|pr-|left-|right-|text-left\b|text-right\b|border-l-|border-r-|rounded-l-|rounded-r-)\S*/g;
+        const physicalRegex = /(?<![\w-])(ml-|mr-|pl-|pr-|left-|right-|text-left\b|text-right\b|border-l-|border-r-|rounded-l-|rounded-r-)\S*/g;
         return {
           JSXAttribute(node) {
             if (node.name && node.name.name === "className" && node.value && typeof node.value.value === "string") {
