@@ -6,19 +6,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const srcDir = path.resolve(__dirname, "../src");
 
+// Match physical left/right Tailwind classes: ml-, mr-, pl-, pr-, left-, right-, text-left, text-right, etc.
+// Negative lookbehind (?<![\w-]) ensures we don't match hyphenated prefixes like slide-in-from-left or data-[side=left]
 const PHYSICAL_CLASS_PATTERNS = [
-  { pattern: /\bml-(\d+|px|auto|\[[^\]]+\])/g, suggestion: "ms-$1" },
-  { pattern: /\bmr-(\d+|px|auto|\[[^\]]+\])/g, suggestion: "me-$1" },
-  { pattern: /\bpl-(\d+|px|\[[^\]]+\])/g, suggestion: "ps-$1" },
-  { pattern: /\bpr-(\d+|px|\[[^\]]+\])/g, suggestion: "pe-$1" },
-  { pattern: /\bleft-(\d+|px|auto|full|\[[^\]]+\])/g, suggestion: "start-$1" },
-  { pattern: /\bright-(\d+|px|auto|full|\[[^\]]+\])/g, suggestion: "end-$1" },
-  { pattern: /\btext-left\b/g, suggestion: "text-start" },
-  { pattern: /\btext-right\b/g, suggestion: "text-end" },
-  { pattern: /\bborder-l(-\S+)?\b/g, suggestion: "border-s$1" },
-  { pattern: /\bborder-r(-\S+)?\b/g, suggestion: "border-e$1" },
-  { pattern: /\brounded-l(-\S+)?\b/g, suggestion: "rounded-s$1" },
-  { pattern: /\brounded-r(-\S+)?\b/g, suggestion: "rounded-e$1" },
+  { pattern: /(?<![\w-])ml-(\d+|px|auto|\[[^\]]+\])/g, suggestion: "ms-$1" },
+  { pattern: /(?<![\w-])mr-(\d+|px|auto|\[[^\]]+\])/g, suggestion: "me-$1" },
+  { pattern: /(?<![\w-])pl-(\d+|px|\[[^\]]+\])/g, suggestion: "ps-$1" },
+  { pattern: /(?<![\w-])pr-(\d+|px|\[[^\]]+\])/g, suggestion: "pe-$1" },
+  { pattern: /(?<![\w-])left-(\d+|px|auto|full|\[[^\]]+\])/g, suggestion: "start-$1" },
+  { pattern: /(?<![\w-])right-(\d+|px|auto|full|\[[^\]]+\])/g, suggestion: "end-$1" },
+  { pattern: /(?<![\w-])text-left\b/g, suggestion: "text-start" },
+  { pattern: /(?<![\w-])text-right\b/g, suggestion: "text-end" },
+  { pattern: /(?<![\w-])border-l(-\S+)?\b/g, suggestion: "border-s$1" },
+  { pattern: /(?<![\w-])border-r(-\S+)?\b/g, suggestion: "border-e$1" },
+  { pattern: /(?<![\w-])rounded-l(-\S+)?\b/g, suggestion: "rounded-s$1" },
+  { pattern: /(?<![\w-])rounded-r(-\S+)?\b/g, suggestion: "rounded-e$1" },
 ];
 
 function getFiles(dir) {
