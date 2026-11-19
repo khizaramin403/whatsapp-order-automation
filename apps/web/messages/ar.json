@@ -65,6 +65,30 @@
     "signOut": "تسجيل الخروج",
     "signedOut": "تم تسجيل الخروج بنجاح"
   },
+  "login": {
+    "brandStatement": "كل طلب،\nيُدار بكل هدوء.",
+    "brandSupporting": "الطلبات والمطبخ والتوصيل في مكان واحد.",
+    "placeholderCopy": "(نص تجريبي)",
+    "welcomeBack": "مرحباً بعودتك",
+    "signInSubtitle": "سجّل الدخول لإدارة طلباتك.",
+    "emailLabel": "البريد الإلكتروني",
+    "emailPlaceholder": "name@hotel.com",
+    "passwordLabel": "كلمة المرور",
+    "passwordPlaceholder": "••••••••",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "rememberMe": "تذكرني",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "signInButton": "تسجيل الدخول",
+    "signingIn": "جارٍ تسجيل الدخول...",
+    "needAccess": "هل تحتاج إلى وصول؟ اطلب من مالك الفندق.",
+    "errors": {
+      "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صالح.",
+      "passwordRequired": "كلمة المرور مطلوبة (6 أحرف على الأقل).",
+      "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+      "tooManyAttempts": "محاولات كثيرة جداً. يرجى الانتظار لمدة دقيقة واحدة قبل المحاولة مرة أخرى."
+    }
+  },
   "pages": {
     "orders": "الطلبات",
     "kitchen": "المطبخ",
