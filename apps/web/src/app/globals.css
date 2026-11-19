@@ -1,26 +1,334 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F7F7F7;
+  --foreground: #10202D;
+  --card: #FFFFFF;
+  --card-foreground: #10202D;
+  --popover: #FFFFFF;
+  --popover-foreground: #10202D;
+  --primary: #10202D;
+  --primary-foreground: #F7F7F7;
+  --secondary: #ECEEF1;
+  --secondary-foreground: #10202D;
+  --muted: #ECEEF1;
+  --muted-foreground: #5F6C79;
+  --accent: #F2F4F6;
+  --accent-foreground: #10202D;
+  --destructive: #B3392F;
+  --destructive-foreground: #FFFFFF;
+  --border: #E2E5E9;
+  --input: #D5DAE0;
+  --ring: #10202D;
+  --gold: #C7A667;
+  --gold-foreground: #10202D;
+  --gold-hover: #B5964F;
+  --gold-pressed: #A3853F;
+  --gold-tint: #F4ECDC;
+  --gold-text: #7D6228;
+  --success: #2F7D5B;
+  --warning: #B7791F;
+  --info: #2F6690;
+  --sidebar: #10202D;
+  --sidebar-foreground: #A9B4BE;
+  --sidebar-accent: #1B2D3B;
+  --sidebar-accent-foreground: #F7F7F7;
+  --sidebar-primary: #C7A667;
+  --sidebar-border: #22394B;
+  --sidebar-ring: #C7A667;
+  --sidebar-width: 16.5rem;
+  --sidebar-width-icon: 4.5rem;
+  --radius: 0.5rem;
+
+  /* Additional Palette Colors */
+  --midnight: #10202D;
+  --midnight-800: #1B2D3B;
+  --midnight-700: #22394B;
+  --midnight-deep: #0B1620;
+  --slate-text: #4A5865;
+  --muted-text: #5F6C79;
+  --sidebar-text: #A9B4BE;
+  --input-border: #D5DAE0;
+  --hover-fill: #F2F4F6;
+
+  /* Status Tokens (Fill, Text, and Solid pairs) */
+  --status-success-fill: #E6F2EC;
+  --status-success-text: #1F5C42;
+  --status-success-solid: #2F7D5B;
+
+  --status-warning-fill: #FBF0DA;
+  --status-warning-text: #7A4E0B;
+  --status-warning-solid: #B7791F;
+
+  --status-danger-fill: #F8E4E1;
+  --status-danger-text: #8E2A22;
+  --status-danger-solid: #B3392F;
+  --status-danger-hover: #9C2F26;
+
+  --status-info-fill: #E3EDF5;
+  --status-info-text: #1F4C73;
+  --status-info-solid: #2F6690;
+
+  --status-gold-fill: #F4ECDC;
+  --status-gold-text: #7D6228;
+
+  --status-midnight-fill: #E3E8EE;
+  --status-midnight-text: #10202D;
+
+  --status-neutral-fill: #ECEEF1;
+  --status-neutral-text: #3A4651;
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(16, 32, 45, 0.06);
+  --shadow-overlay: 0 8px 24px rgba(16, 32, 45, 0.12);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-gold-hover: var(--gold-hover);
+  --color-gold-pressed: var(--gold-pressed);
+  --color-gold-tint: var(--gold-tint);
+  --color-gold-text: var(--gold-text);
+
+  --color-midnight: var(--midnight);
+  --color-midnight-800: var(--midnight-800);
+  --color-midnight-700: var(--midnight-700);
+  --color-midnight-deep: var(--midnight-deep);
+  --color-slate-text: var(--slate-text);
+  --color-muted-text: var(--muted-text);
+  --color-sidebar-text: var(--sidebar-text);
+  --color-input-border: var(--input-border);
+  --color-hover-fill: var(--hover-fill);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-status-success-fill: var(--status-success-fill);
+  --color-status-success-text: var(--status-success-text);
+  --color-status-success-solid: var(--status-success-solid);
+
+  --color-status-warning-fill: var(--status-warning-fill);
+  --color-status-warning-text: var(--status-warning-text);
+  --color-status-warning-solid: var(--status-warning-solid);
+
+  --color-status-danger-fill: var(--status-danger-fill);
+  --color-status-danger-text: var(--status-danger-text);
+  --color-status-danger-solid: var(--status-danger-solid);
+  --color-status-danger-hover: var(--status-danger-hover);
+
+  --color-status-info-fill: var(--status-info-fill);
+  --color-status-info-text: var(--status-info-text);
+  --color-status-info-solid: var(--status-info-solid);
+
+  --color-status-gold-fill: var(--status-gold-fill);
+  --color-status-gold-text: var(--status-gold-text);
+
+  --color-status-midnight-fill: var(--status-midnight-fill);
+  --color-status-midnight-text: var(--status-midnight-text);
+
+  --color-status-neutral-fill: var(--status-neutral-fill);
+  --color-status-neutral-text: var(--status-neutral-text);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: var(--font-inter), sans-serif;
+  --font-arabic: var(--font-ibm-plex-arabic), sans-serif;
+  --font-brand: var(--font-playfair), serif;
+
+  --shadow-card: var(--shadow-card);
+  --shadow-overlay: var(--shadow-overlay);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), sans-serif;
+  min-height: 100vh;
+}
+
+/* Tabular numerals utility */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Brand wordmark and login font */
+.font-brand {
+  font-family: var(--font-playfair), serif;
+}
+
+/* Arabic font */
+.font-arabic {
+  font-family: var(--font-ibm-plex-arabic), sans-serif;
+}
+
+html[lang="ar"],
+html[lang="ar"] body {
+  font-family: var(--font-ibm-plex-arabic), sans-serif;
+}
+
+/* Typography Scale (Section 7.4) */
+.text-page-title {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  color: #10202D;
+}
+
+.text-section-title {
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 600;
+  color: #10202D;
+}
+
+.text-card-title {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  color: #10202D;
+}
+
+.text-body-primary {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #10202D;
+}
+
+.text-body-secondary {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #4A5865;
+}
+
+.text-form-label {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #10202D;
+}
+
+.text-caption {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  color: #5F6C79;
+}
+
+.text-table-header {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5F6C79;
+}
+
+.text-kpi-number {
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 600;
+  color: #10202D;
+  font-variant-numeric: tabular-nums;
+}
+
+.text-login-heading {
+  font-family: var(--font-playfair), serif;
+  font-size: 34px;
+  line-height: 40px;
+  font-weight: 600;
+  color: #10202D;
+}
+
+/* Arabic typography scaling (+1px, 1.7 line height) */
+html[lang="ar"] .text-page-title {
+  font-size: 25px;
+  line-height: 1.7;
+}
+
+html[lang="ar"] .text-section-title {
+  font-size: 19px;
+  line-height: 1.7;
+}
+
+html[lang="ar"] .text-card-title {
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+html[lang="ar"] .text-body-primary,
+html[lang="ar"] .text-body-secondary {
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+html[lang="ar"] .text-form-label {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+html[lang="ar"] .text-caption,
+html[lang="ar"] .text-table-header {
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+html[lang="ar"] .text-kpi-number {
+  font-size: 29px;
+  line-height: 1.7;
+}
+
+/* Card and surface shadows */
+.shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+.shadow-overlay {
+  box-shadow: var(--shadow-overlay);
+}
+
+/* Motion and reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
