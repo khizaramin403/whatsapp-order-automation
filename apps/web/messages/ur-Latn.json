@@ -1,0 +1,27 @@
+{
+  "common": {
+    "save": "Save karein",
+    "cancel": "Mansookh karein",
+    "signIn": "Sign in karein",
+    "orders": "Orders",
+    "kitchen": "Kitchen",
+    "delivery": "Delivery",
+    "menu": "Menu",
+    "analytics": "Tajziyaat",
+    "team": "Team",
+    "settings": "Settings",
+    "language": "Zaban",
+    "english": "English",
+    "arabic": "العربية",
+    "romanUrdu": "Roman Urdu",
+    "currentLanguage": "Mojooda zaban: Roman Urdu",
+    "testTitle": "RTL aur Translation Testing",
+    "testSubtitle": "next-intl cookie setup, Tailwind logical classes aur fonts ki verification",
+    "customer": "Gahak",
+    "total": "Kul raqam",
+    "status": "Haalat",
+    "actions": "Iqdamat",
+    "active": "Fa'aal",
+    "preparing": "Tayyar ho raha hai"
+  }
+}

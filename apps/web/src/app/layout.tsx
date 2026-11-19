@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, IBM_Plex_Sans_Arabic, Playfair_Display } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import { BRAND_NAME } from "@/config/brand";
 import "./globals.css";
 
@@ -29,17 +31,26 @@ export const metadata: Metadata = {
   description: "Operations dashboard for restaurants and hotels",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+  const dir = locale === "ar" ? "rtl" : "ltr";
+
   return (
     <html
-      lang="en"
+      lang={locale}
+      dir={dir}
       className={`${inter.variable} ${ibmPlexSansArabic.variable} ${playfairDisplay.variable}`}
     >
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+      </body>
     </html>
   );
 }

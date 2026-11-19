@@ -1,0 +1,27 @@
+{
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "signIn": "تسجيل الدخول",
+    "orders": "الطلبات",
+    "kitchen": "المطبخ",
+    "delivery": "التوصيل",
+    "menu": "قائمة الطعام",
+    "analytics": "التحليلات",
+    "team": "فريق العمل",
+    "settings": "الإعدادات",
+    "language": "اللغة",
+    "english": "English",
+    "arabic": "العربية",
+    "romanUrdu": "Roman Urdu",
+    "currentLanguage": "اللغة الحالية: العربية",
+    "testTitle": "اختبار الترجمة ودعم الاتجاه من اليمين إلى اليسار (RTL)",
+    "testSubtitle": "التحقق من إعدادات ملفات تعريف الارتباط لـ next-intl وفئات Tailwind المنطقية وخط IBM Plex Sans Arabic",
+    "customer": "العميل",
+    "total": "الإجمالي",
+    "status": "الحالة",
+    "actions": "الإجراءات",
+    "active": "نشط",
+    "preparing": "قيد التحضير"
+  }
+}

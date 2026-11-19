@@ -1,0 +1,27 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "signIn": "Sign in",
+    "orders": "Orders",
+    "kitchen": "Kitchen",
+    "delivery": "Delivery",
+    "menu": "Menu",
+    "analytics": "Analytics",
+    "team": "Team",
+    "settings": "Settings",
+    "language": "Language",
+    "english": "English",
+    "arabic": "العربية",
+    "romanUrdu": "Roman Urdu",
+    "currentLanguage": "Current language: English",
+    "testTitle": "RTL & Translation Testing",
+    "testSubtitle": "Verifying next-intl cookie configuration, logical Tailwind classes, and IBM Plex Sans Arabic font",
+    "customer": "Customer",
+    "total": "Total",
+    "status": "Status",
+    "actions": "Actions",
+    "active": "Active",
+    "preparing": "Preparing"
+  }
+}
