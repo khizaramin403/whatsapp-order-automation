@@ -507,7 +507,7 @@ export default function DesignCheckPage() {
               <button
                 type="button"
                 onClick={() => setPasswordShown(!passwordShown)}
-                className="absolute end-3 top-1/2 -translate-y-1/2 text-[#5F6C79] hover:text-[#10202D]"
+                className="absolute end-3 top-1/2 -translate-y-1/2 text-[#5F6C79] hover:text-[#10202D] cursor-pointer"
                 aria-label="Toggle password"
               >
                 {passwordShown ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
