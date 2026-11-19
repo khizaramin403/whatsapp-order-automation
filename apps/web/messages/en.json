@@ -65,6 +65,30 @@
     "signOut": "Sign out",
     "signedOut": "Signed out successfully"
   },
+  "login": {
+    "brandStatement": "Every order,\nhandled calmly.",
+    "brandSupporting": "Orders, kitchen and delivery in one place.",
+    "placeholderCopy": "(placeholder copy)",
+    "welcomeBack": "Welcome back",
+    "signInSubtitle": "Sign in to manage your orders.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "name@hotel.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "••••••••",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signInButton": "Sign in",
+    "signingIn": "Signing in...",
+    "needAccess": "Need access? Ask your hotel owner.",
+    "errors": {
+      "invalidEmail": "Please enter a valid email address.",
+      "passwordRequired": "Password is required (min 6 characters).",
+      "invalidCredentials": "Invalid email or password.",
+      "tooManyAttempts": "Too many login attempts. Please wait 1 minute before trying again."
+    }
+  },
   "pages": {
     "orders": "Orders",
     "kitchen": "Kitchen",

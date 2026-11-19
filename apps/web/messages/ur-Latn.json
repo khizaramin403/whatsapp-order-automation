@@ -65,6 +65,30 @@
     "signOut": "Sign out",
     "signedOut": "Kamyabi se sign out ho gaya"
   },
+  "login": {
+    "brandStatement": "Har order,\npura sukoon se.",
+    "brandSupporting": "Orders, kitchen aur delivery aik he jagah.",
+    "placeholderCopy": "(placeholder copy)",
+    "welcomeBack": "Welcome back",
+    "signInSubtitle": "Apne orders manage karne ke liye sign in karein.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "name@hotel.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "••••••••",
+    "showPassword": "Password dikhayein",
+    "hidePassword": "Password chupayein",
+    "rememberMe": "Mujhe yaad rakhein",
+    "forgotPassword": "Password bhool gaye?",
+    "signInButton": "Sign in karein",
+    "signingIn": "Sign in ho raha hai...",
+    "needAccess": "Access chahiye? Apne hotel owner se rabta karein.",
+    "errors": {
+      "invalidEmail": "Barah-e-karam durust email darj karein.",
+      "passwordRequired": "Password zaroori hai (kam az kam 6 characters).",
+      "invalidCredentials": "Email ya password ghalat hai.",
+      "tooManyAttempts": "Bohot zyada koshishein. Barah-e-karam dobara koshish karne se pehle 1 minute intezar karein."
+    }
+  },
   "pages": {
     "orders": "Orders",
     "kitchen": "Kitchen",
