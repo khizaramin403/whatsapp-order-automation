@@ -23,5 +23,40 @@
     "actions": "الإجراءات",
     "active": "نشط",
     "preparing": "قيد التحضير"
+  },
+  "sidebar": {
+    "operations": "العمليات",
+    "catalog": "قائمة المنتجات",
+    "insights": "الرؤى والتحليلات",
+    "manage": "الإدارة",
+    "orders": "الطلبات",
+    "kitchen": "المطبخ",
+    "delivery": "التوصيل",
+    "menu": "قائمة الطعام",
+    "analytics": "التحليلات",
+    "team": "فريق العمل",
+    "settings": "الإعدادات",
+    "collapse": "طي الشريط الجانبي (Ctrl+B)",
+    "expand": "توسيع الشريط الجانبي (Ctrl+B)",
+    "newOrdersBadge": "{count} جديد",
+    "roles": {
+      "super_admin": "مشرف عام",
+      "owner": "المالك",
+      "manager": "المدير",
+      "chef": "الطاهي",
+      "rider": "عامل التوصيل"
+    },
+    "userMenu": "ملف المستخدم والخيارات",
+    "mobileMenu": "تبديل قائمة التنقل",
+    "openMenu": "فتح القائمة"
+  },
+  "pages": {
+    "orders": "الطلبات",
+    "kitchen": "المطبخ",
+    "delivery": "التوصيل",
+    "menu": "قائمة الطعام",
+    "analytics": "التحليلات",
+    "team": "فريق العمل",
+    "settings": "الإعدادات"
   }
 }

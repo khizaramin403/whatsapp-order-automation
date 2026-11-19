@@ -23,5 +23,40 @@
     "actions": "Actions",
     "active": "Active",
     "preparing": "Preparing"
+  },
+  "sidebar": {
+    "operations": "OPERATIONS",
+    "catalog": "CATALOG",
+    "insights": "INSIGHTS",
+    "manage": "MANAGE",
+    "orders": "Orders",
+    "kitchen": "Kitchen",
+    "delivery": "Delivery",
+    "menu": "Menu",
+    "analytics": "Analytics",
+    "team": "Team",
+    "settings": "Settings",
+    "collapse": "Collapse sidebar (Ctrl+B)",
+    "expand": "Expand sidebar (Ctrl+B)",
+    "newOrdersBadge": "{count} new",
+    "roles": {
+      "super_admin": "Super Admin",
+      "owner": "Owner",
+      "manager": "Manager",
+      "chef": "Chef",
+      "rider": "Rider"
+    },
+    "userMenu": "User profile and options",
+    "mobileMenu": "Toggle navigation menu",
+    "openMenu": "Open Menu"
+  },
+  "pages": {
+    "orders": "Orders",
+    "kitchen": "Kitchen",
+    "delivery": "Delivery",
+    "menu": "Menu",
+    "analytics": "Analytics",
+    "team": "Team",
+    "settings": "Settings"
   }
 }

@@ -23,5 +23,40 @@
     "actions": "Iqdamat",
     "active": "Fa'aal",
     "preparing": "Tayyar ho raha hai"
+  },
+  "sidebar": {
+    "operations": "OPERATIONS",
+    "catalog": "CATALOG",
+    "insights": "TAJZIYAAT",
+    "manage": "INTIZAMIA",
+    "orders": "Orders",
+    "kitchen": "Kitchen",
+    "delivery": "Delivery",
+    "menu": "Menu",
+    "analytics": "Tajziyaat",
+    "team": "Team",
+    "settings": "Settings",
+    "collapse": "Sidebar band karein (Ctrl+B)",
+    "expand": "Sidebar kholein (Ctrl+B)",
+    "newOrdersBadge": "{count} naye",
+    "roles": {
+      "super_admin": "Super Admin",
+      "owner": "Owner",
+      "manager": "Manager",
+      "chef": "Chef",
+      "rider": "Rider"
+    },
+    "userMenu": "User profile aur ikhtiyarat",
+    "mobileMenu": "Navigation menu kholein",
+    "openMenu": "Menu kholein"
+  },
+  "pages": {
+    "orders": "Orders",
+    "kitchen": "Kitchen",
+    "delivery": "Delivery",
+    "menu": "Menu",
+    "analytics": "Tajziyaat",
+    "team": "Team",
+    "settings": "Settings"
   }
 }
