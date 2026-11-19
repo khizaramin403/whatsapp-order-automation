@@ -19,7 +19,7 @@ async function main() {
 
   const page = await browser.newPage();
 
-  // Helper to set cookie for English
+  // Set English cookie
   await page.setCookie({
     name: "NEXT_LOCALE",
     value: "en",
@@ -27,65 +27,42 @@ async function main() {
     path: "/",
   });
 
-  // 1. Expanded sidebar
+  // 1. Desktop view with Topbar & User Menu opened from Topbar Avatar
   await page.setViewport({ width: 1280, height: 800 });
   await page.goto("http://localhost:3000/orders", { waitUntil: "networkidle0" });
   await new Promise((r) => setTimeout(r, 600));
 
-  // Ensure sidebar is expanded
-  const isCollapsed = await page.$('aside[data-state="collapsed"]');
-  if (isCollapsed) {
-    const expandBtn = await page.$('aside button[aria-label*="Expand"], aside button[aria-label*="expand"], aside button');
-    if (expandBtn) {
-      await expandBtn.click();
-      await new Promise((r) => setTimeout(r, 400));
-    }
-  }
-
-  await page.screenshot({ path: path.join(OUT_DIR, "01-expanded.png") });
-  console.log("1. Captured expanded sidebar");
-
-  // 2. Collapsed sidebar
-  const collapseBtn = await page.$(
-    'aside button[title*="Collapse"], aside button[aria-label*="Collapse"], aside button[title*="sidebar"], aside button[aria-label*="sidebar"]'
-  );
-  if (collapseBtn) {
-    await collapseBtn.click();
-    await new Promise((r) => setTimeout(r, 500));
-  } else {
-    await page.keyboard.down("Control");
-    await page.keyboard.press("KeyB");
-    await page.keyboard.up("Control");
-    await new Promise((r) => setTimeout(r, 500));
-  }
-  await page.screenshot({ path: path.join(OUT_DIR, "02-collapsed.png") });
-  console.log("2. Captured collapsed sidebar");
-
-  // 3. Collapsed with tooltip
-  const ordersLink = await page.$('aside a[href="/orders"]');
-  if (ordersLink) {
-    await ordersLink.hover();
+  // Click Topbar avatar to open User Menu
+  const topbarAvatarBtn = await page.$('header button[aria-label*="user menu"], header button[aria-label*="User menu"]');
+  if (topbarAvatarBtn) {
+    await topbarAvatarBtn.click();
     await new Promise((r) => setTimeout(r, 400));
   }
-  await page.screenshot({ path: path.join(OUT_DIR, "03-collapsed-tooltip.png") });
-  console.log("3. Captured collapsed sidebar with tooltip");
+  await page.screenshot({ path: path.join(OUT_DIR, "step16-desktop-topbar-usermenu.png") });
+  console.log("1. Captured Desktop Topbar with User Menu");
 
-  // 4. Mobile view
+  // 2. Sidebar Footer User Menu trigger
+  // Click outside to close topbar menu
+  await page.mouse.click(500, 500);
+  await new Promise((r) => setTimeout(r, 300));
+
+  // Click sidebar footer user trigger
+  const sidebarFooter = await page.$('aside div[role="button"][title*="profile"], aside div[role="button"][title*="user"]');
+  if (sidebarFooter) {
+    await sidebarFooter.click();
+    await new Promise((r) => setTimeout(r, 400));
+  }
+  await page.screenshot({ path: path.join(OUT_DIR, "step16-sidebar-footer-usermenu.png") });
+  console.log("2. Captured Sidebar Footer with User Menu");
+
+  // 3. Mobile view (390x844) showing ONLY title, live dot, bell and avatar
   await page.setViewport({ width: 390, height: 844 });
   await page.goto("http://localhost:3000/orders", { waitUntil: "networkidle0" });
-  await new Promise((r) => setTimeout(r, 500));
+  await new Promise((r) => setTimeout(r, 600));
+  await page.screenshot({ path: path.join(OUT_DIR, "step16-mobile-topbar.png") });
+  console.log("3. Captured Mobile Topbar (title, live dot, bell, avatar only)");
 
-  const menuBtn = await page.$(
-    'header button[aria-label*="menu"], header button[aria-label*="Navigation"], header button[aria-label*="navigation"]'
-  );
-  if (menuBtn) {
-    await menuBtn.click();
-    await new Promise((r) => setTimeout(r, 600));
-  }
-  await page.screenshot({ path: path.join(OUT_DIR, "04-mobile.png") });
-  console.log("4. Captured mobile sidebar");
-
-  // 5. Arabic view (expanded and collapsed)
+  // 4. Arabic RTL Topbar and User Menu
   await page.setCookie({
     name: "NEXT_LOCALE",
     value: "ar",
@@ -96,26 +73,14 @@ async function main() {
   await page.goto("http://localhost:3000/orders", { waitUntil: "networkidle0" });
   await new Promise((r) => setTimeout(r, 600));
 
-  // If collapsed, expand it for Arabic expanded screenshot
-  const isArCollapsed = await page.$('aside[data-state="collapsed"]');
-  if (isArCollapsed) {
-    const arExpandBtn = await page.$('aside button');
-    if (arExpandBtn) {
-      await arExpandBtn.click();
-      await new Promise((r) => setTimeout(r, 500));
-    }
+  // Click Arabic Topbar avatar
+  const arAvatarBtn = await page.$('header button[aria-label*="المستخدم"], header button[aria-label*="user menu"]');
+  if (arAvatarBtn) {
+    await arAvatarBtn.click();
+    await new Promise((r) => setTimeout(r, 400));
   }
-  await page.screenshot({ path: path.join(OUT_DIR, "05-arabic-expanded.png") });
-  console.log("5. Captured Arabic expanded sidebar");
-
-  // Also collapse Arabic for collapsed view
-  const arCollapseBtn = await page.$('aside button');
-  if (arCollapseBtn) {
-    await arCollapseBtn.click();
-    await new Promise((r) => setTimeout(r, 500));
-  }
-  await page.screenshot({ path: path.join(OUT_DIR, "06-arabic-collapsed.png") });
-  console.log("6. Captured Arabic collapsed sidebar");
+  await page.screenshot({ path: path.join(OUT_DIR, "step16-arabic-topbar-usermenu.png") });
+  console.log("4. Captured Arabic RTL Topbar and User Menu");
 
   // Reset cookie back to English
   await page.setCookie({
@@ -126,10 +91,10 @@ async function main() {
   });
 
   await browser.close();
-  console.log("All screenshots successfully captured in:", OUT_DIR);
+  console.log("Step 1.6 screenshots captured in:", OUT_DIR);
 }
 
 main().catch((err) => {
-  console.error("Screenshot capture failed:", err);
+  console.error("Screenshot error:", err);
   process.exit(1);
 });

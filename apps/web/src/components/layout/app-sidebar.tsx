@@ -23,6 +23,7 @@ import { useAuth, type UserRole } from "@/stores/auth.store";
 import { BRAND_NAME } from "@/config/brand";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UserMenu } from "@/components/layout/user-menu";
 import {
   Tooltip,
   TooltipContent,
@@ -337,55 +338,49 @@ export function AppSidebar() {
         {/* Footer Area: User Trigger */}
         <div className="border-t border-[#22394B] p-3 shrink-0">
           {sidebarOpen ? (
-            <div
-              className={cn(
-                "h-12 flex items-center px-2 gap-3 rounded-[8px]",
-                "hover:bg-[#1B2D3B] transition-colors cursor-pointer",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7A667]"
-              )}
-              title={t("userMenu")}
-              tabIndex={0}
-              role="button"
-            >
-              {/* Avatar on dark sidebar (DESIGN.md Section 7.12) */}
-              <Avatar size="default" className="shrink-0">
-                <AvatarFallback dark>{userInitials}</AvatarFallback>
-              </Avatar>
+            <UserMenu align="start" side="top" sideOffset={12}>
+              <div
+                className={cn(
+                  "h-12 flex items-center px-2 gap-3 rounded-[8px]",
+                  "hover:bg-[#1B2D3B] transition-colors cursor-pointer",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7A667]"
+                )}
+                title={t("userMenu")}
+                tabIndex={0}
+                role="button"
+              >
+                {/* Avatar on dark sidebar (DESIGN.md Section 7.12) */}
+                <Avatar size="default" dark className="shrink-0">
+                  <AvatarFallback dark>{userInitials}</AvatarFallback>
+                </Avatar>
 
-              {/* Name & Role */}
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-[#F7F7F7] truncate leading-tight">
-                  {user?.name ?? "Ali Raza"}
-                </p>
-                <p className="text-xs text-[#A9B4BE] leading-tight truncate">
-                  {t(`roles.${userRole}`)}
-                </p>
+                {/* Name & Role */}
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-[#F7F7F7] truncate leading-tight">
+                    {userName}
+                  </p>
+                  <p className="text-xs text-[#A9B4BE] leading-tight truncate">
+                    {t(`roles.${userRole}`)}
+                  </p>
+                </div>
+
+                {/* Chevron */}
+                <ChevronDown className="h-4 w-4 text-[#A9B4BE] shrink-0 ms-auto" strokeWidth={1.75} />
               </div>
-
-              {/* Chevron */}
-              <ChevronDown className="h-4 w-4 text-[#A9B4BE] shrink-0 ms-auto" strokeWidth={1.75} />
-            </div>
+            </UserMenu>
           ) : (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className="h-10 w-10 mx-auto flex items-center justify-center rounded-[8px] hover:bg-[#1B2D3B] transition-colors cursor-pointer"
-                  tabIndex={0}
-                  role="button"
-                  aria-label={user?.name ?? "Ali Raza"}
-                >
-                  <Avatar size="default">
-                    <AvatarFallback dark>{userInitials}</AvatarFallback>
-                  </Avatar>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side={isRtl ? "left" : "right"} sideOffset={12}>
-                <div className="text-start">
-                  <p className="font-semibold">{user?.name ?? "Ali Raza"}</p>
-                  <p className="text-xs text-[#A9B4BE]">{t(`roles.${userRole}`)}</p>
-                </div>
-              </TooltipContent>
-            </Tooltip>
+            <UserMenu align="end" side={isRtl ? "left" : "right"} sideOffset={16}>
+              <div
+                className="h-10 w-10 mx-auto flex items-center justify-center rounded-[8px] hover:bg-[#1B2D3B] transition-colors cursor-pointer"
+                tabIndex={0}
+                role="button"
+                aria-label={userName}
+              >
+                <Avatar size="default" dark>
+                  <AvatarFallback dark>{userInitials}</AvatarFallback>
+                </Avatar>
+              </div>
+            </UserMenu>
           )}
         </div>
       </aside>

@@ -50,6 +50,21 @@
     "mobileMenu": "Toggle navigation menu",
     "openMenu": "Open Menu"
   },
+  "topbar": {
+    "live": "Live",
+    "reconnecting": "Reconnecting",
+    "soundOn": "Sound on",
+    "soundMuted": "Sound muted",
+    "notifications": "Notifications",
+    "openUserMenu": "Open user menu",
+    "openMobileMenu": "Open navigation menu"
+  },
+  "userMenu": {
+    "profile": "Profile",
+    "language": "Language",
+    "signOut": "Sign out",
+    "signedOut": "Signed out successfully"
+  },
   "pages": {
     "orders": "Orders",
     "kitchen": "Kitchen",

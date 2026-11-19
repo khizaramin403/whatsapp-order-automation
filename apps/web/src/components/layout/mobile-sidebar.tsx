@@ -21,6 +21,7 @@ import { useAuth, type UserRole } from "@/stores/auth.store";
 import { BRAND_NAME } from "@/config/brand";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UserMenu } from "@/components/layout/user-menu";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 
 interface NavItem {
@@ -223,15 +224,17 @@ export function MobileSidebar() {
 
         {/* Mobile Footer */}
         <div className="border-t border-[#22394B] p-3 shrink-0">
-          <div className="flex items-center px-2 gap-3">
-            <Avatar size="default" className="shrink-0">
-              <AvatarFallback dark>{userInitials}</AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-[#F7F7F7] truncate">{user?.name ?? "Ali Raza"}</p>
-              <p className="text-xs text-[#A9B4BE] truncate">{t(`roles.${userRole}`)}</p>
+          <UserMenu align="start" side="top" sideOffset={12}>
+            <div className="flex items-center px-2 gap-3 cursor-pointer hover:bg-[#1B2D3B] rounded-[8px] py-1 transition-colors" role="button">
+              <Avatar size="default" dark className="shrink-0">
+                <AvatarFallback dark>{userInitials}</AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-[#F7F7F7] truncate">{userName}</p>
+                <p className="text-xs text-[#A9B4BE] truncate">{t(`roles.${userRole}`)}</p>
+              </div>
             </div>
-          </div>
+          </UserMenu>
         </div>
       </SheetContent>
     </Sheet>

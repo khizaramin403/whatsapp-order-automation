@@ -50,6 +50,21 @@
     "mobileMenu": "تبديل قائمة التنقل",
     "openMenu": "فتح القائمة"
   },
+  "topbar": {
+    "live": "مباشر",
+    "reconnecting": "إعادة الاتصال",
+    "soundOn": "تشغيل الصوت",
+    "soundMuted": "كتم الصوت",
+    "notifications": "الإشعارات",
+    "openUserMenu": "فتح قائمة المستخدم",
+    "openMobileMenu": "فتح قائمة التنقل"
+  },
+  "userMenu": {
+    "profile": "الملف الشخصي",
+    "language": "اللغة",
+    "signOut": "تسجيل الخروج",
+    "signedOut": "تم تسجيل الخروج بنجاح"
+  },
   "pages": {
     "orders": "الطلبات",
     "kitchen": "المطبخ",

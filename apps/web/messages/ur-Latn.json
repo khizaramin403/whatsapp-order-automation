@@ -50,6 +50,21 @@
     "mobileMenu": "Navigation menu kholein",
     "openMenu": "Menu kholein"
   },
+  "topbar": {
+    "live": "Live",
+    "reconnecting": "Reconnecting",
+    "soundOn": "Sound on",
+    "soundMuted": "Sound muted",
+    "notifications": "Notifications",
+    "openUserMenu": "User menu kholein",
+    "openMobileMenu": "Navigation menu kholein"
+  },
+  "userMenu": {
+    "profile": "Profile",
+    "language": "Zaban",
+    "signOut": "Sign out",
+    "signedOut": "Kamyabi se sign out ho gaya"
+  },
   "pages": {
     "orders": "Orders",
     "kitchen": "Kitchen",

@@ -4,23 +4,28 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const avatarVariants = cva(
-  "relative flex shrink-0 overflow-hidden border border-[#E2E5E9]",
+  "relative flex shrink-0 overflow-hidden border",
   {
     variants: {
       size: {
-        xs: "h-6 w-6 text-[10px]",  // 24px
-        sm: "h-8 w-8 text-xs",       // 32px
-        default: "h-10 w-10 text-sm", // 40px
-        lg: "h-16 w-16 text-lg",     // 64px
+        xs: "h-6 w-6 text-[10px]",    // 24px
+        sm: "h-8 w-8 text-xs",         // 32px
+        default: "h-10 w-10 text-sm",  // 40px
+        lg: "h-16 w-16 text-lg",       // 64px
       },
       shape: {
         circle: "rounded-full",
-        square: "rounded-[8px]", // Hotel logo option
+        square: "rounded-[8px]",       // Hotel logo option
+      },
+      dark: {
+        true: "border-[#3A5266] bg-[#22394B]",
+        false: "border-[#E2E5E9] bg-white",
       },
     },
     defaultVariants: {
       size: "default",
       shape: "circle",
+      dark: false,
     },
   }
 );
@@ -32,10 +37,10 @@ export interface AvatarProps
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
   AvatarProps
->(({ className, size, shape, ...props }, ref) => (
+>(({ className, size, shape, dark, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
-    className={cn(avatarVariants({ size, shape, className }))}
+    className={cn(avatarVariants({ size, shape, dark, className }))}
     {...props}
   />
 ));
@@ -67,7 +72,7 @@ const AvatarFallback = React.forwardRef<
     className={cn(
       "flex h-full w-full items-center justify-center font-semibold select-none",
       dark
-        ? "bg-[#22394B] text-[#E8D9B5] border border-[#3A5266]"
+        ? "bg-[#22394B] text-[#E8D9B5]"
         : "bg-[#F4ECDC] text-[#7D6228]",
       className
     )}
