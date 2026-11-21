@@ -1,11 +1,10 @@
-import { getTranslations } from "next-intl/server";
+import { KitchenView } from "@/components/kitchen/kitchen-view";
+import { RoleGuard } from "@/components/layout/RoleGuard";
 
-export default async function KitchenPage() {
-  const t = await getTranslations("pages");
+export default function KitchenPage() {
   return (
-    <div className="space-y-4">
-      <h1 className="text-page-title">{t("kitchen")}</h1>
-      <p className="text-caption text-[#5F6C79]">{t("placeholders.kitchen")}</p>
-    </div>
+    <RoleGuard allowedRoles={["super_admin", "owner", "manager", "chef"]}>
+      <KitchenView />
+    </RoleGuard>
   );
 }

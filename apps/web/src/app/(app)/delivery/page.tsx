@@ -1,11 +1,10 @@
-import { getTranslations } from "next-intl/server";
+import { DeliveryView } from "@/components/delivery/delivery-view";
+import { RoleGuard } from "@/components/layout/RoleGuard";
 
-export default async function DeliveryPage() {
-  const t = await getTranslations("pages");
+export default function DeliveryPage() {
   return (
-    <div className="space-y-4">
-      <h1 className="text-page-title">{t("delivery")}</h1>
-      <p className="text-caption text-[#5F6C79]">{t("placeholders.delivery")}</p>
-    </div>
+    <RoleGuard allowedRoles={["super_admin", "owner", "manager", "rider"]}>
+      <DeliveryView />
+    </RoleGuard>
   );
 }
