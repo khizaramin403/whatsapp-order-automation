@@ -251,5 +251,102 @@
     "errorTitle": "فشل تحميل طلبات التوصيل",
     "errorDesc": "تعذر جلب الطلبات الحالية. يرجى إعادة المحاولة.",
     "retry": "إعادة المحاولة"
+  },
+  "menu": {
+    "title": "قائمة الطعام",
+    "subtitle": "التصنيفات، الأصناف، الأسعار والترجمات متعددة اللغات",
+    "categories": "التصنيفات",
+    "allCategories": "جميع التصنيفات",
+    "newCategory": "تصنيف جديد",
+    "editCategory": "تعديل التصنيف",
+    "deleteCategory": "حذف التصنيف",
+    "reorderUp": "تحريك لأعلى",
+    "reorderDown": "تحريك لأسفل",
+    "categoryNameEn": "اسم التصنيف (الإنجليزية)",
+    "categoryNameAr": "اسم التصنيف (العربية)",
+    "categoryNameUr": "اسم التصنيف (الرومان أردو)",
+    "confirmDeleteCategoryTitle": "حذف التصنيف \"{name}\"؟",
+    "confirmDeleteCategoryDesc": "هل أنت متأكد من حذف هذا التصنيف؟ سيتم أيضاً حذف الأصناف التابعة له.",
+    "items": "أصناف القائمة",
+    "itemsCount": "{count} أصناف",
+    "addItem": "إضافة صنف",
+    "editItem": "تعديل الصنف",
+    "deleteItem": "حذف الصنف",
+    "confirmDeleteItemTitle": "حذف الصنف \"{name}\"؟",
+    "confirmDeleteItemDesc": "هل أنت متأكد من حذف هذا الصنف؟ لا يمكن التراجع عن هذا الإجراء.",
+    "searchPlaceholder": "البحث بالاسم، المرادفات أو التصنيف...",
+    "table": {
+      "image": "الصورة",
+      "name": "اسم الصنف",
+      "category": "التصنيف",
+      "price": "السعر",
+      "availability": "متوفر",
+      "actions": "إجراءات"
+    },
+    "pagination": {
+      "showing": "عرض {from} - {to} من أصل {total} صنف",
+      "previous": "السابق",
+      "next": "التالي",
+      "pageOf": "صفحة {page} من {pages}"
+    },
+    "form": {
+      "addItemTitle": "إضافة صنف جديد",
+      "editItemTitle": "تعديل الصنف",
+      "general": "معلومات الصنف",
+      "price": "السعر ({currency})",
+      "priceHelper": "سعر البيع القياسي بالـ {currency}",
+      "category": "التصنيف",
+      "selectCategory": "اختر تصنيفاً",
+      "isAvailable": "متوفر للطلب",
+      "image": "صورة الصنف",
+      "uploadImage": "رفع صورة",
+      "changeImage": "تغيير الصورة",
+      "removeImage": "إزالة الصورة",
+      "translations": "الترجمات والمرادفات",
+      "tabEn": "English",
+      "tabAr": "العربية",
+      "tabUr": "Roman Urdu",
+      "missingTranslation": "ترجمة مفقودة",
+      "fallbackNotice": "الترجمات المفقودة ستظهر باللغة الإنجليزية للعملاء تلقائياً.",
+      "nameLabel": "اسم الصنف",
+      "namePlaceholderEn": "e.g. Special Chicken Biryani",
+      "namePlaceholderAr": "مثال: برياني دجاج خاص",
+      "namePlaceholderUr": "e.g. Khaas Chicken Biryani",
+      "descLabel": "الوصف",
+      "descPlaceholder": "صف المكونات، حجم الوجبة أو طريقة التحضير...",
+      "aliasesLabel": "المرادفات (مفصولة بفواصل)",
+      "aliasesPlaceholder": "مثال: برياني، ارز، برياني دجاج",
+      "aliasesHelper": "يستخدمها بوت الواتساب للتعرف على رسائل العملاء المكتوبة.",
+      "save": "حفظ الصنف",
+      "saving": "جارٍ الحفظ...",
+      "create": "إنشاء الصنف",
+      "creating": "جارٍ الإنشاء..."
+    },
+    "toasts": {
+      "availableSuccess": "\"{name}\" متوفر الآن.",
+      "unavailableSuccess": "\"{name}\" غير متوفر الآن.",
+      "availabilityFailed": "فشل تحديث حالة التوفر. تمت استعادة الحالة السابقة.",
+      "itemCreated": "تم إنشاء الصنف بنجاح.",
+      "itemUpdated": "تم تحديث الصنف بنجاح.",
+      "itemDeleted": "تم حذف الصنف.",
+      "categoryCreated": "تم إنشاء التصنيف بنجاح.",
+      "categoryUpdated": "تم تحديث التصنيف بنجاح.",
+      "categoryDeleted": "تم حذف التصنيف."
+    },
+    "empty": {
+      "noItemsTitle": "أضف صنفك الأول إلى القائمة",
+      "noItemsDesc": "ابدأ بإنشاء التصنيفات وإضافة أشهى الأصناف إلى قائمتك الرقمية على واتساب.",
+      "noSearchResultsTitle": "لم يتم العثور على أي صنف",
+      "noSearchResultsDesc": "جرب تعديل كلمات البحث أو تحديد تصنيف مختلف."
+    },
+    "error": {
+      "title": "فشل تحميل القائمة",
+      "desc": "حدث خطأ أثناء تحميل التصنيفات والأصناف.",
+      "retry": "إعادة المحاولة"
+    },
+    "dev": {
+      "simulateFail": "محاكاة فشل التبديل (Dev)",
+      "simulateFailActive": "المحاكاة نشطة"
+    }
   }
 }

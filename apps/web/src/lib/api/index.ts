@@ -4,6 +4,7 @@ import type {
   OrderStatus,
   PaymentStatus,
   MenuItem,
+  MenuCategory,
   MenuTranslation,
   Restaurant,
   User,
@@ -62,6 +63,59 @@ export async function updateMenuItem(
   data: Partial<MenuItem> & { translations?: MenuTranslation[] }
 ): Promise<MenuItem> {
   return fakeStore.updateMenuItem(id, data);
+}
+
+/**
+ * Create a new menu item with category, price, image and translations.
+ */
+export async function createMenuItem(
+  data: Omit<MenuItem, "id" | "restaurant_id"> & { id?: string }
+): Promise<MenuItem> {
+  return fakeStore.createMenuItem(data);
+}
+
+/**
+ * Delete a menu item by ID.
+ */
+export async function deleteMenuItem(id: string): Promise<{ success: boolean }> {
+  return fakeStore.deleteMenuItem(id);
+}
+
+/**
+ * Create a new category with translations in en, ar, ur-Latn.
+ */
+export async function createCategory(data: {
+  name: string;
+  translations: MenuTranslation[];
+}): Promise<MenuCategory> {
+  return fakeStore.createCategory(data);
+}
+
+/**
+ * Update/rename an existing category and its translations.
+ */
+export async function updateCategory(
+  id: string,
+  data: { name?: string; translations: MenuTranslation[] }
+): Promise<MenuCategory> {
+  return fakeStore.updateCategory(id, data);
+}
+
+/**
+ * Reorder categories (move up or down).
+ */
+export async function reorderCategory(
+  id: string,
+  direction: "up" | "down"
+): Promise<MenuCategory[]> {
+  return fakeStore.reorderCategory(id, direction);
+}
+
+/**
+ * Delete a category and its items.
+ */
+export async function deleteCategory(id: string): Promise<{ success: boolean }> {
+  return fakeStore.deleteCategory(id);
 }
 
 /**

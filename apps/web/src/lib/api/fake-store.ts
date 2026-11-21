@@ -225,9 +225,33 @@ class FakeStore {
   public async getMenu(): Promise<MenuResponse> {
     await this.delay();
     return {
-      categories: [...this.categories],
+      categories: [...this.categories].sort((a, b) => a.sort_order - b.sort_order),
       items: [...this.menuItems],
     };
+  }
+
+  public async createMenuItem(
+    data: Omit<MenuItem, "id" | "restaurant_id"> & { id?: string }
+  ): Promise<MenuItem> {
+    await this.delay();
+    const id = data.id || `item-${Date.now()}`;
+    const enName = data.translations?.find((t) => t.language === "en")?.name;
+    const newItem: MenuItem = {
+      id,
+      restaurant_id: this.restaurant.id,
+      category_id: data.category_id,
+      price: data.price,
+      image_url: data.image_url ?? null,
+      is_available: data.is_available ?? true,
+      sort_order: data.sort_order ?? this.menuItems.length + 1,
+      name: data.name ?? enName ?? "New Menu Item",
+      translations: data.translations ?? [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    this.menuItems.unshift(newItem);
+    return { ...newItem };
   }
 
   public async updateMenuItem(
@@ -240,9 +264,11 @@ class FakeStore {
       throw new Error(`Menu item ${id} not found`);
     }
 
+    const enName = data.translations?.find((t) => t.language === "en")?.name;
     const updated: MenuItem = {
       ...this.menuItems[index],
       ...data,
+      name: data.name ?? enName ?? this.menuItems[index].name,
       updated_at: new Date().toISOString(),
     };
 
@@ -250,8 +276,28 @@ class FakeStore {
     return { ...updated };
   }
 
+  public async deleteMenuItem(id: string): Promise<{ success: boolean }> {
+    await this.delay();
+    const index = this.menuItems.findIndex((it) => it.id === id);
+    if (index === -1) {
+      throw new Error(`Menu item ${id} not found`);
+    }
+    this.menuItems.splice(index, 1);
+    return { success: true };
+  }
+
   public async setItemAvailability(id: string, is_available: boolean): Promise<MenuItem> {
     await this.delay();
+
+    // Dev flag: simulate failure when global flag is active or URL query param ?simulateFail=true
+    if (
+      typeof window !== "undefined" &&
+      ((window as unknown as { __simulateMenuFail?: boolean }).__simulateMenuFail === true ||
+        new URLSearchParams(window.location.search).get("simulateFail") === "true")
+    ) {
+      throw new Error("Dev simulated network error on availability switch");
+    }
+
     const index = this.menuItems.findIndex((it) => it.id === id);
     if (index === -1) {
       throw new Error(`Menu item ${id} not found`);
@@ -265,6 +311,82 @@ class FakeStore {
 
     this.menuItems[index] = updated;
     return { ...updated };
+  }
+
+  public async createCategory(data: {
+    name: string;
+    translations: MenuTranslation[];
+  }): Promise<MenuCategory> {
+    await this.delay();
+    const id = `cat-${Date.now()}`;
+    const enName = data.translations.find((t) => t.language === "en")?.name || data.name;
+    const newCategory: MenuCategory = {
+      id,
+      restaurant_id: this.restaurant.id,
+      sort_order: this.categories.length + 1,
+      name: enName,
+      translations: data.translations,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    this.categories.push(newCategory);
+    return { ...newCategory };
+  }
+
+  public async updateCategory(
+    id: string,
+    data: { name?: string; translations: MenuTranslation[] }
+  ): Promise<MenuCategory> {
+    await this.delay();
+    const index = this.categories.findIndex((c) => c.id === id);
+    if (index === -1) {
+      throw new Error(`Category ${id} not found`);
+    }
+
+    const enName = data.translations.find((t) => t.language === "en")?.name;
+    const updated: MenuCategory = {
+      ...this.categories[index],
+      name: data.name ?? enName ?? this.categories[index].name,
+      translations: data.translations,
+      updated_at: new Date().toISOString(),
+    };
+
+    this.categories[index] = updated;
+    return { ...updated };
+  }
+
+  public async reorderCategory(id: string, direction: "up" | "down"): Promise<MenuCategory[]> {
+    await this.delay();
+    const sorted = [...this.categories].sort((a, b) => a.sort_order - b.sort_order);
+    const index = sorted.findIndex((c) => c.id === id);
+    if (index === -1) return sorted;
+
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= sorted.length) {
+      return sorted;
+    }
+
+    const tempOrder = sorted[index].sort_order;
+    sorted[index].sort_order = sorted[targetIndex].sort_order;
+    sorted[targetIndex].sort_order = tempOrder;
+
+    sorted.sort((a, b) => a.sort_order - b.sort_order);
+    this.categories = sorted;
+    return [...this.categories];
+  }
+
+  public async deleteCategory(id: string): Promise<{ success: boolean }> {
+    await this.delay();
+    const index = this.categories.findIndex((c) => c.id === id);
+    if (index === -1) {
+      throw new Error(`Category ${id} not found`);
+    }
+
+    this.categories.splice(index, 1);
+    // Delete or re-assign items
+    this.menuItems = this.menuItems.filter((item) => item.category_id !== id);
+    return { success: true };
   }
 
   // --- Team ---

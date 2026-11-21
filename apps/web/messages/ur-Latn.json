@@ -251,5 +251,102 @@
     "errorTitle": "Deliveries load karne mein masla",
     "errorDesc": "Delivery orders nahi mil sakay. Dobara koshish karein.",
     "retry": "Dobara koshish karein"
+  },
+  "menu": {
+    "title": "Menu",
+    "subtitle": "Categories, items, prices aur multi-language translations",
+    "categories": "Categories",
+    "allCategories": "Tamam Categories",
+    "newCategory": "Nayi Category",
+    "editCategory": "Category Edit Karein",
+    "deleteCategory": "Category Delete Karein",
+    "reorderUp": "Upar karein",
+    "reorderDown": "Neeche karein",
+    "categoryNameEn": "Category Ka Naam (English)",
+    "categoryNameAr": "Category Ka Naam (العربية)",
+    "categoryNameUr": "Category Ka Naam (Roman Urdu)",
+    "confirmDeleteCategoryTitle": "Category \"{name}\" delete karein?",
+    "confirmDeleteCategoryDesc": "Kya aap waqai is category ko delete karna chahte hain? Is category ke items bhi khatam ho jayenge.",
+    "items": "Menu Items",
+    "itemsCount": "{count} items",
+    "addItem": "Naya Item",
+    "editItem": "Item Edit Karein",
+    "deleteItem": "Item Delete Karein",
+    "confirmDeleteItemTitle": "Menu Item \"{name}\" delete karein?",
+    "confirmDeleteItemDesc": "Kya aap waqai is item ko delete karna chahte hain? Yeh wapis nahi laya ja sake ga.",
+    "searchPlaceholder": "Item ke naam, alias ya category se talash karein...",
+    "table": {
+      "image": "Tasweer",
+      "name": "Item Ka Naam",
+      "category": "Category",
+      "price": "Qeemat",
+      "availability": "Dastyab",
+      "actions": "Actions"
+    },
+    "pagination": {
+      "showing": "{from} - {to} dikha rahe hain kul {total} items mein se",
+      "previous": "Pichla",
+      "next": "Agla",
+      "pageOf": "Page {page} of {pages}"
+    },
+    "form": {
+      "addItemTitle": "Naya Menu Item Shamil Karein",
+      "editItemTitle": "Menu Item Edit Karein",
+      "general": "Item Ki Maloomat",
+      "price": "Qeemat ({currency})",
+      "priceHelper": "Standard qeemat {currency} mein",
+      "category": "Category",
+      "selectCategory": "Category muntakhab karein",
+      "isAvailable": "Order ke liye dastyab hai",
+      "image": "Item Ki Photo",
+      "uploadImage": "Photo Upload Karein",
+      "changeImage": "Photo Tabdeel Karein",
+      "removeImage": "Photo Hatayein",
+      "translations": "Translations Aur Aliases",
+      "tabEn": "English",
+      "tabAr": "العربية",
+      "tabUr": "Roman Urdu",
+      "missingTranslation": "Translation missing hai",
+      "fallbackNotice": "Missing translation ki soorat mein gahak ko English dikhayi jayegi.",
+      "nameLabel": "Item Ka Naam",
+      "namePlaceholderEn": "e.g. Special Chicken Biryani",
+      "namePlaceholderAr": "مثال: برياني دجاج خاص",
+      "namePlaceholderUr": "e.g. Khaas Chicken Biryani",
+      "descLabel": "Tafseel",
+      "descPlaceholder": "Ajzaa, portion size ya tayari ki wazahat karein...",
+      "aliasesLabel": "Aliases (comma se alag karein)",
+      "aliasesPlaceholder": "e.g. biryani, chawal, chicken biryani",
+      "aliasesHelper": "WhatsApp bot gahak ke type kiye gaye messages ko match karne ke liye use karta hai.",
+      "save": "Item Mehfooz Karein",
+      "saving": "Mehfooz ho raha hai...",
+      "create": "Item Banayein",
+      "creating": "Ban raha hai..."
+    },
+    "toasts": {
+      "availableSuccess": "\"{name}\" ab dastyab hai.",
+      "unavailableSuccess": "\"{name}\" ab ghair dastyab hai.",
+      "availabilityFailed": "Availability update nahi ho saki. Purani halat bahaal kar di gayi.",
+      "itemCreated": "Menu item kamyabi se shamil ho gaya.",
+      "itemUpdated": "Menu item update ho gaya.",
+      "itemDeleted": "Menu item delete kar diya gaya.",
+      "categoryCreated": "Category kamyabi se ban gayi.",
+      "categoryUpdated": "Category update ho gayi.",
+      "categoryDeleted": "Category delete kar di gayi."
+    },
+    "empty": {
+      "noItemsTitle": "Apna pehla menu item shamil karein",
+      "noItemsDesc": "Categories banayein aur WhatsApp menu ke liye items shamil karein.",
+      "noSearchResultsTitle": "Koi item nahi mila",
+      "noSearchResultsDesc": "Talash ke alfaz tabdeel karein ya doosri category check karein."
+    },
+    "error": {
+      "title": "Menu load karne mein masla",
+      "desc": "Categories aur items load karte waqt error pesh aaya.",
+      "retry": "Dobara koshish karein"
+    },
+    "dev": {
+      "simulateFail": "Switch failure simulate karein (Dev)",
+      "simulateFailActive": "Simulated failure active hai"
+    }
   }
 }
