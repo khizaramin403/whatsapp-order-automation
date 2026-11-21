@@ -171,6 +171,35 @@
       "noOrdersInColumn": "لا توجد طلبات في هذه الخانة",
       "noOrdersFiltered": "لا توجد طلبات تطابق الفلتر المحدد"
     },
+    "detail": {
+      "title": "تفاصيل الطلب",
+      "customer": "العميل",
+      "phone": "رقم الهاتف",
+      "type": "نوع الطلب",
+      "items": "الأصناف المطلوبة",
+      "subtotal": "المجموع الفرعي",
+      "deliveryFee": "رسوم التوصيل",
+      "total": "الإجمالي",
+      "address": "عنوان التوصيل",
+      "table": "ملاحظة الطاولة",
+      "scheduledTime": "الوقت المحدد",
+      "immediate": "فوري (في أقرب وقت)",
+      "paymentDetails": "الدفع والتحقق",
+      "paymentMethod": "طريقة الدفع",
+      "paymentStatus": "حالة الدفع",
+      "paymentProof": "إشعار الدفع",
+      "onlineBank": "تحويل بنكي / راست",
+      "viewScreenshot": "عرض الإشعار بالحجم الكامل",
+      "verifyPayment": "تأكيد الدفع",
+      "notReceived": "لم يتم الاستلام",
+      "screenshotDisclaimer": "لقطة الشاشة هي مجرد إشعار مبدئي، يرجى تأكيد استلام المبلغ في تطبيق البنك الخاص بك.",
+      "timeline": "مسار مراحل الطلب",
+      "close": "إغلاق"
+    },
+    "live": {
+      "newOrderTitle": "وصل طلب جديد!",
+      "newOrderDesc": "طلب رقم {number} من {customer}"
+    },
     "error": {
       "title": "فشل في تحميل الطلبات",
       "description": "حدث خطأ أثناء تحميل لوحة الطلبات المباشرة.",
