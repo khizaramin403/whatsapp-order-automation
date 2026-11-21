@@ -164,8 +164,8 @@ export function MobileSidebar() {
           </button>
         </div>
 
-        {/* Mobile Navigation List */}
-        <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-4">
+        {/* Mobile Navigation List (scrollbar hidden) */}
+        <nav className="flex-1 overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-3 px-3 space-y-4">
           {visibleGroups.map((group) => (
             <div key={group.key} className="space-y-1">
               <div className="px-2 pt-2 pb-1 text-[10.5px] font-semibold uppercase tracking-wider text-[#7F8C98]">

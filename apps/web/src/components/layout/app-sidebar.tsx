@@ -223,8 +223,8 @@ export function AppSidebar() {
           )}
         </div>
 
-        {/* Scrollable Navigation Groups */}
-        <nav className="flex-1 overflow-y-auto overflow-x-hidden py-3 px-3 space-y-4">
+        {/* Scrollable Navigation Groups (scrollbar hidden) */}
+        <nav className="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-3 px-3 space-y-4">
           {visibleGroups.map((group, groupIdx) => {
             return (
               <div key={group.key} className="space-y-1">
