@@ -201,9 +201,9 @@ export function OrderBoard() {
       {/* 4. Board Columns */}
       {showLoading ? (
         /* Loading Skeleton Board */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row lg:overflow-x-auto gap-4 items-start pb-2 [scrollbar-width:thin]">
           {COLUMNS.map((col) => (
-            <div key={col.id} className="space-y-3">
+            <div key={col.id} className="space-y-3 min-w-0 lg:flex-1 lg:min-w-[210px]">
               <div className="flex items-center justify-between pb-1">
                 <Skeleton className="h-4 w-20" />
                 <Skeleton className="h-4 w-6 rounded-full" />
@@ -215,7 +215,7 @@ export function OrderBoard() {
         </div>
       ) : (
         /* Live Orders Board */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row lg:overflow-x-auto gap-4 items-start pb-2 [scrollbar-width:thin]">
           {COLUMNS.map((col) => {
             const allItems = columnOrders[col.id] || [];
             const count = allItems.length;
@@ -234,7 +234,7 @@ export function OrderBoard() {
               <div
                 key={col.id}
                 className={cn(
-                  "flex flex-col gap-3 min-w-0",
+                  "flex flex-col gap-3 min-w-0 lg:flex-1 lg:min-w-[210px]",
                   isHiddenOnMobile ? "hidden md:flex" : "flex"
                 )}
               >

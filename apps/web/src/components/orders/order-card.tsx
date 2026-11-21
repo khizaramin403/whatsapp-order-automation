@@ -86,19 +86,19 @@ export const OrderCard = React.memo(function OrderCard({ order }: OrderCardProps
       <Card
         clickable
         onClick={() => setSelectedOrderId(order.id)}
-        className="p-4 flex flex-col gap-2.5 bg-white border border-[#E2E5E9] rounded-[12px] shadow-[0_1px_2px_rgba(16,32,45,0.06)] hover:border-[#C7A667] hover:shadow-[0_4px_12px_rgba(16,32,45,0.08)] transition-all duration-150"
+        className="p-3.5 flex flex-col gap-2.5 bg-white border border-[#E2E5E9] rounded-[12px] shadow-[0_1px_2px_rgba(16,32,45,0.06)] hover:border-[#C7A667] hover:shadow-[0_4px_12px_rgba(16,32,45,0.08)] transition-all duration-150"
       >
         {/* Header row: Order number & Customer name + Time since created */}
-        <div className="flex items-center justify-between gap-2 min-w-0">
+        <div className="flex items-center justify-between gap-1.5 min-w-0">
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="font-semibold text-sm text-[#10202D] shrink-0">
               {order.number}
             </span>
-            <span className="font-semibold text-sm text-[#10202D] truncate">
+            <span className="font-semibold text-sm text-[#10202D] truncate" title={order.customer?.name}>
               {order.customer?.name || "Customer"}
             </span>
           </div>
-          <span className="text-[12px] text-[#5F6C79] shrink-0">
+          <span className="text-[11px] text-[#5F6C79] shrink-0 whitespace-nowrap">
             {formatRelativeTime(order.created_at, tCard)}
           </span>
         </div>
@@ -109,28 +109,30 @@ export const OrderCard = React.memo(function OrderCard({ order }: OrderCardProps
         </p>
 
         {/* Badge & Total row */}
-        <div className="flex items-center justify-between gap-2 pt-0.5">
+        <div className="flex items-center justify-between gap-1.5 pt-0.5 min-w-0">
           {/* Payment Badge */}
-          {order.payment_method === "cod" ? (
-            <Badge variant="neutral">
-              {tCard("payment.cod")}
-            </Badge>
-          ) : order.payment_status === "verified" ? (
-            <Badge variant="success" dot>
-              {tCard("payment.onlineVerified")}
-            </Badge>
-          ) : order.payment_status === "pending_check" ? (
-            <Badge variant="warning" dot>
-              {tCard("payment.onlinePending")}
-            </Badge>
-          ) : (
-            <Badge variant="danger">
-              {tCard("payment.onlineUnpaid")}
-            </Badge>
-          )}
+          <div className="shrink-0 min-w-0">
+            {order.payment_method === "cod" ? (
+              <Badge variant="neutral" className="text-[11px] px-2 py-0.5 whitespace-nowrap">
+                {tCard("payment.cod")}
+              </Badge>
+            ) : order.payment_status === "verified" ? (
+              <Badge variant="success" dot className="text-[11px] px-2 py-0.5 whitespace-nowrap">
+                {tCard("payment.onlineVerified")}
+              </Badge>
+            ) : order.payment_status === "pending_check" ? (
+              <Badge variant="warning" dot className="text-[11px] px-2 py-0.5 whitespace-nowrap">
+                {tCard("payment.onlinePending")}
+              </Badge>
+            ) : (
+              <Badge variant="danger" className="text-[11px] px-2 py-0.5 whitespace-nowrap">
+                {tCard("payment.onlineUnpaid")}
+              </Badge>
+            )}
+          </div>
 
           {/* Formatted Price */}
-          <span className="text-sm font-semibold text-[#10202D] tabular-nums">
+          <span className="text-sm font-semibold text-[#10202D] tabular-nums shrink-0 whitespace-nowrap">
             {formatMoney(order.total, "PKR", locale === "ar" ? "ar-PK" : "en-PK")}
           </span>
         </div>
@@ -144,15 +146,16 @@ export const OrderCard = React.memo(function OrderCard({ order }: OrderCardProps
 
         {/* Action button(s) for the next status */}
         <div
-          className="pt-1.5 flex items-center gap-2"
+          className="pt-1 flex items-center gap-1.5"
           onClick={(e) => e.stopPropagation()}
         >
           {order.status === "PENDING" && (
-            <>
+            <div className="flex items-center gap-1.5 w-full">
               {/* Accept is the single Accent / Gold button on screen */}
               <Button
                 variant="accent"
-                className="flex-1 font-semibold"
+                size="sm"
+                className="flex-1 font-semibold text-xs h-8 px-2.5"
                 loading={isPending}
                 onClick={() => handleTransition("ACCEPTED")}
               >
@@ -161,19 +164,20 @@ export const OrderCard = React.memo(function OrderCard({ order }: OrderCardProps
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-xs text-[#B3392F] hover:bg-[#F8E4E1] hover:text-[#8E2A22]"
+                className="text-xs text-[#B3392F] hover:bg-[#F8E4E1] hover:text-[#8E2A22] h-8 px-2.5 shrink-0"
                 onClick={() => setConfirmDialog("reject")}
               >
                 {tActions("reject")}
               </Button>
-            </>
+            </div>
           )}
 
           {order.status === "ACCEPTED" && (
-            <>
+            <div className="flex items-center gap-1.5 w-full">
               <Button
                 variant="primary"
-                className="flex-1 font-semibold"
+                size="sm"
+                className="flex-1 font-semibold text-xs h-8 px-2.5"
                 loading={isPending}
                 onClick={() => handleTransition("PREPARING")}
               >
@@ -182,18 +186,19 @@ export const OrderCard = React.memo(function OrderCard({ order }: OrderCardProps
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-xs text-[#5F6C79] hover:bg-[#ECEEF1]"
+                className="text-xs text-[#5F6C79] hover:bg-[#ECEEF1] h-8 px-2.5 shrink-0"
                 onClick={() => setConfirmDialog("cancel")}
               >
                 {tActions("cancel")}
               </Button>
-            </>
+            </div>
           )}
 
           {order.status === "PREPARING" && (
             <Button
               variant="primary"
-              className="w-full font-semibold"
+              size="sm"
+              className="w-full font-semibold text-xs h-8"
               loading={isPending}
               onClick={() => handleTransition("READY")}
             >
@@ -205,7 +210,8 @@ export const OrderCard = React.memo(function OrderCard({ order }: OrderCardProps
             order.type === "delivery" ? (
               <Button
                 variant="secondary"
-                className="w-full font-semibold"
+                size="sm"
+                className="w-full font-semibold text-xs h-8 border-[#D5DAE0]"
                 loading={isPending}
                 onClick={() => handleTransition("OUT_FOR_DELIVERY")}
               >
@@ -214,7 +220,8 @@ export const OrderCard = React.memo(function OrderCard({ order }: OrderCardProps
             ) : (
               <Button
                 variant="primary"
-                className="w-full font-semibold"
+                size="sm"
+                className="w-full font-semibold text-xs h-8"
                 loading={isPending}
                 onClick={() => handleTransition("COMPLETED")}
               >
@@ -226,7 +233,8 @@ export const OrderCard = React.memo(function OrderCard({ order }: OrderCardProps
           {order.status === "OUT_FOR_DELIVERY" && (
             <Button
               variant="primary"
-              className="w-full font-semibold"
+              size="sm"
+              className="w-full font-semibold text-xs h-8"
               loading={isPending}
               onClick={() => handleTransition("DELIVERED")}
             >
