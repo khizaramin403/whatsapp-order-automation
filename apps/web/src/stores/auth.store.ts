@@ -1,6 +1,7 @@
 import { create } from "zustand";
+import type { Role } from "@app/shared";
 
-export type UserRole = "super_admin" | "owner" | "manager" | "chef" | "rider";
+export type UserRole = Role;
 
 export interface UserProfile {
   name: string;
