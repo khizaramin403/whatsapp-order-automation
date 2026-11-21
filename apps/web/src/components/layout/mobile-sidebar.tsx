@@ -157,8 +157,8 @@ export function MobileSidebar() {
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
-            className="h-9 w-9 rounded-[8px] flex items-center justify-center text-[#A9B4BE] hover:text-[#F7F7F7] hover:bg-[#1B2D3B] transition-colors"
-            aria-label="Close navigation"
+            className="h-9 w-9 rounded-[8px] flex items-center justify-center text-[#A9B4BE] hover:text-[#F7F7F7] hover:bg-[#1B2D3B] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7A667]"
+            aria-label={t("closeNavigation")}
           >
             <X className="h-5 w-5" strokeWidth={1.75} />
           </button>

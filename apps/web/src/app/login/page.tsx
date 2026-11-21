@@ -288,7 +288,7 @@ export default function LoginPage() {
 
               <button
                 type="button"
-                className="text-xs font-semibold text-[#7D6228] hover:underline cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7A667] rounded-[2px]"
+                className="text-xs font-semibold text-[#7D6228] hover:underline cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10202D] focus-visible:ring-offset-2 rounded-[2px]"
               >
                 {t("forgotPassword")}
               </button>

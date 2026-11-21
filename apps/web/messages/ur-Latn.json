@@ -2,6 +2,7 @@
   "common": {
     "save": "Save karein",
     "cancel": "Mansookh karein",
+    "close": "Band karein",
     "signIn": "Sign in karein",
     "orders": "Orders",
     "kitchen": "Kitchen",
@@ -48,7 +49,8 @@
     },
     "userMenu": "User profile aur ikhtiyarat",
     "mobileMenu": "Navigation menu kholein",
-    "openMenu": "Menu kholein"
+    "openMenu": "Menu kholein",
+    "closeNavigation": "Navigation menu band karein"
   },
   "topbar": {
     "live": "Live",
@@ -90,12 +92,22 @@
     }
   },
   "pages": {
+    "dashboard": "Dashboard",
     "orders": "Orders",
     "kitchen": "Kitchen",
     "delivery": "Delivery",
     "menu": "Menu",
     "analytics": "Tajziyaat",
     "team": "Team",
-    "settings": "Settings"
+    "settings": "Settings",
+    "placeholders": {
+      "orders": "Orders board ke liye placeholder (Phase 2)",
+      "kitchen": "Kitchen screen ke liye placeholder (Phase 2)",
+      "delivery": "Delivery screen ke liye placeholder (Phase 2)",
+      "menu": "Menu catalog ke liye placeholder (Phase 2)",
+      "analytics": "Tajziyaat aur charts ke liye placeholder (Phase 2)",
+      "team": "Team management ke liye placeholder (Phase 2)",
+      "settings": "Restaurant settings ke liye placeholder (Phase 2)"
+    }
   }
 }

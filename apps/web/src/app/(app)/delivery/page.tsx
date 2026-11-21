@@ -5,7 +5,7 @@ export default async function DeliveryPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-page-title">{t("delivery")}</h1>
-      <p className="text-caption text-[#5F6C79]">Placeholder for delivery screen (Phase 2)</p>
+      <p className="text-caption text-[#5F6C79]">{t("placeholders.delivery")}</p>
     </div>
   );
 }

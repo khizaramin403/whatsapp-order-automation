@@ -37,7 +37,7 @@ export function LanguageSwitcher() {
             onClick={() => handleSelect(lang.code)}
             className={cn(
               "rounded-full px-2.5 py-1 text-xs font-semibold transition-colors cursor-pointer",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7A667]",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10202D] focus-visible:ring-offset-2",
               isActive
                 ? "bg-[#10202D] text-[#F7F7F7] shadow-xs"
                 : "text-[#5F6C79] hover:text-[#10202D] hover:bg-[#E2E5E9]"

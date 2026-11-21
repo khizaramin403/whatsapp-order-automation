@@ -38,7 +38,7 @@ export function Topbar({ connectionStatus = "connected" }: TopbarProps) {
     if (pathname.includes("/analytics")) return tPages("analytics");
     if (pathname.includes("/team")) return tPages("team");
     if (pathname.includes("/settings")) return tPages("settings");
-    return "Dashboard";
+    return tPages("dashboard");
   }, [pathname, tPages]);
 
   const userName = user?.name ?? "Ali Raza";
@@ -63,7 +63,7 @@ export function Topbar({ connectionStatus = "connected" }: TopbarProps) {
           className={cn(
             "md:hidden h-10 w-10 rounded-[8px] border border-[#D5DAE0] flex items-center justify-center",
             "text-[#10202D] hover:bg-[#F2F4F6] transition-colors cursor-pointer",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7A667]"
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10202D] focus-visible:ring-offset-2"
           )}
           aria-label={tTopbar("openMobileMenu")}
         >
@@ -103,7 +103,7 @@ export function Topbar({ connectionStatus = "connected" }: TopbarProps) {
           onClick={toggleSound}
           className={cn(
             "hidden md:flex h-9 w-9 rounded-[8px] items-center justify-center text-[#5F6C79] hover:text-[#10202D] hover:bg-[#F2F4F6] transition-colors cursor-pointer",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7A667]"
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10202D] focus-visible:ring-offset-2"
           )}
           title={soundOn ? tTopbar("soundOn") : tTopbar("soundMuted")}
           aria-label={soundOn ? tTopbar("soundOn") : tTopbar("soundMuted")}
@@ -120,7 +120,7 @@ export function Topbar({ connectionStatus = "connected" }: TopbarProps) {
           type="button"
           className={cn(
             "h-9 w-9 rounded-[8px] flex items-center justify-center text-[#5F6C79] hover:text-[#10202D] hover:bg-[#F2F4F6] transition-colors cursor-pointer relative",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7A667]"
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10202D] focus-visible:ring-offset-2"
           )}
           title={tTopbar("notifications")}
           aria-label={tTopbar("notifications")}

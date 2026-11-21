@@ -2,6 +2,7 @@
   "common": {
     "save": "Save",
     "cancel": "Cancel",
+    "close": "Close",
     "signIn": "Sign in",
     "orders": "Orders",
     "kitchen": "Kitchen",
@@ -48,7 +49,8 @@
     },
     "userMenu": "User profile and options",
     "mobileMenu": "Toggle navigation menu",
-    "openMenu": "Open Menu"
+    "openMenu": "Open Menu",
+    "closeNavigation": "Close navigation"
   },
   "topbar": {
     "live": "Live",
@@ -90,12 +92,22 @@
     }
   },
   "pages": {
+    "dashboard": "Dashboard",
     "orders": "Orders",
     "kitchen": "Kitchen",
     "delivery": "Delivery",
     "menu": "Menu",
     "analytics": "Analytics",
     "team": "Team",
-    "settings": "Settings"
+    "settings": "Settings",
+    "placeholders": {
+      "orders": "Placeholder for orders board (Phase 2)",
+      "kitchen": "Placeholder for kitchen screen (Phase 2)",
+      "delivery": "Placeholder for delivery screen (Phase 2)",
+      "menu": "Placeholder for menu catalog (Phase 2)",
+      "analytics": "Placeholder for analytics & charts (Phase 2)",
+      "team": "Placeholder for team management (Phase 2)",
+      "settings": "Placeholder for restaurant settings (Phase 2)"
+    }
   }
 }

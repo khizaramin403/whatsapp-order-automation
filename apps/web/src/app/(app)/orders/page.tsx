@@ -5,7 +5,7 @@ export default async function OrdersPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-page-title">{t("orders")}</h1>
-      <p className="text-caption text-[#5F6C79]">Placeholder for orders board (Phase 2)</p>
+      <p className="text-caption text-[#5F6C79]">{t("placeholders.orders")}</p>
     </div>
   );
 }

@@ -5,7 +5,7 @@ export default async function MenuPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-page-title">{t("menu")}</h1>
-      <p className="text-caption text-[#5F6C79]">Placeholder for menu catalog (Phase 2)</p>
+      <p className="text-caption text-[#5F6C79]">{t("placeholders.menu")}</p>
     </div>
   );
 }
