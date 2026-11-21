@@ -171,6 +171,35 @@
       "noOrdersInColumn": "No orders in this column",
       "noOrdersFiltered": "No orders match the selected filters"
     },
+    "detail": {
+      "title": "Order Details",
+      "customer": "Customer",
+      "phone": "Phone",
+      "type": "Order Type",
+      "items": "Ordered Items",
+      "subtotal": "Subtotal",
+      "deliveryFee": "Delivery Fee",
+      "total": "Total",
+      "address": "Delivery Address",
+      "table": "Table Note",
+      "scheduledTime": "Scheduled Time",
+      "immediate": "Immediate (ASAP)",
+      "paymentDetails": "Payment & Verification",
+      "paymentMethod": "Payment Method",
+      "paymentStatus": "Payment Status",
+      "paymentProof": "Payment Proof",
+      "onlineBank": "Online Bank / Raast",
+      "viewScreenshot": "View Screenshot",
+      "verifyPayment": "Payment verified",
+      "notReceived": "Not received",
+      "screenshotDisclaimer": "The screenshot is only a hint, confirm the money in your bank or wallet app.",
+      "timeline": "Order Journey",
+      "close": "Close"
+    },
+    "live": {
+      "newOrderTitle": "New Order Arrived!",
+      "newOrderDesc": "Order {number} from {customer}"
+    },
     "error": {
       "title": "Failed to load orders",
       "description": "An error occurred while fetching the live orders board.",
