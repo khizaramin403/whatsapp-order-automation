@@ -8,7 +8,7 @@ type ToasterProps = React.ComponentProps<typeof Sonner>;
 const Toaster = ({ ...props }: ToasterProps) => {
   const locale = useLocale();
   const dir = locale === "ar" ? "rtl" : "ltr";
-  const position = dir === "rtl" ? "bottom-left" : "bottom-right";
+  const position = props.position || (dir === "rtl" ? "top-left" : "top-right");
 
   return (
     <Sonner

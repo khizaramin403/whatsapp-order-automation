@@ -42,7 +42,7 @@ export const useUI = create<UIState>()(
         set((state) => ({ newOrdersCount: state.newOrdersCount + 1 })),
     }),
     {
-      name: "ui-storage",
+      name: "ui-storage-v2",
       storage: createJSONStorage(() => (typeof window !== "undefined" ? localStorage : {
         getItem: () => null,
         setItem: () => null,
@@ -52,6 +52,12 @@ export const useUI = create<UIState>()(
         sidebarOpen: state.sidebarOpen,
         soundOn: state.soundOn,
       }),
+      onRehydrateStorage: () => (state) => {
+        // Ensure sidebar is expanded by default on desktop/laptop screens (>= 768px)
+        if (state && typeof window !== "undefined" && window.innerWidth >= 768) {
+          state.sidebarOpen = true;
+        }
+      },
     }
   )
 );
