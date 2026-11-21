@@ -111,6 +111,7 @@ export function MobileSidebar() {
 
   const mobileOpen = useUI((s) => s.mobileOpen);
   const setMobileOpen = useUI((s) => s.setMobileOpen);
+  const newOrdersCount = useUI((s) => s.newOrdersCount);
   const user = useAuth((s) => s.user);
 
   const userRole: UserRole = user?.role ?? "owner";
@@ -209,9 +210,12 @@ export function MobileSidebar() {
 
                       <span className="truncate">{label}</span>
 
-                      {(item.badgeCount ?? 0) > 0 && (
-                        <span className="ms-auto inline-flex items-center justify-center px-2 py-0.5 text-[11px] font-semibold rounded-full bg-[#C7A667] text-[#10202D] leading-none shrink-0">
-                          {item.badgeCount}
+                      {((item.key === "orders" ? newOrdersCount : item.badgeCount) ?? 0) > 0 && (
+                        <span
+                          className="ms-auto inline-flex items-center justify-center px-2 py-0.5 text-[11px] font-semibold rounded-full bg-[#C7A667] text-[#10202D] leading-none shrink-0"
+                          aria-label={t("newOrdersBadge", { count: item.key === "orders" ? newOrdersCount : (item.badgeCount ?? 0) })}
+                        >
+                          {item.key === "orders" ? newOrdersCount : item.badgeCount}
                         </span>
                       )}
                     </Link>
