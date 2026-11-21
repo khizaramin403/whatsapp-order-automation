@@ -349,3 +349,13 @@ button:disabled,
 [type="reset"]:disabled {
   cursor: not-allowed;
 }
+
+/* Hide scrollbar while preserving scrolling capability */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
