@@ -7,7 +7,7 @@
     "dev:web": "pnpm --filter @app/web dev",
     "dev:api": "pnpm --filter @app/api dev",
     "build": "pnpm -r run build",
-    "limnt": "pnpm -r run lint",
+    "lint": "pnpm -r run lint",
     "typecheck": "pnpm -r run typecheck",
     "test": "pnpm --filter @app/shared test",
     "db:up": "docker compose up -d",

@@ -109,5 +109,72 @@
       "team": "مساحة مخصصة لإدارة فريق العمل (المرحلة 2)",
       "settings": "مساحة مخصصة لإعدادات المطعم (المرحلة 2)"
     }
+  },
+  "orders": {
+    "title": "الطلبات",
+    "kpis": {
+      "newOrders": "الطلبات الجديدة",
+      "inKitchen": "في المطبخ",
+      "outForDelivery": "خارج للتوصيل",
+      "todaySales": "مبيعات اليوم"
+    },
+    "filters": {
+      "all": "الكل",
+      "cod": "الدفع عند الاستلام",
+      "online": "الدفع الإلكتروني",
+      "today": "اليوم",
+      "allDates": "جميع التواريخ"
+    },
+    "columns": {
+      "new": "جديد",
+      "accepted": "مقبول",
+      "preparing": "قيد التحضير",
+      "ready": "جاهز",
+      "outForDelivery": "خارج للتوصيل",
+      "delivered": "تم التوصيل"
+    },
+    "actions": {
+      "accept": "قبول",
+      "startPreparing": "بدء التحضير",
+      "markReady": "تحديد كجاهز",
+      "outForDelivery": "إرسال للتوصيل",
+      "markDelivered": "تم التسليم",
+      "completeOrder": "إتمام الطلب",
+      "reject": "رفض",
+      "cancel": "إلغاء",
+      "loadMore": "تحميل المزيد"
+    },
+    "dialogs": {
+      "rejectTitle": "رفض الطلب {number}؟",
+      "rejectDesc": "هل أنت متأكد من رفض هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
+      "rejectConfirm": "تأكيد الرفض",
+      "cancelTitle": "إلغاء الطلب {number}؟",
+      "cancelDesc": "هل أنت متأكد من إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
+      "cancelConfirm": "تأكيد الإلغاء",
+      "keepOrder": "الإبقاء على الطلب"
+    },
+    "card": {
+      "dineIn": "تناول محلي",
+      "delivery": "توصيل",
+      "pickup": "استلام",
+      "justNow": "الآن",
+      "minutesAgo": "{minutes} د",
+      "hoursAgo": "{hours} س",
+      "payment": {
+        "cod": "الدفع عند الاستلام",
+        "onlineVerified": "إلكتروني · مدفوع",
+        "onlinePending": "إلكتروني · قيد التحقق",
+        "onlineUnpaid": "إلكتروني · غير مدفوع"
+      }
+    },
+    "empty": {
+      "noOrdersInColumn": "لا توجد طلبات في هذه الخانة",
+      "noOrdersFiltered": "لا توجد طلبات تطابق الفلتر المحدد"
+    },
+    "error": {
+      "title": "فشل في تحميل الطلبات",
+      "description": "حدث خطأ أثناء تحميل لوحة الطلبات المباشرة.",
+      "retry": "إعادة المحاولة"
+    }
   }
 }

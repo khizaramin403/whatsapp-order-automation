@@ -109,5 +109,72 @@
       "team": "Placeholder for team management (Phase 2)",
       "settings": "Placeholder for restaurant settings (Phase 2)"
     }
+  },
+  "orders": {
+    "title": "Orders",
+    "kpis": {
+      "newOrders": "New orders",
+      "inKitchen": "In kitchen",
+      "outForDelivery": "Out for delivery",
+      "todaySales": "Today's sales"
+    },
+    "filters": {
+      "all": "All",
+      "cod": "COD",
+      "online": "Online",
+      "today": "Today",
+      "allDates": "All Dates"
+    },
+    "columns": {
+      "new": "New",
+      "accepted": "Accepted",
+      "preparing": "Preparing",
+      "ready": "Ready",
+      "outForDelivery": "Out for delivery",
+      "delivered": "Delivered"
+    },
+    "actions": {
+      "accept": "Accept",
+      "startPreparing": "Start preparing",
+      "markReady": "Mark ready",
+      "outForDelivery": "Out for delivery",
+      "markDelivered": "Delivered",
+      "completeOrder": "Complete order",
+      "reject": "Reject",
+      "cancel": "Cancel",
+      "loadMore": "Load more"
+    },
+    "dialogs": {
+      "rejectTitle": "Reject order {number}?",
+      "rejectDesc": "Are you sure you want to reject this order? This cannot be undone.",
+      "rejectConfirm": "Reject order",
+      "cancelTitle": "Cancel order {number}?",
+      "cancelDesc": "Are you sure you want to cancel this order? This cannot be undone.",
+      "cancelConfirm": "Cancel order",
+      "keepOrder": "Keep order"
+    },
+    "card": {
+      "dineIn": "Dine-in",
+      "delivery": "Delivery",
+      "pickup": "Pickup",
+      "justNow": "Just now",
+      "minutesAgo": "{minutes} min",
+      "hoursAgo": "{hours} hr",
+      "payment": {
+        "cod": "COD",
+        "onlineVerified": "Online · Verified",
+        "onlinePending": "Online · Pending",
+        "onlineUnpaid": "Online · Unpaid"
+      }
+    },
+    "empty": {
+      "noOrdersInColumn": "No orders in this column",
+      "noOrdersFiltered": "No orders match the selected filters"
+    },
+    "error": {
+      "title": "Failed to load orders",
+      "description": "An error occurred while fetching the live orders board.",
+      "retry": "Retry"
+    }
   }
 }

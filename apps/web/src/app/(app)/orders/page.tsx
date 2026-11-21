@@ -1,11 +1,10 @@
-import { getTranslations } from "next-intl/server";
+import { OrderBoard } from "@/components/orders/order-board";
+import { RoleGuard } from "@/components/layout/RoleGuard";
 
-export default async function OrdersPage() {
-  const t = await getTranslations("pages");
+export default function OrdersPage() {
   return (
-    <div className="space-y-4">
-      <h1 className="text-page-title">{t("orders")}</h1>
-      <p className="text-caption text-[#5F6C79]">{t("placeholders.orders")}</p>
-    </div>
+    <RoleGuard allowedRoles={["super_admin", "owner", "manager"]}>
+      <OrderBoard />
+    </RoleGuard>
   );
 }

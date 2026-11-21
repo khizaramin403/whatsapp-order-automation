@@ -109,5 +109,72 @@
       "team": "Team management ke liye placeholder (Phase 2)",
       "settings": "Restaurant settings ke liye placeholder (Phase 2)"
     }
+  },
+  "orders": {
+    "title": "Orders",
+    "kpis": {
+      "newOrders": "Naye orders",
+      "inKitchen": "Kitchen mein",
+      "outForDelivery": "Delivery par",
+      "todaySales": "Aaj ki bikri"
+    },
+    "filters": {
+      "all": "Sab",
+      "cod": "COD",
+      "online": "Online",
+      "today": "Aaj",
+      "allDates": "Tamam Tareekhein"
+    },
+    "columns": {
+      "new": "Naya",
+      "accepted": "Qabool",
+      "preparing": "Tayyari mein",
+      "ready": "Tayyar",
+      "outForDelivery": "Delivery par",
+      "delivered": "Pohanch gaya"
+    },
+    "actions": {
+      "accept": "Qabool karein",
+      "startPreparing": "Tayyari shuru karein",
+      "markReady": "Tayyar mark karein",
+      "outForDelivery": "Delivery par bhejein",
+      "markDelivered": "Pohanch gaya",
+      "completeOrder": "Order mukammal karein",
+      "reject": "Radd karein",
+      "cancel": "Mansookh karein",
+      "loadMore": "Mazeed dikhayein"
+    },
+    "dialogs": {
+      "rejectTitle": "Order {number} radd karein?",
+      "rejectDesc": "Kya aap waqai yeh order radd karna chahte hain? Yeh wapis nahi ho sakta.",
+      "rejectConfirm": "Radd karein",
+      "cancelTitle": "Order {number} mansookh karein?",
+      "cancelDesc": "Kya aap waqai yeh order mansookh karna chahte hain? Yeh wapis nahi ho sakta.",
+      "cancelConfirm": "Mansookh karein",
+      "keepOrder": "Order rakhein"
+    },
+    "card": {
+      "dineIn": "Dine-in",
+      "delivery": "Delivery",
+      "pickup": "Pickup",
+      "justNow": "Abhi",
+      "minutesAgo": "{minutes}m",
+      "hoursAgo": "{hours}h",
+      "payment": {
+        "cod": "COD",
+        "onlineVerified": "Online · Verified",
+        "onlinePending": "Online · Check karein",
+        "onlineUnpaid": "Online · Unpaid"
+      }
+    },
+    "empty": {
+      "noOrdersInColumn": "Is column mein koi order nahi",
+      "noOrdersFiltered": "Filters ke mutabiq koi order nahi mila"
+    },
+    "error": {
+      "title": "Orders load karne mein masla",
+      "description": "Live orders board load karte waqt error pesh aaya.",
+      "retry": "Dobara koshish karein"
+    }
   }
 }
