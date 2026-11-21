@@ -9,7 +9,7 @@
     "build": "pnpm -r run build",
     "lint": "pnpm -r run lint",
     "typecheck": "pnpm -r run typecheck",
-    "test": "node -e \"console.log('No tests configured yet. Tests start in Phase 3.'); process.exit(0)\"",
+    "test": "pnpm --filter @app/shared test",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down"
   },
