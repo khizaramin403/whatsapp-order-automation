@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { TriangleAlert, RefreshCw, Calendar, Inbox } from "lucide-react";
+import { TriangleAlert, RefreshCw, Calendar, Inbox, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Order, OrderStatus } from "@app/shared";
 import { useOrders } from "@/hooks/use-orders";
 import { useUI, type OrderFilter } from "@/stores/ui.store";
@@ -53,6 +53,38 @@ export function OrderBoard() {
   // Active column tab for mobile views
   const [activeMobileColumn, setActiveMobileColumn] = React.useState<string>("col-new");
 
+  // Horizontal scroll container ref & navigation state for PC/desktop users
+  const boardScrollRef = React.useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = React.useState(false);
+  const [canScrollRight, setCanScrollRight] = React.useState(true);
+
+  const updateScrollButtons = React.useCallback(() => {
+    const el = boardScrollRef.current;
+    if (!el) return;
+    const isRtl = typeof document !== "undefined" && document.documentElement.dir === "rtl";
+    if (isRtl) {
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const current = Math.abs(el.scrollLeft);
+      setCanScrollLeft(current < maxScroll - 5);
+      setCanScrollRight(current > 5);
+    } else {
+      setCanScrollLeft(el.scrollLeft > 5);
+      setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 5);
+    }
+  }, []);
+
+  const handleScroll = (direction: "left" | "right") => {
+    const el = boardScrollRef.current;
+    if (!el) return;
+    const isRtl = typeof document !== "undefined" && document.documentElement.dir === "rtl";
+    const step = 340;
+    const delta = direction === "right"
+      ? (isRtl ? -step : step)
+      : (isRtl ? step : -step);
+
+    el.scrollBy({ left: delta, behavior: "smooth" });
+  };
+
   // Fetch orders with TanStack Query
   const {
     data: ordersResponse,
@@ -68,6 +100,19 @@ export function OrderBoard() {
 
   const orders = React.useMemo(() => ordersResponse?.data || [], [ordersResponse?.data]);
   const showLoading = isLoading || forceLoading;
+
+  // Attach scroll listener to update desktop scroll buttons
+  React.useEffect(() => {
+    const el = boardScrollRef.current;
+    if (!el) return;
+    updateScrollButtons();
+    el.addEventListener("scroll", updateScrollButtons, { passive: true });
+    window.addEventListener("resize", updateScrollButtons);
+    return () => {
+      el.removeEventListener("scroll", updateScrollButtons);
+      window.removeEventListener("resize", updateScrollButtons);
+    };
+  }, [updateScrollButtons, orders]);
 
   // Group orders into columns
   const columnOrders = React.useMemo(() => {
@@ -153,8 +198,42 @@ export function OrderBoard() {
           })}
         </div>
 
-        {/* Date Filter Toggle */}
+        {/* Date Filter Toggle & PC Scroll Navigation */}
         <div className="flex items-center gap-2">
+          {/* PC / Desktop Scroll Navigation Buttons */}
+          <div className="hidden lg:flex items-center gap-1 bg-[#ECEEF1] p-1 rounded-[8px]">
+            <button
+              type="button"
+              onClick={() => handleScroll("left")}
+              disabled={!canScrollLeft}
+              className={cn(
+                "h-7 w-7 rounded-[6px] flex items-center justify-center transition-all cursor-pointer",
+                canScrollLeft
+                  ? "bg-white text-[#10202D] shadow-xs hover:bg-[#F2F4F6]"
+                  : "text-[#A9B4BE] opacity-40 cursor-not-allowed"
+              )}
+              title="Scroll left"
+              aria-label="Scroll left"
+            >
+              <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleScroll("right")}
+              disabled={!canScrollRight}
+              className={cn(
+                "h-7 w-7 rounded-[6px] flex items-center justify-center transition-all cursor-pointer",
+                canScrollRight
+                  ? "bg-white text-[#10202D] shadow-xs hover:bg-[#F2F4F6]"
+                  : "text-[#A9B4BE] opacity-40 cursor-not-allowed"
+              )}
+              title="Scroll right"
+              aria-label="Scroll right"
+            >
+              <ChevronRight className="h-4 w-4 rtl:rotate-180" />
+            </button>
+          </div>
+
           <Button
             variant={dateFilter === "today" ? "primary" : "secondary"}
             size="sm"
@@ -201,7 +280,7 @@ export function OrderBoard() {
       {/* 4. Board Columns */}
       {showLoading ? (
         /* Loading Skeleton Board */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row lg:overflow-x-auto gap-4 items-start pb-2 [scrollbar-width:thin]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row lg:overflow-x-auto gap-4 items-start pb-2 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {COLUMNS.map((col) => (
             <div key={col.id} className="space-y-3 min-w-0 lg:flex-1 lg:min-w-[210px]">
               <div className="flex items-center justify-between pb-1">
@@ -215,7 +294,10 @@ export function OrderBoard() {
         </div>
       ) : (
         /* Live Orders Board */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row lg:overflow-x-auto gap-4 items-start pb-2 [scrollbar-width:thin]">
+        <div
+          ref={boardScrollRef}
+          className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row lg:overflow-x-auto gap-4 items-start pb-2 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-smooth"
+        >
           {COLUMNS.map((col) => {
             const allItems = columnOrders[col.id] || [];
             const count = allItems.length;

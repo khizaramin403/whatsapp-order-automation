@@ -15,11 +15,14 @@ const Toaster = ({ ...props }: ToasterProps) => {
       dir={dir}
       position={position}
       duration={4000}
+      closeButton
       className="toaster group"
       toastOptions={{
         classNames: {
           toast:
             "group toast group-[.toaster]:bg-white group-[.toaster]:text-[#10202D] group-[.toaster]:border-[#E2E5E9] group-[.toaster]:shadow-[0_8px_24px_rgba(16,32,45,0.12)] group-[.toaster]:rounded-[12px] group-[.toaster]:p-4 group-[.toaster]:text-sm",
+          closeButton:
+            "!bg-white !text-[#5F6C79] !border-[#E2E5E9] hover:!bg-[#F2F4F6] hover:!text-[#10202D] !transition-colors !start-auto !end-2 !top-2 !transform-none !shadow-xs",
           description: "group-[.toast]:text-[#5F6C79] text-xs",
           actionButton:
             "group-[.toast]:bg-[#10202D] group-[.toast]:text-[#F7F7F7] group-[.toast]:rounded-[8px] text-xs font-semibold px-3 py-1.5",
