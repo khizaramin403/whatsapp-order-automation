@@ -103,3 +103,10 @@ export async function getSettings(): Promise<Restaurant> {
 export async function updateSettings(data: Partial<Restaurant>): Promise<Restaurant> {
   return fakeStore.updateSettings(data);
 }
+
+/**
+ * Live simulator helper: add a new pending order.
+ */
+export async function addPendingOrder(): Promise<Order> {
+  return fakeStore.addPendingOrder();
+}

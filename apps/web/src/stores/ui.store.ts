@@ -9,6 +9,7 @@ export interface UIState {
   filter: OrderFilter;
   selectedOrderId: string | null;
   mobileOpen: boolean;
+  newOrdersCount: number;
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
   toggleSound: () => void;
@@ -16,6 +17,8 @@ export interface UIState {
   setSelectedOrderId: (id: string | null) => void;
   setMobileOpen: (open: boolean) => void;
   toggleMobile: () => void;
+  setNewOrdersCount: (count: number) => void;
+  incrementNewOrdersCount: () => void;
 }
 
 export const useUI = create<UIState>()(
@@ -26,6 +29,7 @@ export const useUI = create<UIState>()(
       filter: "all",
       selectedOrderId: null,
       mobileOpen: false,
+      newOrdersCount: 6,
       toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
       setSidebarOpen: (sidebarOpen) => set({ sidebarOpen }),
       toggleSound: () => set((state) => ({ soundOn: !state.soundOn })),
@@ -33,6 +37,9 @@ export const useUI = create<UIState>()(
       setSelectedOrderId: (selectedOrderId) => set({ selectedOrderId }),
       setMobileOpen: (mobileOpen) => set({ mobileOpen }),
       toggleMobile: () => set((state) => ({ mobileOpen: !state.mobileOpen })),
+      setNewOrdersCount: (newOrdersCount) => set({ newOrdersCount }),
+      incrementNewOrdersCount: () =>
+        set((state) => ({ newOrdersCount: state.newOrdersCount + 1 })),
     }),
     {
       name: "ui-storage",
