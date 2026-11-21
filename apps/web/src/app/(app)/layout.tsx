@@ -4,6 +4,7 @@ import { MobileSidebar } from "@/components/layout/mobile-sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { AuthGuard } from "@/components/layout/auth-guard";
 import { RoleGuard } from "@/components/layout/RoleGuard";
+import { LiveOrderListener } from "@/components/orders/live-order-listener";
 
 export default function AppLayout({
   children,
@@ -12,6 +13,7 @@ export default function AppLayout({
 }) {
   return (
     <AuthGuard>
+      <LiveOrderListener />
       <div className="min-h-screen bg-[#F7F7F7] text-[#10202D] flex">
         {/* Desktop Sidebar (hidden on mobile under 768px) */}
         <div className="hidden md:block shrink-0">
