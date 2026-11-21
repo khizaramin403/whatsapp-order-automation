@@ -3,6 +3,7 @@ import { AppSidebar } from "@/components/layout/app-sidebar";
 import { MobileSidebar } from "@/components/layout/mobile-sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { AuthGuard } from "@/components/layout/auth-guard";
+import { RoleGuard } from "@/components/layout/RoleGuard";
 
 export default function AppLayout({
   children,
@@ -24,7 +25,9 @@ export default function AppLayout({
         <div className="flex-1 flex flex-col min-w-0 transition-all duration-200 ease-out">
           <Topbar />
           <main className="flex-1 p-4 sm:p-6 md:p-8">
-            {children}
+            <RoleGuard>
+              {children}
+            </RoleGuard>
           </main>
         </div>
       </div>
