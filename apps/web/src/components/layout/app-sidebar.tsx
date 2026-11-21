@@ -119,6 +119,7 @@ export function AppSidebar() {
   // Narrow Zustand selectors (PERFORMANCE.md)
   const sidebarOpen = useUI((s) => s.sidebarOpen);
   const toggleSidebar = useUI((s) => s.toggleSidebar);
+  const newOrdersCount = useUI((s) => s.newOrdersCount);
   const user = useAuth((s) => s.user);
 
   const userRole: UserRole = user?.role ?? "owner";
@@ -250,6 +251,8 @@ export function AppSidebar() {
                       pathname === item.href || pathname.startsWith(item.href + "/");
                     const Icon = item.icon;
                     const label = t(item.key);
+                    const badgeCount =
+                      item.key === "orders" ? newOrdersCount : (item.badgeCount ?? 0);
 
                     const linkContent = (
                       <Link
@@ -282,7 +285,7 @@ export function AppSidebar() {
                           />
 
                           {/* Collapsed small gold dot badge */}
-                          {!sidebarOpen && (item.badgeCount ?? 0) > 0 && (
+                          {!sidebarOpen && badgeCount > 0 && (
                             <span
                               className="absolute -top-1 -end-1 h-2 w-2 rounded-full bg-[#C7A667] ring-2 ring-[#10202D]"
                               aria-hidden="true"
@@ -295,12 +298,12 @@ export function AppSidebar() {
                           <>
                             <span className="truncate">{label}</span>
 
-                            {(item.badgeCount ?? 0) > 0 && (
+                            {badgeCount > 0 && (
                               <span
                                 className="ms-auto inline-flex items-center justify-center px-2 py-0.5 text-[11px] font-semibold rounded-full bg-[#C7A667] text-[#10202D] leading-none shrink-0"
-                                aria-label={t("newOrdersBadge", { count: item.badgeCount ?? 0 })}
+                                aria-label={t("newOrdersBadge", { count: badgeCount })}
                               >
-                                {item.badgeCount}
+                                {badgeCount}
                               </span>
                             )}
                           </>
