@@ -171,6 +171,35 @@
       "noOrdersInColumn": "Is column mein koi order nahi",
       "noOrdersFiltered": "Filters ke mutabiq koi order nahi mila"
     },
+    "detail": {
+      "title": "Order Ki Tafseelaat",
+      "customer": "Gahak",
+      "phone": "Phone Number",
+      "type": "Order Ki Qisam",
+      "items": "Mangwai Gayi Cheezein",
+      "subtotal": "Subtotal",
+      "deliveryFee": "Delivery Charges",
+      "total": "Kul Raqam",
+      "address": "Delivery Ka Pata",
+      "table": "Table Note",
+      "scheduledTime": "Waqt",
+      "immediate": "Fauri (Jald az jald)",
+      "paymentDetails": "Payment aur Tasdeeq",
+      "paymentMethod": "Payment Ka Tareeqa",
+      "paymentStatus": "Payment Ki Haalat",
+      "paymentProof": "Payment Ka Saboot",
+      "onlineBank": "Online Bank / Raast",
+      "viewScreenshot": "Screenshot Dekhein",
+      "verifyPayment": "Payment verified",
+      "notReceived": "Not received",
+      "screenshotDisclaimer": "Yeh screenshot sirf aik ishara hai, bank app mein raqam zaroor confirm karein.",
+      "timeline": "Order Ka Safar",
+      "close": "Band karein"
+    },
+    "live": {
+      "newOrderTitle": "Naya Order Aaya!",
+      "newOrderDesc": "Order {number} - {customer}"
+    },
     "error": {
       "title": "Orders load karne mein masla",
       "description": "Live orders board load karte waqt error pesh aaya.",
