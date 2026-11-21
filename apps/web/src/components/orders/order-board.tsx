@@ -12,6 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { KpiRow } from "./kpi-row";
 import { OrderCard } from "./order-card";
+import { OrderDetailSheet } from "./order-detail-sheet";
 import { cn } from "@/lib/utils";
 
 interface ColumnDef {
@@ -282,6 +283,9 @@ export function OrderBoard() {
           })}
         </div>
       )}
+
+      {/* Order Detail Sheet (Step 2.3) */}
+      <OrderDetailSheet />
     </div>
   );
 }
