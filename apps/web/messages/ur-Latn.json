@@ -348,5 +348,50 @@
       "simulateFail": "Switch failure simulate karein (Dev)",
       "simulateFailActive": "Simulated failure active hai"
     }
+  },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Farokht ki karkardagi, orders ki raftaar aur adaigi ka hisab",
+    "ranges": {
+      "today": "Aaj",
+      "7d": "7 Din",
+      "30d": "30 Din"
+    },
+    "kpis": {
+      "totalSales": "Kul Farokht",
+      "orders": "Kul Orders",
+      "averageOrderValue": "Ausat Order Value",
+      "codShare": "COD Ka Hissa",
+      "todaySubtitle": "Aaj ke live orders ka hisab",
+      "periodSubtitle": "Muntakhab arsay ke liye"
+    },
+    "charts": {
+      "ordersPerHour": "Fi Ghanta Orders",
+      "ordersPerHourSubtitle": "Rush ke peak ghantay gold rang mein numayan hain",
+      "ordersCount": "Orders",
+      "peakHour": "Peak Ghanta",
+      "salesOverTime": "Farokht Ka Rujhan",
+      "salesOverTimeSubtitle": "Muntakhab arsay mein aamdani ka rujhan",
+      "revenue": "Aamdani",
+      "paymentSplit": "Adaigi Ke Tareeqay",
+      "paymentSplitSubtitle": "Cash on Delivery aur Online Adaigi",
+      "cod": "Cash on Delivery (COD)",
+      "online": "Online Adaigi",
+      "percentage": "Faisad",
+      "ordersUnit": "{count} orders",
+      "topItems": "Ziada Biknay Wali Cheezein",
+      "topItemsSubtitle": "Miqdar aur aamdani ke lehaz se behtareen items",
+      "quantitySold": "{count} farokht",
+      "rank": "#"
+    },
+    "empty": {
+      "title": "Koi analytics data nahi hai",
+      "subtitle": "Is arsay ke liye abhi tak koi order darj nahi hua."
+    },
+    "error": {
+      "title": "Analytics load karne mein masla",
+      "subtitle": "Data hasil karte waqt error pesh aaya. Dobara koshish karein.",
+      "retry": "Dobara koshish karein"
+    }
   }
 }

@@ -348,5 +348,50 @@
       "simulateFail": "Simulate switch failure (Dev)",
       "simulateFailActive": "Simulated failure active"
     }
+  },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Sales performance, order velocity, and payment distribution",
+    "ranges": {
+      "today": "Today",
+      "7d": "7 Days",
+      "30d": "30 Days"
+    },
+    "kpis": {
+      "totalSales": "Total Sales",
+      "orders": "Orders",
+      "averageOrderValue": "Avg. Order Value",
+      "codShare": "COD Share",
+      "todaySubtitle": "Today's live volume",
+      "periodSubtitle": "For selected period"
+    },
+    "charts": {
+      "ordersPerHour": "Orders per Hour",
+      "ordersPerHourSubtitle": "Peak ordering hours highlighted in gold",
+      "ordersCount": "Orders",
+      "peakHour": "Peak Hour",
+      "salesOverTime": "Sales Over Time",
+      "salesOverTimeSubtitle": "Revenue trends across the selected period",
+      "revenue": "Revenue",
+      "paymentSplit": "Payment Methods",
+      "paymentSplitSubtitle": "Cash on Delivery vs Online Payments",
+      "cod": "Cash on Delivery (COD)",
+      "online": "Online Payment",
+      "percentage": "Percentage",
+      "ordersUnit": "{count} orders",
+      "topItems": "Top Selling Items",
+      "topItemsSubtitle": "Highest volume menu items by quantity and revenue",
+      "quantitySold": "{count} sold",
+      "rank": "#"
+    },
+    "empty": {
+      "title": "No analytics data available",
+      "subtitle": "There are no completed or recorded orders for this time range yet."
+    },
+    "error": {
+      "title": "Failed to load analytics",
+      "subtitle": "An error occurred while fetching metrics. Please try again.",
+      "retry": "Retry"
+    }
   }
 }

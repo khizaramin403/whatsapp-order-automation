@@ -348,5 +348,50 @@
       "simulateFail": "محاكاة فشل التبديل (Dev)",
       "simulateFailActive": "المحاكاة نشطة"
     }
+  },
+  "analytics": {
+    "title": "التحليلات",
+    "subtitle": "أداء المبيعات، وتيرة الطلبات، وتوزيع طرق الدفع",
+    "ranges": {
+      "today": "اليوم",
+      "7d": "7 أيام",
+      "30d": "30 يوماً"
+    },
+    "kpis": {
+      "totalSales": "إجمالي المبيعات",
+      "orders": "عدد الطلبات",
+      "averageOrderValue": "متوسط قيمة الطلب",
+      "codShare": "نسبة الدفع عند الاستلام",
+      "todaySubtitle": "البيانات المباشرة لليوم",
+      "periodSubtitle": "للفترة المحددة"
+    },
+    "charts": {
+      "ordersPerHour": "الطلبات حسب الساعة",
+      "ordersPerHourSubtitle": "ساعات الذروة مميزة باللون الذهبي",
+      "ordersCount": "الطلبات",
+      "peakHour": "ساعة الذروة",
+      "salesOverTime": "المبيعات عبر الوقت",
+      "salesOverTimeSubtitle": "اتجاهات الإيرادات خلال الفترة المحددة",
+      "revenue": "الإيراد",
+      "paymentSplit": "طرق الدفع",
+      "paymentSplitSubtitle": "الدفع عند الاستلام مقابل الدفع الإلكتروني",
+      "cod": "الدفع عند الاستلام (COD)",
+      "online": "الدفع الإلكتروني",
+      "percentage": "النسبة",
+      "ordersUnit": "{count} طلبات",
+      "topItems": "الأصناف الأكثر مبيعاً",
+      "topItemsSubtitle": "أعلى الأصناف طلباً حسب الكمية والإيراد",
+      "quantitySold": "تم بيع {count}",
+      "rank": "#"
+    },
+    "empty": {
+      "title": "لا توجد بيانات تحليلات متاحة",
+      "subtitle": "لا توجد طلبات مسجلة لهذه الفترة الزمنية حتى الآن."
+    },
+    "error": {
+      "title": "فشل تحميل التحليلات",
+      "subtitle": "حدث خطأ أثناء جلب المقاييس. يرجى إعادة المحاولة.",
+      "retry": "إعادة المحاولة"
+    }
   }
 }
