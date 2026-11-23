@@ -393,5 +393,187 @@
       "subtitle": "An error occurred while fetching metrics. Please try again.",
       "retry": "Retry"
     }
+  },
+  "team": {
+    "title": "Staff & Team",
+    "subtitle": "Manage staff members, roles, languages, and dashboard access permissions",
+    "addMember": "Add member",
+    "searchPlaceholder": "Search staff by name, email, or role...",
+    "columns": {
+      "member": "Member",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "language": "Language",
+      "actions": "Actions"
+    },
+    "roles": {
+      "super_admin": "Super Admin",
+      "owner": "Owner",
+      "manager": "Manager",
+      "chef": "Chef",
+      "rider": "Rider"
+    },
+    "languages": {
+      "en": "English",
+      "ar": "العربية",
+      "ur": "Roman Urdu",
+      "ur-Latn": "Roman Urdu"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "edit": "Edit member",
+      "deactivate": "Deactivate member",
+      "activate": "Activate member"
+    },
+    "deactivateDialog": {
+      "title": "Deactivate staff member?",
+      "description": "Are you sure you want to deactivate {name}? They will immediately lose access to the dashboard until reactivated.",
+      "confirm": "Deactivate",
+      "cancel": "Cancel"
+    },
+    "sheet": {
+      "addTitle": "Add team member",
+      "addSubtitle": "Create a new staff account with assigned role and preferred language.",
+      "editTitle": "Edit team member",
+      "editSubtitle": "Update staff member role, preferred language, or credentials.",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "e.g. Tariq Khan",
+      "email": "Email Address",
+      "emailPlaceholder": "e.g. tariq@hotel.com",
+      "role": "Assigned Role",
+      "rolePlaceholder": "Select role",
+      "language": "Preferred Language",
+      "tempPassword": "Temporary Password",
+      "tempPasswordPlaceholder": "Enter temporary password",
+      "tempPasswordNote": "Set by owner for now. Staff can sign in using this password.",
+      "save": "Save Member",
+      "saving": "Saving..."
+    },
+    "toast": {
+      "created": "Team member added successfully",
+      "updated": "Team member updated successfully",
+      "deactivated": "Staff member deactivated",
+      "activated": "Staff member activated",
+      "error": "Failed to save team member"
+    },
+    "empty": {
+      "title": "No staff members found",
+      "subtitle": "No team members matched your search criteria."
+    },
+    "pagination": {
+      "showing": "Showing {start} to {end} of {total} staff",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "validation": {
+      "nameRequired": "Full name is required",
+      "emailInvalid": "Please enter a valid email address",
+      "roleRequired": "Please select a role",
+      "passwordRequired": "Temporary password is required for new accounts",
+      "passwordMin": "Password must be at least 6 characters"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage hotel profile, daily operating hours, payment instructions, bot messages, and notifications",
+    "tabs": {
+      "hotel": "Hotel",
+      "payments": "Payments",
+      "bot": "Bot texts",
+      "notifications": "Notifications"
+    },
+    "unsavedChanges": {
+      "warning": "You have unsaved changes",
+      "desc": "Don't forget to save your settings before navigating away from this page."
+    },
+    "save": "Save Settings",
+    "saving": "Saving...",
+    "hotel": {
+      "title": "Hotel Profile & Hours",
+      "subtitle": "Manage hotel identity, timezone, operating hours, delivery fees, and minimum order",
+      "name": "Hotel Name",
+      "namePlaceholder": "e.g. Pearl Continental Hotel",
+      "timezone": "Timezone",
+      "currency": "Currency",
+      "defaultLanguage": "Default Language",
+      "deliveryFee": "Delivery Fee (Rs)",
+      "deliveryFeePlaceholder": "e.g. 150",
+      "minimumOrder": "Minimum Order Amount (Rs)",
+      "minimumOrderPlaceholder": "e.g. 500",
+      "deliveryArea": "Delivery Area Note",
+      "deliveryAreaPlaceholder": "e.g. Within 10 km radius covering Gulberg, DHA Phase 1-5, and Cantt",
+      "openingHours": "Opening Hours",
+      "openingHoursSubtitle": "Set daily opening and closing hours or mark days as closed",
+      "days": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      },
+      "openTime": "Open",
+      "closeTime": "Close",
+      "closed": "Closed"
+    },
+    "payments": {
+      "title": "Payment Settings",
+      "subtitle": "Bank account number and transfer instructions displayed to customers who choose online payment",
+      "accountNumber": "Hotel Payment Account / IBAN",
+      "accountNumberPlaceholder": "e.g. PK36MEZN0001234567890101 (Meezan Bank)",
+      "instructions": "Payment Instructions",
+      "instructionsPlaceholder": "e.g. Please transfer the order total via Raast or bank transfer and send the payment screenshot in this WhatsApp chat.",
+      "helpNote": "These instructions and account details are sent automatically to customers who select 'Online Payment' on WhatsApp."
+    },
+    "bot": {
+      "title": "WhatsApp Bot Texts",
+      "subtitle": "Welcome and payment messages sent by the WhatsApp bot for each language",
+      "languages": {
+        "en": "English",
+        "ar": "العربية",
+        "ur": "Roman Urdu",
+        "ur-Latn": "Roman Urdu"
+      },
+      "welcomeMessage": "Welcome Greeting",
+      "welcomePlaceholder": "Enter greeting message sent when a customer says Hi/Hello...",
+      "paymentMessage": "Payment Request Message",
+      "paymentPlaceholder": "Enter payment request message sent when an online order is placed...",
+      "preview": {
+        "title": "WhatsApp Preview",
+        "subtitle": "Simulated live customer view",
+        "botName": "Hotel Order Bot",
+        "verified": "Official Business Account",
+        "sampleCustomer": "Hi, I'd like to view the menu"
+      }
+    },
+    "notifications": {
+      "title": "Notification Preferences",
+      "subtitle": "Configure how and where your staff receive order alerts and reports",
+      "emailOnNewOrder": "Email on every new order",
+      "emailOnNewOrderDesc": "Receive an email alert whenever a customer places a new order",
+      "dailySummaryEmail": "Daily summary email",
+      "dailySummaryEmailDesc": "Receive an end-of-day digest with daily sales totals and order counts",
+      "pushNotifications": "Web push notifications",
+      "pushNotificationsDesc": "Receive desktop push notifications even when the browser tab is in the background",
+      "sound": "Sound alerts",
+      "soundDesc": "Play a chime sound when new orders arrive on the live board",
+      "notificationEmail": "Notification Email Address",
+      "notificationEmailPlaceholder": "e.g. orders@hotel.com"
+    },
+    "toast": {
+      "saved": "Settings saved successfully",
+      "error": "Failed to save settings. Please try again."
+    },
+    "validation": {
+      "nameRequired": "Hotel name is required",
+      "deliveryFeePositive": "Delivery fee must be 0 or greater",
+      "minOrderPositive": "Minimum order must be 0 or greater",
+      "emailInvalid": "Please enter a valid notification email address"
+    }
   }
 }

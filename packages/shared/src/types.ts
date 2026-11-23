@@ -46,9 +46,13 @@ export interface Restaurant {
   bot_welcome_en?: string | null;
   bot_welcome_ar?: string | null;
   bot_welcome_ur?: string | null;
+  bot_payment_en?: string | null;
+  bot_payment_ar?: string | null;
+  bot_payment_ur?: string | null;
   email_notifications?: boolean;
   daily_summary_email?: boolean;
   push_notifications?: boolean;
+  sound_notifications?: boolean;
   notification_email?: string | null;
 }
 

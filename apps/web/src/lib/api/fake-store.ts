@@ -395,6 +395,60 @@ class FakeStore {
     return [...this.users];
   }
 
+  public async createTeamMember(
+    data: Omit<User, "id" | "restaurant_id"> & { id?: string; password?: string }
+  ): Promise<User> {
+    await this.delay();
+    const id = data.id || `user-${Date.now()}`;
+    const newUser: User = {
+      id,
+      restaurant_id: this.restaurant.id,
+      name: data.name,
+      email: data.email,
+      role: data.role,
+      language: data.language || "en",
+      avatar_key: data.avatar_key || null,
+      is_active: data.is_active ?? true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    this.users.push(newUser);
+    return { ...newUser };
+  }
+
+  public async updateTeamMember(
+    id: string,
+    data: Partial<User> & { password?: string }
+  ): Promise<User> {
+    await this.delay();
+    const index = this.users.findIndex((u) => u.id === id);
+    if (index === -1) {
+      throw new Error(`User ${id} not found`);
+    }
+    const updated: User = {
+      ...this.users[index],
+      ...data,
+      updated_at: new Date().toISOString(),
+    };
+    this.users[index] = updated;
+    return { ...updated };
+  }
+
+  public async toggleUserActive(id: string, is_active: boolean): Promise<User> {
+    await this.delay();
+    const index = this.users.findIndex((u) => u.id === id);
+    if (index === -1) {
+      throw new Error(`User ${id} not found`);
+    }
+    const updated: User = {
+      ...this.users[index],
+      is_active,
+      updated_at: new Date().toISOString(),
+    };
+    this.users[index] = updated;
+    return { ...updated };
+  }
+
   // --- Settings ---
   public async getSettings(): Promise<Restaurant> {
     await this.delay();

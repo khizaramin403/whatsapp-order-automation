@@ -145,6 +145,35 @@ export async function getTeam(): Promise<User[]> {
 }
 
 /**
+ * Add a new team member.
+ */
+export async function createTeamMember(
+  data: Omit<User, "id" | "restaurant_id"> & { id?: string; password?: string }
+): Promise<User> {
+  return fakeStore.createTeamMember(data);
+}
+
+/**
+ * Update team member details.
+ */
+export async function updateTeamMember(
+  id: string,
+  data: Partial<User> & { password?: string }
+): Promise<User> {
+  return fakeStore.updateTeamMember(id, data);
+}
+
+/**
+ * Toggle user active/inactive status.
+ */
+export async function toggleUserActive(
+  id: string,
+  is_active: boolean
+): Promise<User> {
+  return fakeStore.toggleUserActive(id, is_active);
+}
+
+/**
  * Fetch current restaurant settings.
  */
 export async function getSettings(): Promise<Restaurant> {

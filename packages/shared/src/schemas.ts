@@ -57,9 +57,13 @@ export const RestaurantSchema = z.object({
   bot_welcome_en: z.string().nullish(),
   bot_welcome_ar: z.string().nullish(),
   bot_welcome_ur: z.string().nullish(),
+  bot_payment_en: z.string().nullish(),
+  bot_payment_ar: z.string().nullish(),
+  bot_payment_ur: z.string().nullish(),
   email_notifications: z.boolean().optional(),
   daily_summary_email: z.boolean().optional(),
   push_notifications: z.boolean().optional(),
+  sound_notifications: z.boolean().optional(),
   notification_email: z.string().email().nullish(),
 });
 

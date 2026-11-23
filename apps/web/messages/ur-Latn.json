@@ -393,5 +393,187 @@
       "subtitle": "Data hasil karte waqt error pesh aaya. Dobara koshish karein.",
       "retry": "Dobara koshish karein"
     }
+  },
+  "team": {
+    "title": "Staff aur Team",
+    "subtitle": "Staff accounts, unkay roles, zubanain aur dashboard access permissions sambhalein",
+    "addMember": "Naya member shamil karein",
+    "searchPlaceholder": "Naam, email ya role se talash karein...",
+    "columns": {
+      "member": "Member",
+      "email": "Email",
+      "role": "Role",
+      "status": "Haalat",
+      "language": "Zuban",
+      "actions": "Iqdamat"
+    },
+    "roles": {
+      "super_admin": "Super Admin",
+      "owner": "Owner",
+      "manager": "Manager",
+      "chef": "Chef",
+      "rider": "Rider"
+    },
+    "languages": {
+      "en": "English",
+      "ar": "العربية",
+      "ur": "Roman Urdu",
+      "ur-Latn": "Roman Urdu"
+    },
+    "status": {
+      "active": "Fa'aal",
+      "inactive": "Ghair-fa'aal"
+    },
+    "actions": {
+      "edit": "Member edit karein",
+      "deactivate": "Account band karein",
+      "activate": "Account bahaal karein"
+    },
+    "deactivateDialog": {
+      "title": "Staff member ko deactivate karein?",
+      "description": "Kya aap waqayi {name} ka account deactivate karna chahtay hain? Woh dubara active hone tak dashboard mein login nahi kar sakein ge.",
+      "confirm": "Deactivate karein",
+      "cancel": "Mansookh karein"
+    },
+    "sheet": {
+      "addTitle": "Naya team member shamil karein",
+      "addSubtitle": "Naye staff member ka account, role aur pasandeeda zuban set karein.",
+      "editTitle": "Team member ki maloomat badlein",
+      "editSubtitle": "Staff member ka role, zuban ya temporary password update karein.",
+      "fullName": "Mukammal Naam",
+      "fullNamePlaceholder": "Jaise: Tariq Khan",
+      "email": "Email Address",
+      "emailPlaceholder": "Jaise: tariq@hotel.com",
+      "role": "Muntakhib Role",
+      "rolePlaceholder": "Role muntakhib karein",
+      "language": "Pasandeeda Zuban",
+      "tempPassword": "Temporary Password",
+      "tempPasswordPlaceholder": "Temporary password darj karein",
+      "tempPasswordNote": "Abhi owner ki taraf se set kiya gaya hai. Staff member login ke liye yeh password istemal karein ge.",
+      "save": "Member Save Karein",
+      "saving": "Save ho raha hai..."
+    },
+    "toast": {
+      "created": "Team member kamyabi se shamil ho gaya",
+      "updated": "Team member ki maloomat update ho gayin",
+      "deactivated": "Staff member deactivate ho gaya",
+      "activated": "Staff member activate ho gaya",
+      "error": "Team member save karne mein masla pesh aya"
+    },
+    "empty": {
+      "title": "Koi staff member nahi mila",
+      "subtitle": "Aap ki talash ke mutabiq koi member mojood nahi."
+    },
+    "pagination": {
+      "showing": "{total} mein se {start} ta {end} staff dikhaye ja rahay hain",
+      "prev": "Pichla",
+      "next": "Agla"
+    },
+    "validation": {
+      "nameRequired": "Mukammal naam zaroori hai",
+      "emailInvalid": "Sahih email address darj karein",
+      "roleRequired": "Role muntakhib karna zaroori hai",
+      "passwordRequired": "Naye account ke liye temporary password zaroori hai",
+      "passwordMin": "Password kam az kam 6 characters ka hona chahiye"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Hotel profile, rozana ke auqat, payment instructions, bot paighamaat aur alerts set karein",
+    "tabs": {
+      "hotel": "Hotel",
+      "payments": "Payments",
+      "bot": "Bot Paighamaat",
+      "notifications": "Alerts"
+    },
+    "unsavedChanges": {
+      "warning": "Aap ke paas ghair-mahfooz tabdeeliyan hain",
+      "desc": "Is page se janay se pehle apni settings zaroor save karein."
+    },
+    "save": "Settings Save Karein",
+    "saving": "Save ho raha hai...",
+    "hotel": {
+      "title": "Hotel Profile aur Auqat",
+      "subtitle": "Hotel ka naam, timezone, rozana khulnay ke auqat, delivery fees aur kam az kam order",
+      "name": "Hotel Ka Naam",
+      "namePlaceholder": "Jaise: Pearl Continental Hotel",
+      "timezone": "Timezone",
+      "currency": "Currency",
+      "defaultLanguage": "Bunyadi Zuban",
+      "deliveryFee": "Delivery Fee (Rs)",
+      "deliveryFeePlaceholder": "Jaise: 150",
+      "minimumOrder": "Kam az Kam Order (Rs)",
+      "minimumOrderPlaceholder": "Jaise: 500",
+      "deliveryArea": "Delivery Area Ki Wazaahat",
+      "deliveryAreaPlaceholder": "Jaise: 10 km ke daairay mein tamam ilaaqay",
+      "openingHours": "Khulnay Ke Auqat",
+      "openingHoursSubtitle": "Haftay ke har din ke khulnay aur band honay ke auqat set karein",
+      "days": {
+        "monday": "Peer",
+        "tuesday": "Mangal",
+        "wednesday": "Budh",
+        "thursday": "Jumerat",
+        "friday": "Juma",
+        "saturday": "Hafta",
+        "sunday": "Itwar"
+      },
+      "openTime": "Khulna",
+      "closeTime": "Band",
+      "closed": "Band hai"
+    },
+    "payments": {
+      "title": "Online Payment Settings",
+      "subtitle": "Bank account number aur transfer ki hidayat jo online payment walo ko dikhai jayein gi",
+      "accountNumber": "Hotel Payment Account / IBAN",
+      "accountNumberPlaceholder": "Jaise: PK36MEZN0001234567890101 (Meezan Bank)",
+      "instructions": "Payment Ki Hidayat",
+      "instructionsPlaceholder": "Jaise: Order ki kul raqam bank account mein transfer kar ke screenshot is WhatsApp chat mein bheinjein.",
+      "helpNote": "Yeh hidayat aur account ki maloomat WhatsApp par 'Online Payment' muntakhib karne walay gahak ko khudbakhud bheji jati hain."
+    },
+    "bot": {
+      "title": "WhatsApp Bot Ke Paighamaat",
+      "subtitle": "Har zuban mein bot ke khush-aamdeed aur payment request paighamaat",
+      "languages": {
+        "en": "English",
+        "ar": "العربية",
+        "ur": "Roman Urdu",
+        "ur-Latn": "Roman Urdu"
+      },
+      "welcomeMessage": "Khush-aamdeed Paigham",
+      "welcomePlaceholder": "Jab gahak 'Hi/Hello' kahe to bheja janay wala paigham...",
+      "paymentMessage": "Payment Request Ka Paigham",
+      "paymentPlaceholder": "Online order place hone par bheja janay wala paigham...",
+      "preview": {
+        "title": "WhatsApp Preview",
+        "subtitle": "Gahak ke screen ka live WhatsApp manzar",
+        "botName": "Hotel Order Bot",
+        "verified": "Verified Business Account",
+        "sampleCustomer": "Salam! Menu dikhayein please"
+      }
+    },
+    "notifications": {
+      "title": "Alerts Ki Tarjeehat",
+      "subtitle": "Naye orders aur rozana ki report ke alerts kahan aur kaise mileyin",
+      "emailOnNewOrder": "Har naye order par email",
+      "emailOnNewOrderDesc": "Jab bhi koi naya order place ho to fori email alert miley",
+      "dailySummaryEmail": "Rozana summary email",
+      "dailySummaryEmailDesc": "Din ke ikhtitaam par kul bikri aur orders ki tadad ki report miley",
+      "pushNotifications": "Web push notifications",
+      "pushNotificationsDesc": "Browser tab background mein hone par bhi desktop notifications mileyin",
+      "sound": "Sound alerts",
+      "soundDesc": "Live board par naye order anay par chime ki aawaz aye",
+      "notificationEmail": "Notification Email Address",
+      "notificationEmailPlaceholder": "Jaise: orders@hotel.com"
+    },
+    "toast": {
+      "saved": "Settings kamyabi se save ho gayin",
+      "error": "Settings save karne mein masla pesh aya. Dobara koshish karein."
+    },
+    "validation": {
+      "nameRequired": "Hotel ka naam zaroori hai",
+      "deliveryFeePositive": "Delivery fee 0 ya is se zyada honi chahiye",
+      "minOrderPositive": "Kam az kam order 0 ya is se zyada hona chahiye",
+      "emailInvalid": "Durust email address darj karein"
+    }
   }
 }

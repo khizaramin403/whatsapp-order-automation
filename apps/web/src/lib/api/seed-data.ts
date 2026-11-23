@@ -28,9 +28,13 @@ export const seedRestaurant: Restaurant = {
   bot_welcome_en: "Welcome to Pearl Continental Hotel & Suites! How may we delight you today?",
   bot_welcome_ar: "مرحباً بكم في فندق بيرل كونتيننتال! كيف يمكننا خدمتكم اليوم؟",
   bot_welcome_ur: "Pearl Continental mein khush-aamdeed! Aaj aap kya mangwana pasand karein ge?",
+  bot_payment_en: "Thank you for your order! Please transfer the total to our bank account and send us the payment screenshot.",
+  bot_payment_ar: "شكراً لطلبكم! يرجى تحويل إجمالي المبلغ لحسابنا البنكي وإرسال صورة الإشعار هنا.",
+  bot_payment_ur: "Aap ke order ka shukriya! Barah-e-karam raqam hamaray bank account mein transfer kar ke screenshot yahan bheinjein.",
   email_notifications: true,
   daily_summary_email: true,
   push_notifications: true,
+  sound_notifications: true,
   notification_email: "orders@pearlcontinental.mock",
   open_hours: {
     monday: { open: "11:00", close: "23:30" },
