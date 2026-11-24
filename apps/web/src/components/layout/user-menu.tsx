@@ -2,11 +2,14 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { User, Languages, LogOut, Check } from "lucide-react";
+import { User, Languages, LogOut, Check, Shield } from "lucide-react";
+import type { Role } from "@app/shared";
 
 import { useAuth } from "@/stores/auth.store";
 import { setLocale } from "@/actions/locale";
+import { ROLE_HOME_PAGES } from "@/components/layout/RoleGuard";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +30,8 @@ const LANGUAGES = [
   { code: "ar", label: "العربية" },
 ] as const;
 
+const AVAILABLE_ROLES: Role[] = ["owner", "manager", "chef", "rider"];
+
 interface UserMenuProps {
   children: React.ReactNode;
   align?: "start" | "end" | "center";
@@ -43,9 +48,11 @@ export function UserMenu({
   const t = useTranslations("userMenu");
   const tSidebar = useTranslations("sidebar");
   const currentLocale = useLocale();
+  const router = useRouter();
 
   const user = useAuth((s) => s.user);
   const clearAuth = useAuth((s) => s.clearAuth);
+  const setRole = useAuth((s) => s.setRole);
 
   const [isPending, startTransition] = React.useTransition();
 
@@ -55,13 +62,20 @@ export function UserMenu({
     });
   };
 
+  const handleRoleChange = (role: Role) => {
+    setRole(role);
+    toast.success(t("roleSwitched", { role: tSidebar(`roles.${role}`) }));
+    const targetHome = ROLE_HOME_PAGES[role] || "/orders";
+    router.push(targetHome);
+  };
+
   const handleSignOut = () => {
     clearAuth();
     toast.success(t("signedOut"));
   };
 
   const userName = user?.name ?? "Ali Raza";
-  const userRole = user?.role ?? "owner";
+  const userRole = (user?.role as Role) ?? "owner";
 
   return (
     <DropdownMenu>
@@ -94,6 +108,32 @@ export function UserMenu({
               <span>{t("profile")}</span>
             </Link>
           </DropdownMenuItem>
+
+          {/* Switch Role Submenu */}
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger className="cursor-pointer">
+              <Shield className="me-2 h-4 w-4 text-[#5F6C79]" strokeWidth={1.75} />
+              <span>{t("switchRole")}</span>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent className="w-44">
+              {AVAILABLE_ROLES.map((role) => {
+                const isSelected = userRole === role;
+                return (
+                  <DropdownMenuItem
+                    key={role}
+                    onClick={() => handleRoleChange(role)}
+                    selected={isSelected}
+                    className="cursor-pointer flex items-center justify-between"
+                  >
+                    <span>{tSidebar(`roles.${role}`)}</span>
+                    {isSelected && (
+                      <Check className="h-4 w-4 text-[#7D6228]" strokeWidth={2.5} />
+                    )}
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
 
           {/* Language Selection Submenu */}
           <DropdownMenuSub>

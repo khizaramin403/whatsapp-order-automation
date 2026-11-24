@@ -63,6 +63,8 @@
   },
   "userMenu": {
     "profile": "Profile",
+    "switchRole": "Role tabdeel karein",
+    "roleSwitched": "Role {role} par tabdeel ho gaya",
     "language": "Zaban",
     "signOut": "Sign out",
     "signedOut": "Kamyabi se sign out ho gaya"

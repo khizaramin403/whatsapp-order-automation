@@ -63,6 +63,8 @@
   },
   "userMenu": {
     "profile": "Profile",
+    "switchRole": "Switch Role",
+    "roleSwitched": "Switched role to {role}",
     "language": "Language",
     "signOut": "Sign out",
     "signedOut": "Signed out successfully"

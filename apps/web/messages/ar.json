@@ -63,6 +63,8 @@
   },
   "userMenu": {
     "profile": "الملف الشخصي",
+    "switchRole": "تبديل الدور",
+    "roleSwitched": "تم تبديل الدور إلى {role}",
     "language": "اللغة",
     "signOut": "تسجيل الخروج",
     "signedOut": "تم تسجيل الخروج بنجاح"
