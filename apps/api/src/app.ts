@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import helmet from "helmet";
 import cors from "cors";
 import crypto from "crypto";
@@ -6,8 +6,13 @@ import pinoHttp from "pino-http";
 import { env } from "./config";
 import { logger } from "./utils/logger";
 import { errorHandler } from "./middleware";
+import { apiV1Router } from "./routes";
+import { AppError } from "./utils/errors";
 
 const app = express();
+
+// Trust reverse proxy for rate limiting and IP resolution
+app.set("trust proxy", 1);
 
 // Security headers & CORS
 app.use(helmet());
@@ -42,13 +47,20 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check endpoint
+// Health check endpoint (outside /api/v1)
 app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({ status: "ok" });
+});
+
+// Mount all API endpoints under /api/v1
+app.use("/api/v1", apiV1Router);
+
+// 404 for unknown routes
+app.use((_req: Request, _res: Response, next: NextFunction) => {
+  next(new AppError("Route not found", 404, "NOT_FOUND"));
 });
 
 // Centralized error handler
 app.use(errorHandler);
 
 export default app;
-

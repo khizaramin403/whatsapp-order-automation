@@ -1,16 +1,9 @@
 import { Request, Response, NextFunction } from "express";
+import { AppError } from "../utils/errors";
+import { sendError } from "../utils/response";
+import { logger } from "../utils/logger";
 
-export class AppError extends Error {
-  public readonly statusCode: number;
-  public readonly code: string;
-
-  constructor(message: string, statusCode = 500, code = "INTERNAL_SERVER_ERROR") {
-    super(message);
-    this.statusCode = statusCode;
-    this.code = code;
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
-}
+export { AppError };
 
 export function errorHandler(
   err: Error,
@@ -22,29 +15,34 @@ export function errorHandler(
 
   if (err instanceof AppError) {
     if (req.log) {
-      req.log.warn({ err, requestId }, err.message);
+      req.log.warn({ err, requestId, code: err.code }, err.message);
+    } else {
+      logger.warn({ err, requestId, code: err.code }, err.message);
     }
-    return res.status(err.statusCode).json({
-      error: {
-        code: err.code,
-        message: err.message,
-        requestId,
-      },
-    });
+
+    return sendError(
+      res,
+      err.code,
+      err.message,
+      err.statusCode,
+      requestId,
+      err.details
+    );
   }
 
+  // Unknown or unhandled internal error: log full stack trace securely on the server
   if (req.log) {
     req.log.error({ err, requestId }, err.message || "Unhandled internal error");
   } else {
-    console.error(err);
+    logger.error({ err, requestId }, err.message || "Unhandled internal error");
   }
 
-  return res.status(500).json({
-    error: {
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An unexpected error occurred",
-      requestId,
-    },
-  });
+  // Never leak internal stack traces or internal implementation details to the client
+  return sendError(
+    res,
+    "INTERNAL_SERVER_ERROR",
+    "An unexpected error occurred",
+    500,
+    requestId
+  );
 }
-
