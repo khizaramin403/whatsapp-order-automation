@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import helmet from "helmet";
 import cors from "cors";
 import crypto from "crypto";
+import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
 import { env } from "./config";
 import { logger } from "./utils/logger";
@@ -23,8 +24,9 @@ app.use(
   })
 );
 
-// Body parser
+// Body and cookie parsers
 app.use(express.json());
+app.use(cookieParser());
 
 // Request logging with correlation ID
 app.use(
