@@ -548,7 +548,8 @@
         "subtitle": "Simulated live customer view",
         "botName": "Hotel Order Bot",
         "verified": "Official Business Account",
-        "sampleCustomer": "Hi, I'd like to view the menu"
+        "sampleCustomer": "Hi, I'd like to view the menu",
+        "sampleOrder": "Order #1085 • Online Payment"
       }
     },
     "notifications": {

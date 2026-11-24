@@ -59,7 +59,7 @@ function getInitials(name: string): string {
   return name.slice(0, 2).toUpperCase();
 }
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 20;
 
 export function TeamManagement() {
   const t = useTranslations("team");

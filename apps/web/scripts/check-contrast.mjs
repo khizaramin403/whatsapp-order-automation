@@ -72,7 +72,7 @@ const pairs = [
   // Login Brand Panel
   { name: 'Login Brand Statement (#F7F7F7 on #10202D)', fg: '#F7F7F7', bg: '#10202D', type: 'text' },
   { name: 'Login Brand Supporting (#A9B4BE on #10202D)', fg: '#A9B4BE', bg: '#10202D', type: 'text' },
-  { name: 'Login Placeholder Copy (#5F6C79 on #10202D)', fg: '#5F6C79', bg: '#10202D', type: 'text' }
+  { name: 'Login Placeholder Copy (#A9B4BE on #10202D)', fg: '#A9B4BE', bg: '#10202D', type: 'text' }
 ];
 
 console.log('| Pair Name | Foreground | Background | Ratio | Target | Status |');

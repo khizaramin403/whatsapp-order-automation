@@ -207,7 +207,7 @@ export function BotTextsTab() {
             {/* Customer order confirmation */}
             <div className="flex justify-end">
               <div className="bg-[#DCF8C6] text-[#10202D] p-2.5 rounded-[10px] rounded-tr-none max-w-[80%] shadow-xs">
-                <p className="leading-snug">Order #1085 • Online Payment</p>
+                <p className="leading-snug">{t("bot.preview.sampleOrder")}</p>
                 <div className="text-[9px] text-[#5F6C79] text-end mt-1">11:05 AM</div>
               </div>
             </div>

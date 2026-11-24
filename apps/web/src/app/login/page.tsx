@@ -153,7 +153,7 @@ export default function LoginPage() {
         </div>
 
         {/* Bottom placeholder text */}
-        <div className="relative z-10 text-xs text-[#5F6C79]">
+        <div className="relative z-10 text-xs text-[#A9B4BE]">
           {t("placeholderCopy")}
         </div>
       </div>

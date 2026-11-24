@@ -548,7 +548,8 @@
         "subtitle": "Gahak ke screen ka live WhatsApp manzar",
         "botName": "Hotel Order Bot",
         "verified": "Verified Business Account",
-        "sampleCustomer": "Salam! Menu dikhayein please"
+        "sampleCustomer": "Salam! Menu dikhayein please",
+        "sampleOrder": "Order #1085 • Online Payment"
       }
     },
     "notifications": {
