@@ -6,7 +6,7 @@ import { authenticate, tenant, requireRole } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { dashboardLimiter } from "../middleware/rateLimiter";
 
-const updateSettingsSchema = z.object({
+export const updateSettingsSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").optional(),
   timezone: z.string().optional(),
   currency: z.string().optional(),

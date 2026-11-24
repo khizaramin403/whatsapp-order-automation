@@ -9,6 +9,8 @@ import { logger } from "./utils/logger";
 import { errorHandler } from "./middleware";
 import { apiV1Router } from "./routes";
 import { AppError } from "./utils/errors";
+import swaggerUi from "swagger-ui-express";
+import { openapiDocument } from "./docs/openapi";
 
 const app = express();
 
@@ -56,6 +58,22 @@ app.get("/health", (_req: Request, res: Response) => {
 
 // Mount all API endpoints under /api/v1
 app.use("/api/v1", apiV1Router);
+
+// OpenAPI interactive documentation (non-production only)
+if (env.NODE_ENV !== "production") {
+  app.get("/api/docs/openapi.json", (_req: Request, res: Response) => {
+    res.status(200).json(openapiDocument);
+  });
+  app.use(
+    "/api/docs",
+    (_req: Request, res: Response, next: NextFunction) => {
+      res.removeHeader("Content-Security-Policy");
+      next();
+    },
+    swaggerUi.serve,
+    swaggerUi.setup(openapiDocument)
+  );
+}
 
 // 404 for unknown routes
 app.use((_req: Request, _res: Response, next: NextFunction) => {

@@ -10,7 +10,7 @@ const dateStringSchema = z
   .string()
   .refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" });
 
-const summaryQuerySchema = z.object({
+export const summaryQuerySchema = z.object({
   range: z.enum(["today", "7d", "30d"]).optional(),
   dateFrom: dateStringSchema.optional(),
   dateTo: dateStringSchema.optional(),

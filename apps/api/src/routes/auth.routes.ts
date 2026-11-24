@@ -5,12 +5,12 @@ import { authenticate } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { loginLimiter } from "../middleware/rateLimiter";
 
-const loginSchema = z.object({
+export const loginSchema = z.object({
   email: z.string().email("A valid email address is required"),
   password: z.string().min(1, "Password is required"),
 });
 
-const languageSchema = z.object({
+export const languageSchema = z.object({
   language: z.enum(["en", "ar", "ur-Latn"], {
     errorMap: () => ({ message: "Language must be one of: en, ar, ur-Latn" }),
   }),

@@ -6,7 +6,7 @@ import { authenticate, tenant, requireRole } from "../middleware/auth";
 import { validate } from "../middleware/validate";
 import { dashboardLimiter } from "../middleware/rateLimiter";
 
-const translationSchema = z.object({
+export const translationSchema = z.object({
   language: z.enum(["en", "ar", "ur-Latn"], {
     errorMap: () => ({ message: "Language must be en, ar, or ur-Latn" }),
   }),
@@ -15,17 +15,17 @@ const translationSchema = z.object({
   aliases: z.array(z.string()).optional(),
 });
 
-const createCategorySchema = z.object({
+export const createCategorySchema = z.object({
   sort_order: z.number().int().optional(),
   translations: z.array(translationSchema).min(1, "At least one translation is required"),
 });
 
-const updateCategorySchema = z.object({
+export const updateCategorySchema = z.object({
   sort_order: z.number().int().optional(),
   translations: z.array(translationSchema).optional(),
 });
 
-const reorderCategoriesSchema = z.object({
+export const reorderCategoriesSchema = z.object({
   items: z
     .array(
       z.object({
@@ -36,7 +36,7 @@ const reorderCategoriesSchema = z.object({
     .min(1, "At least one category is required"),
 });
 
-const createItemSchema = z.object({
+export const createItemSchema = z.object({
   category_id: z.string().uuid("Invalid category ID"),
   price: z.number().int().nonnegative("Price must be a non-negative integer (minor units)"),
   image_url: z.string().nullable().optional(),
@@ -45,7 +45,7 @@ const createItemSchema = z.object({
   translations: z.array(translationSchema).min(1, "At least one translation is required"),
 });
 
-const updateItemSchema = z.object({
+export const updateItemSchema = z.object({
   category_id: z.string().uuid("Invalid category ID").optional(),
   price: z.number().int().nonnegative().optional(),
   image_url: z.string().nullable().optional(),
@@ -54,15 +54,15 @@ const updateItemSchema = z.object({
   translations: z.array(translationSchema).optional(),
 });
 
-const updateAvailabilitySchema = z.object({
+export const updateAvailabilitySchema = z.object({
   is_available: z.boolean({ required_error: "is_available boolean is required" }),
 });
 
-const idParamSchema = z.object({
+export const idParamSchema = z.object({
   id: z.string().uuid("Invalid ID format"),
 });
 
-const getItemsQuerySchema = z.object({
+export const getItemsQuerySchema = z.object({
   category_id: z.string().uuid().optional(),
   is_available: z.enum(["true", "false"]).optional(),
   search: z.string().optional(),
