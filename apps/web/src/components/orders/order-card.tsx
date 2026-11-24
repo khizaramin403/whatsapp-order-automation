@@ -276,7 +276,7 @@ export const OrderCard = React.memo(function OrderCard({ order }: OrderCardProps
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>
-              {confirmDialog === "cancel" ? tDialogs("keepOrder") : t("common.cancel")}
+              {confirmDialog === "cancel" ? tDialogs("keepOrder") : tActions("cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               className="bg-[#B3392F] text-white hover:bg-[#9C2F26]"

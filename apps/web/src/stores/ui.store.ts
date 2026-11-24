@@ -29,7 +29,7 @@ export const useUI = create<UIState>()(
       filter: "all",
       selectedOrderId: null,
       mobileOpen: false,
-      newOrdersCount: 6,
+      newOrdersCount: 0,
       toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
       setSidebarOpen: (sidebarOpen) => set({ sidebarOpen }),
       toggleSound: () => set((state) => ({ soundOn: !state.soundOn })),

@@ -16,5 +16,5 @@ export async function setLocale(locale: string) {
     sameSite: "lax",
   });
 
-  revalidatePath("/");
+  revalidatePath("/", "layout");
 }

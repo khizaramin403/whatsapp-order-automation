@@ -2,13 +2,22 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Eye, EyeOff, CircleAlert, TriangleAlert } from "lucide-react";
 
-import { useAuth, type UserRole } from "@/stores/auth.store";
+import { useAuth } from "@/stores/auth.store";
+import {
+  login,
+  mapApiUserToProfile,
+  ApiError,
+  getApiErrorMessage,
+} from "@/lib/api";
+import { setLocale } from "@/actions/locale";
+import { ROLE_HOME_PAGES } from "@/components/layout/RoleGuard";
 import { BRAND_NAME } from "@/config/brand";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { Button } from "@/components/ui/button";
@@ -20,7 +29,10 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 
 export default function LoginPage() {
   const t = useTranslations("login");
+  const tErrors = useTranslations("errors");
+  const currentLocale = useLocale();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const setAuth = useAuth((s) => s.setAuth);
 
   const [passwordShown, setPasswordShown] = React.useState(false);
@@ -63,48 +75,44 @@ export default function LoginPage() {
     setErrorMessage(null);
     setWarningMessage(null);
 
-    // Simulate realistic network delay
-    await new Promise((r) => setTimeout(r, 600));
+    try {
+      const res = await login({
+        email: values.email.trim(),
+        password: values.password,
+      });
 
-    // TODO: Phase 3 replaces this with real API call (POST /api/v1/auth/login)
-    const emailLower = values.email.toLowerCase().trim();
+      queryClient.clear();
+      const profile = mapApiUserToProfile(res.user);
+      setAuth(res.accessToken, profile);
 
-    if (emailLower === "fail@test.com") {
+      // Apply the user's saved language preference from their profile
+      if (profile.language && profile.language !== currentLocale) {
+        await setLocale(profile.language);
+      }
+
+      const redirectPath = ROLE_HOME_PAGES[profile.role] || "/orders";
+      router.push(redirectPath);
+      router.refresh();
+    } catch (err) {
+      if (err instanceof ApiError) {
+        if (err.code === "RATE_LIMITED") {
+          setWarningMessage(
+            err.retryAfterSeconds
+              ? tErrors("RATE_LIMITED_SECONDS", { seconds: err.retryAfterSeconds })
+              : t("errors.tooManyAttempts")
+          );
+        } else if (err.code === "UNAUTHENTICATED") {
+          setErrorMessage(t("errors.invalidCredentials"));
+        } else if (err.code === "FORBIDDEN") {
+          setErrorMessage(t("errors.accountInactive"));
+        } else {
+          setErrorMessage(getApiErrorMessage(err, tErrors));
+        }
+      } else {
+        setErrorMessage(getApiErrorMessage(err, tErrors));
+      }
       setIsLoading(false);
-      setErrorMessage(t("errors.invalidCredentials"));
-      return;
     }
-
-    if (emailLower === "wait@test.com") {
-      setIsLoading(false);
-      setWarningMessage(t("errors.tooManyAttempts"));
-      return;
-    }
-
-    // Determine role based on email prefix for testing
-    let role: UserRole = "owner";
-    let redirectPath = "/orders";
-
-    if (emailLower.startsWith("chef")) {
-      role = "chef";
-      redirectPath = "/kitchen";
-    } else if (emailLower.startsWith("rider")) {
-      role = "rider";
-      redirectPath = "/delivery";
-    } else if (emailLower.startsWith("manager")) {
-      role = "manager";
-      redirectPath = "/orders";
-    }
-
-    // Set auth in Zustand in-memory store
-    setAuth("fake-jwt-token-step-1-7", {
-      name: "Ali Raza",
-      role,
-      restaurantId: "rest-001",
-    });
-
-    setIsLoading(false);
-    router.push(redirectPath);
   };
 
   return (

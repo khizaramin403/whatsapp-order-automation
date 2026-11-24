@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCreateTeamMember, useUpdateTeamMember } from "@/hooks/use-team";
+import { getApiErrorMessage } from "@/lib/api";
 import { toast } from "sonner";
 
 interface TeamMemberSheetProps {
@@ -49,6 +50,7 @@ interface TeamMemberFormProps {
 
 function TeamMemberForm({ member, onClose }: TeamMemberFormProps) {
   const t = useTranslations("team");
+  const tErrors = useTranslations("errors");
   const createMember = useCreateTeamMember();
   const updateMember = useUpdateTeamMember();
   const isEditing = Boolean(member);
@@ -65,13 +67,13 @@ function TeamMemberForm({ member, onClose }: TeamMemberFormProps) {
         ? z
             .string()
             .optional()
-            .refine((val) => !val || val.length >= 6, {
+            .refine((val) => !val || val.length >= 8, {
               message: t("validation.passwordMin"),
             })
         : z
             .string()
             .min(1, t("validation.passwordRequired"))
-            .min(6, t("validation.passwordMin")),
+            .min(8, t("validation.passwordMin")),
     });
   }, [t, isEditing]);
 
@@ -118,8 +120,8 @@ function TeamMemberForm({ member, onClose }: TeamMemberFormProps) {
         toast.success(t("toast.created"));
       }
       onClose();
-    } catch {
-      toast.error(t("toast.error"));
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, tErrors));
     }
   };
 

@@ -4,12 +4,13 @@ import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { User, Languages, LogOut, Check, Shield } from "lucide-react";
-import type { Role } from "@app/shared";
+import { useQueryClient } from "@tanstack/react-query";
+import { User, Languages, LogOut, Check } from "lucide-react";
+import type { Role, SupportedLanguage } from "@app/shared";
 
 import { useAuth } from "@/stores/auth.store";
+import { logout, updateMyLanguage, getApiErrorMessage } from "@/lib/api";
 import { setLocale } from "@/actions/locale";
-import { ROLE_HOME_PAGES } from "@/components/layout/RoleGuard";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,8 +31,6 @@ const LANGUAGES = [
   { code: "ar", label: "العربية" },
 ] as const;
 
-const AVAILABLE_ROLES: Role[] = ["owner", "manager", "chef", "rider"];
-
 interface UserMenuProps {
   children: React.ReactNode;
   align?: "start" | "end" | "center";
@@ -47,34 +46,53 @@ export function UserMenu({
 }: UserMenuProps) {
   const t = useTranslations("userMenu");
   const tSidebar = useTranslations("sidebar");
+  const tErrors = useTranslations("errors");
   const currentLocale = useLocale();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const user = useAuth((s) => s.user);
+  const accessToken = useAuth((s) => s.accessToken);
   const clearAuth = useAuth((s) => s.clearAuth);
-  const setRole = useAuth((s) => s.setRole);
+  const setUserLanguage = useAuth((s) => s.setUserLanguage);
 
   const [isPending, startTransition] = React.useTransition();
+  const [isSigningOut, setIsSigningOut] = React.useState(false);
 
-  const handleLanguageChange = (code: string) => {
+  const handleLanguageChange = (code: SupportedLanguage) => {
+    if (code === currentLocale) return;
+
     startTransition(async () => {
-      await setLocale(code);
+      try {
+        if (accessToken) {
+          await updateMyLanguage(code);
+          setUserLanguage(code);
+        }
+        await setLocale(code);
+        router.refresh();
+      } catch (err) {
+        toast.error(getApiErrorMessage(err, tErrors));
+      }
     });
   };
 
-  const handleRoleChange = (role: Role) => {
-    setRole(role);
-    toast.success(t("roleSwitched", { role: tSidebar(`roles.${role}`) }));
-    const targetHome = ROLE_HOME_PAGES[role] || "/orders";
-    router.push(targetHome);
+  const handleSignOut = async () => {
+    if (isSigningOut) return;
+    setIsSigningOut(true);
+    try {
+      await logout();
+    } catch {
+      // Clear local session state even if logout network call fails
+    } finally {
+      clearAuth();
+      queryClient.clear();
+      toast.success(t("signedOut"));
+      router.replace("/login");
+      setIsSigningOut(false);
+    }
   };
 
-  const handleSignOut = () => {
-    clearAuth();
-    toast.success(t("signedOut"));
-  };
-
-  const userName = user?.name ?? "Ali Raza";
+  const userName = user?.name ?? "";
   const userRole = (user?.role as Role) ?? "owner";
 
   return (
@@ -109,32 +127,6 @@ export function UserMenu({
             </Link>
           </DropdownMenuItem>
 
-          {/* Switch Role Submenu */}
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="cursor-pointer">
-              <Shield className="me-2 h-4 w-4 text-[#5F6C79]" strokeWidth={1.75} />
-              <span>{t("switchRole")}</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent className="w-44">
-              {AVAILABLE_ROLES.map((role) => {
-                const isSelected = userRole === role;
-                return (
-                  <DropdownMenuItem
-                    key={role}
-                    onClick={() => handleRoleChange(role)}
-                    selected={isSelected}
-                    className="cursor-pointer flex items-center justify-between"
-                  >
-                    <span>{tSidebar(`roles.${role}`)}</span>
-                    {isSelected && (
-                      <Check className="h-4 w-4 text-[#7D6228]" strokeWidth={2.5} />
-                    )}
-                  </DropdownMenuItem>
-                );
-              })}
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-
           {/* Language Selection Submenu */}
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="cursor-pointer">
@@ -167,6 +159,7 @@ export function UserMenu({
 
         {/* Sign out */}
         <DropdownMenuItem
+          disabled={isSigningOut}
           onClick={handleSignOut}
           className="text-[#8E2A22] focus:text-[#8E2A22] focus:bg-[#F8E4E1] cursor-pointer"
         >

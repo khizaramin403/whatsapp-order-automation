@@ -1,8 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import type { SupportedLanguage } from "@app/shared";
+import { useAuth } from "@/stores/auth.store";
+import { updateMyLanguage, getApiErrorMessage } from "@/lib/api";
 import { setLocale } from "@/actions/locale";
+import { toast } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
 const LANGUAGES = [
@@ -13,11 +18,28 @@ const LANGUAGES = [
 
 export function LanguageSwitcher() {
   const currentLocale = useLocale();
+  const router = useRouter();
+  const tErrors = useTranslations("errors");
+
+  const accessToken = useAuth((s) => s.accessToken);
+  const setUserLanguage = useAuth((s) => s.setUserLanguage);
+
   const [isPending, startTransition] = React.useTransition();
 
-  const handleSelect = (code: string) => {
+  const handleSelect = (code: SupportedLanguage) => {
+    if (code === currentLocale) return;
+
     startTransition(async () => {
-      await setLocale(code);
+      try {
+        if (accessToken) {
+          await updateMyLanguage(code);
+          setUserLanguage(code);
+        }
+        await setLocale(code);
+        router.refresh();
+      } catch (err) {
+        toast.error(getApiErrorMessage(err, tErrors));
+      }
     });
   };
 

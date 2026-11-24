@@ -36,7 +36,7 @@ export function RoleGuard({ children, allowedRoles }: RoleGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
   const user = useAuth((s) => s.user);
-  const userRole = (user?.role as Role) || "owner";
+  const userRole = user?.role as Role | undefined;
 
   const isClient = React.useSyncExternalStore(
     emptySubscribe,
@@ -57,6 +57,9 @@ export function RoleGuard({ children, allowedRoles }: RoleGuardProps) {
   }, [allowedRoles, pathname]);
 
   const isAllowed = React.useMemo(() => {
+    if (!userRole) {
+      return false;
+    }
     if (!effectiveAllowedRoles) {
       // If route is not in restricted map (e.g. public or unmapped), allow
       return true;
@@ -65,15 +68,15 @@ export function RoleGuard({ children, allowedRoles }: RoleGuardProps) {
   }, [effectiveAllowedRoles, userRole]);
 
   React.useEffect(() => {
-    if (isClient && !isAllowed) {
+    if (isClient && userRole && !isAllowed) {
       const homePage = ROLE_HOME_PAGES[userRole] || "/orders";
       if (pathname !== homePage) {
         router.replace(homePage);
       }
     }
-  }, [isClient, isAllowed, userRole, pathname, router]);
+  }, [isClient, userRole, isAllowed, pathname, router]);
 
-  if (!isClient) {
+  if (!isClient || !userRole) {
     return null;
   }
 

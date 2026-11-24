@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useCreateCategory, useUpdateCategory } from "@/hooks/use-menu";
+import { getApiErrorMessage } from "@/lib/api";
 
 interface CategoryDialogProps {
   open: boolean;
@@ -38,6 +39,8 @@ function CategoryDialogInner({
   onClose: () => void;
 }) {
   const t = useTranslations("menu");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const isEditing = Boolean(category);
 
   const createMutation = useCreateCategory();
@@ -110,8 +113,8 @@ function CategoryDialogInner({
         toast.success(t("toasts.categoryCreated"));
       }
       onClose();
-    } catch {
-      toast.error(t("error.title"));
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, tErrors));
     }
   };
 
@@ -182,7 +185,7 @@ function CategoryDialogInner({
             disabled={isPending}
             className="h-9 px-4 text-xs font-semibold rounded-[8px]"
           >
-            {t("pagination.previous") === "Previous" ? "Cancel" : "إلغاء"}
+            {tCommon("cancel")}
           </Button>
           <Button
             type="submit"

@@ -53,7 +53,6 @@ const NAV_GROUPS: NavGroup[] = [
         href: "/orders",
         icon: ClipboardList,
         roles: ["owner", "manager", "super_admin"],
-        badgeCount: 3, // Mock new order count from DESIGN.md
       },
       {
         key: "kitchen",
@@ -145,7 +144,7 @@ export function AppSidebar() {
   }, [userRole]);
 
   // Initials for avatar fallback
-  const userName = user?.name ?? "Ali Raza";
+  const userName = user?.name ?? "";
   const userInitials =
     userName
       .trim()
@@ -153,7 +152,7 @@ export function AppSidebar() {
       .map((p) => p[0])
       .slice(0, 2)
       .join("")
-      .toUpperCase() || "AR";
+      .toUpperCase() || "U";
 
   return (
     <TooltipProvider delayDuration={150}>
@@ -319,9 +318,9 @@ export function AppSidebar() {
                           <TooltipContent side={isRtl ? "left" : "right"} sideOffset={12}>
                             <div className="flex items-center gap-2">
                               <span>{label}</span>
-                              {(item.badgeCount ?? 0) > 0 && (
+                              {badgeCount > 0 && (
                                 <span className="bg-[#C7A667] text-[#10202D] px-1.5 py-0.2 rounded-full text-[10px] font-semibold">
-                                  {item.badgeCount}
+                                  {badgeCount}
                                 </span>
                               )}
                             </div>

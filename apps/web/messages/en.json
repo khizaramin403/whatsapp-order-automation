@@ -90,6 +90,7 @@
       "invalidEmail": "Please enter a valid email address.",
       "passwordRequired": "Password is required (min 6 characters).",
       "invalidCredentials": "Invalid email or password.",
+      "accountInactive": "Your account is inactive. Please contact your hotel owner.",
       "tooManyAttempts": "Too many login attempts. Please wait 1 minute before trying again."
     }
   },
@@ -476,7 +477,7 @@
       "emailInvalid": "Please enter a valid email address",
       "roleRequired": "Please select a role",
       "passwordRequired": "Temporary password is required for new accounts",
-      "passwordMin": "Password must be at least 6 characters"
+      "passwordMin": "Password must be at least 8 characters"
     }
   },
   "settings": {
@@ -578,5 +579,19 @@
       "minOrderPositive": "Minimum order must be 0 or greater",
       "emailInvalid": "Please enter a valid notification email address"
     }
+  },
+  "errors": {
+    "VALIDATION_ERROR": "Please check your input and try again.",
+    "UNAUTHENTICATED": "Your session has expired. Please sign in again.",
+    "FORBIDDEN": "You do not have permission to perform this action.",
+    "NOT_FOUND": "The requested item was not found.",
+    "RATE_LIMITED": "Too many requests. Please wait a moment and try again.",
+    "RATE_LIMITED_SECONDS": "Too many attempts. Please wait {seconds} seconds before trying again.",
+    "ORDER_INVALID_TRANSITION": "This order status change is not allowed.",
+    "BAD_REQUEST": "Invalid request. Please check your input.",
+    "CONFLICT": "This record conflicts with an existing entry.",
+    "INTERNAL_SERVER_ERROR": "Something went wrong on the server. Please try again.",
+    "NETWORK_ERROR": "Unable to connect to the server. Please check your connection.",
+    "UNKNOWN": "An unexpected error occurred. Please try again."
   }
 }

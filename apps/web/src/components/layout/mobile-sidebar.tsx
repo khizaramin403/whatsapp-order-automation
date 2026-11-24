@@ -46,7 +46,6 @@ const NAV_GROUPS: NavGroup[] = [
         href: "/orders",
         icon: ClipboardList,
         roles: ["owner", "manager", "super_admin"],
-        badgeCount: 3,
       },
       {
         key: "kitchen",
@@ -123,7 +122,7 @@ export function MobileSidebar() {
     })).filter((group) => group.items.length > 0);
   }, [userRole]);
 
-  const userName = user?.name ?? "Ali Raza";
+  const userName = user?.name ?? "";
   const userInitials =
     userName
       .trim()
@@ -131,7 +130,7 @@ export function MobileSidebar() {
       .map((p) => p[0])
       .slice(0, 2)
       .join("")
-      .toUpperCase() || "AR";
+      .toUpperCase() || "U";
 
   return (
     <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>

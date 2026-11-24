@@ -165,6 +165,7 @@ export interface Order {
   items?: OrderItem[];
   events?: OrderEvent[];
   payment_proofs?: PaymentProof[];
+  cash_to_collect?: number; // Role-shaped field for riders on COD orders
 }
 
 export interface AnalyticsSummary {

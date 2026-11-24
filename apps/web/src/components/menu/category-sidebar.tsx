@@ -33,6 +33,7 @@ import {
 import { CategoryDialog } from "./category-dialog";
 import { getLocalizedName } from "@/lib/menu-utils";
 import { useReorderCategory, useDeleteCategory } from "@/hooks/use-menu";
+import { getApiErrorMessage } from "@/lib/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -50,6 +51,8 @@ export function CategorySidebar({
   onSelectCategory,
 }: CategorySidebarProps) {
   const t = useTranslations("menu");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const locale = useLocale();
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -72,8 +75,8 @@ export function CategorySidebar({
   const handleReorder = async (id: string, direction: "up" | "down") => {
     try {
       await reorderMutation.mutateAsync({ id, direction });
-    } catch {
-      toast.error(t("error.title"));
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, tErrors));
     }
   };
 
@@ -86,8 +89,8 @@ export function CategorySidebar({
         onSelectCategory(null);
       }
       setDeletingCategory(null);
-    } catch {
-      toast.error(t("error.title"));
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, tErrors));
     }
   };
 
@@ -265,7 +268,7 @@ export function CategorySidebar({
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-3 gap-2 sm:gap-0">
             <AlertDialogCancel className="h-9 px-4 text-xs font-semibold rounded-[8px]">
-              {t("pagination.previous") === "Previous" ? "Cancel" : "إلغاء"}
+              {tCommon("cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}

@@ -1,16 +1,19 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import type { Order, OrderStatus, PaymentStatus } from "@app/shared";
 import {
   getOrders,
   getOrder,
   updateOrderStatus,
   updatePaymentStatus,
+  getApiErrorMessage,
   type GetOrdersParams,
   type PaginatedResponse,
 } from "@/lib/api";
 import { queryKeys } from "@/lib/query-keys";
+import { toast } from "@/components/ui/sonner";
 
 /**
  * Hook to fetch paginated/filtered orders
@@ -39,6 +42,7 @@ export function useOrder(id: string | null | undefined) {
  */
 export function useUpdateOrderStatus() {
   const queryClient = useQueryClient();
+  const tErrors = useTranslations("errors");
 
   return useMutation({
     mutationFn: ({ id, status }: { id: string; status: OrderStatus }) =>
@@ -64,6 +68,9 @@ export function useUpdateOrderStatus() {
         }
       );
     },
+    onError: (err) => {
+      toast.error(getApiErrorMessage(err, tErrors));
+    },
   });
 }
 
@@ -73,6 +80,7 @@ export function useUpdateOrderStatus() {
  */
 export function useUpdatePaymentStatus() {
   const queryClient = useQueryClient();
+  const tErrors = useTranslations("errors");
 
   return useMutation({
     mutationFn: ({
@@ -102,6 +110,9 @@ export function useUpdatePaymentStatus() {
           };
         }
       );
+    },
+    onError: (err) => {
+      toast.error(getApiErrorMessage(err, tErrors));
     },
   });
 }

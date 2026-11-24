@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { RefreshCw, AlertCircle, Utensils } from "lucide-react";
 import type { Order } from "@app/shared";
 import { useOrders } from "@/hooks/use-orders";
+import { getApiErrorMessage } from "@/lib/api";
 import { KitchenCard } from "./kitchen-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
@@ -13,6 +14,7 @@ import { Button } from "@/components/ui/button";
 
 export function KitchenView() {
   const t = useTranslations("kitchen");
+  const tErrors = useTranslations("errors");
 
   // Force loading for testing skeleton state (?loading=true)
   const forceLoading = React.useSyncExternalStore(
@@ -98,7 +100,7 @@ export function KitchenView() {
           <AlertCircle className="h-5 w-5" />
           <AlertTitle>{t("errorTitle")}</AlertTitle>
           <AlertDescription className="flex items-center justify-between gap-4 mt-2">
-            <span>{error instanceof Error ? error.message : t("errorDesc")}</span>
+            <span>{getApiErrorMessage(error, tErrors)}</span>
             <Button variant="secondary" size="sm" onClick={() => refetch()}>
               <RefreshCw className="h-3.5 w-3.5 me-1.5" />
               {t("retry")}

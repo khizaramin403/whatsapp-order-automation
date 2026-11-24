@@ -8,11 +8,12 @@ import {
   RefreshCw,
   AlertTriangle,
   UtensilsCrossed,
-  Bug,
 } from "lucide-react";
 import type { MenuItem } from "@app/shared";
 import { useMenu, useDeleteMenuItem } from "@/hooks/use-menu";
 import { useSettings } from "@/hooks/use-settings";
+import { useAuth } from "@/stores/auth.store";
+import { getApiErrorMessage } from "@/lib/api";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,17 +41,21 @@ import { MenuItemRow } from "./menu-item-row";
 import { ItemFormSheet } from "./item-form-sheet";
 import { getLocalizedName } from "@/lib/menu-utils";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 20;
 
 export function MenuManagement() {
   const t = useTranslations("menu");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const locale = useLocale();
+  const userRole = useAuth((s) => s.user?.role);
 
-  // Queries
+  // Queries (settings endpoint is owner-only; managers default to PKR fallback)
   const { data: menuData, isLoading, isError, error, refetch } = useMenu();
-  const { data: settings } = useSettings();
+  const { data: settings } = useSettings({
+    enabled: userRole === "owner" || userRole === "super_admin",
+  });
   const currency = settings?.currency || "PKR";
 
   // State
@@ -63,17 +68,7 @@ export function MenuManagement() {
   const [editingItem, setEditingItem] = React.useState<MenuItem | null>(null);
   const [deletingItem, setDeletingItem] = React.useState<MenuItem | null>(null);
 
-  // Dev simulation flag for testing switch rollback per requirement 3
-  const [simulateFail, setSimulateFail] = React.useState(false);
-
   const deleteItemMutation = useDeleteMenuItem();
-
-  // Update window flag when simulateFail state changes
-  React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      (window as unknown as { __simulateMenuFail?: boolean }).__simulateMenuFail = simulateFail;
-    }
-  }, [simulateFail]);
 
   const categories = React.useMemo(
     () => menuData?.categories || [],
@@ -143,8 +138,8 @@ export function MenuManagement() {
       await deleteItemMutation.mutateAsync(deletingItem.id);
       toast.success(t("toasts.itemDeleted"));
       setDeletingItem(null);
-    } catch {
-      toast.error(t("error.title"));
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, tErrors));
     }
   };
 
@@ -164,7 +159,7 @@ export function MenuManagement() {
           <AlertTriangle className="h-5 w-5" />
           <AlertTitle>{t("error.title")}</AlertTitle>
           <AlertDescription className="flex items-center justify-between gap-4 mt-2">
-            <span>{error instanceof Error ? error.message : t("error.desc")}</span>
+            <span>{getApiErrorMessage(error, tErrors)}</span>
             <Button
               variant="secondary"
               size="sm"
@@ -190,30 +185,6 @@ export function MenuManagement() {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Dev switch failure simulator toggle (per requirement 3) */}
-          <button
-            type="button"
-            onClick={() => {
-              const next = !simulateFail;
-              setSimulateFail(next);
-              if (next) {
-                toast.info(t("toasts.devFailEnabled"));
-              }
-            }}
-            className={cn(
-              "h-9 px-2.5 rounded-[8px] text-xs font-medium border flex items-center gap-1.5 transition-colors cursor-pointer",
-              simulateFail
-                ? "bg-[#FBF0DA] text-[#7A4E0B] border-[#B7791F]"
-                : "bg-white text-[#5F6C79] border-[#E2E5E9] hover:bg-[#F2F4F6]"
-            )}
-            title={t("dev.simulateFail")}
-          >
-            <Bug className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">
-              {simulateFail ? t("dev.simulateFailActive") : t("dev.simulateFail")}
-            </span>
-          </button>
-
           {/* Add Item Button (Accent Gold Button per DESIGN.md: at most one gold button per screen) */}
           <Button
             variant="primary"
@@ -427,7 +398,7 @@ export function MenuManagement() {
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-3 gap-2 sm:gap-0">
             <AlertDialogCancel className="h-9 px-4 text-xs font-semibold rounded-[8px]">
-              {t("pagination.previous") === "Previous" ? "Cancel" : "إلغاء"}
+              {tCommon("cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteItem}

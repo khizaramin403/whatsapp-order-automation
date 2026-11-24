@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getLocalizedName, getLocalizedDescription } from "@/lib/menu-utils";
 import { useSetItemAvailability } from "@/hooks/use-menu";
+import { getApiErrorMessage, ApiError } from "@/lib/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +36,7 @@ export const MenuItemRow = React.memo(function MenuItemRow({
   onDelete,
 }: MenuItemRowProps) {
   const t = useTranslations("menu");
+  const tErrors = useTranslations("errors");
   const locale = useLocale();
 
   const availabilityMutation = useSetItemAvailability();
@@ -59,8 +61,12 @@ export const MenuItemRow = React.memo(function MenuItemRow({
       } else {
         toast.success(t("toasts.unavailableSuccess", { name: itemName }));
       }
-    } catch {
-      toast.error(t("toasts.availabilityFailed"));
+    } catch (err) {
+      if (err instanceof ApiError && err.code !== "INTERNAL_SERVER_ERROR") {
+        toast.error(getApiErrorMessage(err, tErrors));
+      } else {
+        toast.error(t("toasts.availabilityFailed"));
+      }
     }
   };
 

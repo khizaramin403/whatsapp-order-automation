@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Calendar, RefreshCw, AlertTriangle, BarChart3 } from "lucide-react";
 import { useAnalytics } from "@/hooks/use-analytics";
 import { useSettings } from "@/hooks/use-settings";
+import { getApiErrorMessage } from "@/lib/api";
 import { AnalyticsKpiRow } from "./analytics-kpi-row";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -50,6 +51,7 @@ type DateRange = "today" | "7d" | "30d";
 
 export function AnalyticsDashboard() {
   const t = useTranslations("analytics");
+  const tErrors = useTranslations("errors");
 
   const [range, setRange] = React.useState<DateRange>("today");
 
@@ -72,7 +74,7 @@ export function AnalyticsDashboard() {
           <AlertTriangle className="h-5 w-5" />
           <AlertTitle>{t("error.title")}</AlertTitle>
           <AlertDescription className="flex items-center justify-between gap-4 mt-2">
-            <span>{error instanceof Error ? error.message : t("error.subtitle")}</span>
+            <span>{getApiErrorMessage(error, tErrors)}</span>
             <Button
               variant="secondary"
               size="sm"

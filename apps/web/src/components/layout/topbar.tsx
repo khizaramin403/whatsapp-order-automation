@@ -41,7 +41,7 @@ export function Topbar({ connectionStatus = "connected" }: TopbarProps) {
     return tPages("dashboard");
   }, [pathname, tPages]);
 
-  const userName = user?.name ?? "Ali Raza";
+  const userName = user?.name ?? "";
   const userInitials =
     userName
       .trim()
@@ -49,7 +49,7 @@ export function Topbar({ connectionStatus = "connected" }: TopbarProps) {
       .map((p) => p[0])
       .slice(0, 2)
       .join("")
-      .toUpperCase() || "AR";
+      .toUpperCase() || "U";
 
   const isConnected = connectionStatus === "connected";
 

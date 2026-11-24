@@ -90,6 +90,7 @@
       "invalidEmail": "Barah-e-karam durust email darj karein.",
       "passwordRequired": "Password zaroori hai (kam az kam 6 characters).",
       "invalidCredentials": "Email ya password ghalat hai.",
+      "accountInactive": "Aap ka account band hai. Barah-e-karam hotel owner se rabta karein.",
       "tooManyAttempts": "Bohot zyada koshishein. Barah-e-karam dobara koshish karne se pehle 1 minute intezar karein."
     }
   },
@@ -476,7 +477,7 @@
       "emailInvalid": "Sahih email address darj karein",
       "roleRequired": "Role muntakhib karna zaroori hai",
       "passwordRequired": "Naye account ke liye temporary password zaroori hai",
-      "passwordMin": "Password kam az kam 6 characters ka hona chahiye"
+      "passwordMin": "Password kam az kam 8 characters ka hona chahiye"
     }
   },
   "settings": {
@@ -578,5 +579,19 @@
       "minOrderPositive": "Kam az kam order 0 ya is se zyada hona chahiye",
       "emailInvalid": "Durust email address darj karein"
     }
+  },
+  "errors": {
+    "VALIDATION_ERROR": "Barah-e-karam apni maloomat check karein aur dobara koshish karein.",
+    "UNAUTHENTICATED": "Aap ka session khatam ho gaya hai. Dobara sign in karein.",
+    "FORBIDDEN": "Aap ko yeh amal karne ki ijazat nahi hai.",
+    "NOT_FOUND": "Matlooba cheez nahi mili.",
+    "RATE_LIMITED": "Bohot zyada requests. Thori der baad dobara koshish karein.",
+    "RATE_LIMITED_SECONDS": "Bohot zyada koshishein. Dobara koshish se pehle {seconds} seconds intezar karein.",
+    "ORDER_INVALID_TRANSITION": "Order ki yeh haalat tabdeel nahi ki ja sakti.",
+    "BAD_REQUEST": "Ghalat darkhwast. Barah-e-karam apna data check karein.",
+    "CONFLICT": "Yeh maloomat pehle se mojood record se takra rahi hai.",
+    "INTERNAL_SERVER_ERROR": "Server par kuch kharabi hui. Dobara koshish karein.",
+    "NETWORK_ERROR": "Server se rabta nahi ho saka. Apna internet check karein.",
+    "UNKNOWN": "Ek ghair mutawaqqo masla pesh aya. Dobara koshish karein."
   }
 }

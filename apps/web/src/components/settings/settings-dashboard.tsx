@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import type { Restaurant } from "@app/shared";
 import { useSettings, useUpdateSettings } from "@/hooks/use-settings";
+import { getApiErrorMessage } from "@/lib/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
@@ -33,6 +34,7 @@ interface SettingsFormInnerProps {
 
 function SettingsFormInner({ settings }: SettingsFormInnerProps) {
   const t = useTranslations("settings");
+  const tErrors = useTranslations("errors");
   const updateSettings = useUpdateSettings();
 
   const formSchema = React.useMemo(() => {
@@ -134,8 +136,8 @@ function SettingsFormInner({ settings }: SettingsFormInnerProps) {
       await updateSettings.mutateAsync(payload);
       toast.success(t("toast.saved"));
       reset(data); // Clear dirty state
-    } catch {
-      toast.error(t("toast.error"));
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, tErrors));
     }
   };
 
@@ -237,7 +239,8 @@ function SettingsFormInner({ settings }: SettingsFormInnerProps) {
 
 export function SettingsDashboard() {
   const t = useTranslations("settings");
-  const { data: settings, isLoading, isError, refetch } = useSettings();
+  const tErrors = useTranslations("errors");
+  const { data: settings, isLoading, isError, error, refetch } = useSettings();
 
   if (isLoading) {
     return (
@@ -273,7 +276,7 @@ export function SettingsDashboard() {
       <div className="rounded-[12px] border border-[#F8E4E1] bg-white p-8 text-center space-y-3 shadow-xs">
         <AlertCircle className="mx-auto h-8 w-8 text-[#8E2A22]" />
         <h3 className="text-base font-semibold text-[#10202D]">
-          {t("toast.error")}
+          {getApiErrorMessage(error, tErrors)}
         </h3>
         <Button
           onClick={() => refetch()}

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import type { User, Role } from "@app/shared";
 import { useTeam, useToggleUserActive } from "@/hooks/use-team";
+import { getApiErrorMessage } from "@/lib/api";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -63,7 +64,8 @@ const ITEMS_PER_PAGE = 20;
 
 export function TeamManagement() {
   const t = useTranslations("team");
-  const { data: team = [], isLoading, isError, refetch } = useTeam();
+  const tErrors = useTranslations("errors");
+  const { data: team = [], isLoading, isError, error, refetch } = useTeam();
   const toggleActive = useToggleUserActive();
 
   const [search, setSearch] = React.useState("");
@@ -120,7 +122,7 @@ export function TeamManagement() {
         { id: member.id, is_active: true },
         {
           onSuccess: () => toast.success(t("toast.activated")),
-          onError: () => toast.error(t("toast.error")),
+          onError: (err) => toast.error(getApiErrorMessage(err, tErrors)),
         }
       );
     }
@@ -135,7 +137,10 @@ export function TeamManagement() {
           toast.success(t("toast.deactivated"));
           setDeactivatingMember(null);
         },
-        onError: () => toast.error(t("toast.error")),
+        onError: (err) => {
+          toast.error(getApiErrorMessage(err, tErrors));
+          setDeactivatingMember(null);
+        },
       }
     );
   };
@@ -195,7 +200,7 @@ export function TeamManagement() {
         <div className="rounded-[12px] border border-[#F8E4E1] bg-white p-8 text-center space-y-3 shadow-xs">
           <AlertCircle className="mx-auto h-8 w-8 text-[#8E2A22]" />
           <h3 className="text-base font-semibold text-[#10202D]">
-            {t("toast.error")}
+            {getApiErrorMessage(error, tErrors)}
           </h3>
           <Button
             onClick={() => refetch()}

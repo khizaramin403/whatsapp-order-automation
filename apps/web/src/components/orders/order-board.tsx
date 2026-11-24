@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { TriangleAlert, RefreshCw, Calendar, Inbox, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Order, OrderStatus } from "@app/shared";
 import { useOrders } from "@/hooks/use-orders";
+import { getApiErrorMessage } from "@/lib/api";
 import { useUI, type OrderFilter } from "@/stores/ui.store";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -32,10 +33,12 @@ const COLUMNS: ColumnDef[] = [
 
 export function OrderBoard() {
   const t = useTranslations("orders");
+  const tErrors = useTranslations("errors");
 
   // Narrow Zustand selectors (PERFORMANCE.md Section 9.2)
   const filter = useUI((s) => s.filter);
   const setFilter = useUI((s) => s.setFilter);
+  const setNewOrdersCount = useUI((s) => s.setNewOrdersCount);
 
   // Date filter state: "all" vs "today"
   const [dateFilter, setDateFilter] = React.useState<"all" | "today">("all");
@@ -144,6 +147,13 @@ export function OrderBoard() {
     return grouped;
   }, [orders]);
 
+  // Keep sidebar New Orders badge synced with real unfiltered pending count
+  React.useEffect(() => {
+    if (!isLoading && !isError && filter === "all" && dateFilter === "all") {
+      setNewOrdersCount(columnOrders["col-new"].length);
+    }
+  }, [isLoading, isError, filter, dateFilter, columnOrders, setNewOrdersCount]);
+
   // Error State with Retry
   if (isError) {
     return (
@@ -153,7 +163,7 @@ export function OrderBoard() {
           <TriangleAlert className="h-5 w-5" />
           <AlertTitle>{t("error.title")}</AlertTitle>
           <AlertDescription className="flex items-center justify-between gap-4 mt-2">
-            <span>{error instanceof Error ? error.message : t("error.description")}</span>
+            <span>{getApiErrorMessage(error, tErrors)}</span>
             <Button
               variant="secondary"
               size="sm"

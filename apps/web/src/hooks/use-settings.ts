@@ -8,10 +8,11 @@ import { queryKeys } from "@/lib/query-keys";
 /**
  * Hook to fetch restaurant configuration and settings
  */
-export function useSettings() {
+export function useSettings(options?: { enabled?: boolean }) {
   return useQuery<Restaurant>({
     queryKey: queryKeys.settings.all,
     queryFn: () => getSettings(),
+    enabled: options?.enabled ?? true,
   });
 }
 

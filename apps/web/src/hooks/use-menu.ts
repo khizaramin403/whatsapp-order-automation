@@ -68,7 +68,14 @@ export function useUpdateMenuItem() {
         return {
           ...oldData,
           items: oldData.items.map((it) =>
-            it.id === updatedItem.id ? updatedItem : it
+            it.id === updatedItem.id
+              ? {
+                  ...it,
+                  ...updatedItem,
+                  translations: updatedItem.translations ?? it.translations,
+                  name: updatedItem.name || it.name,
+                }
+              : it
           ),
         };
       });
@@ -132,7 +139,14 @@ export function useSetItemAvailability() {
         return {
           ...oldData,
           items: oldData.items.map((it) =>
-            it.id === updatedItem.id ? updatedItem : it
+            it.id === updatedItem.id
+              ? {
+                  ...it,
+                  ...updatedItem,
+                  translations: updatedItem.translations ?? it.translations,
+                  name: updatedItem.name || it.name,
+                }
+              : it
           ),
         };
       });

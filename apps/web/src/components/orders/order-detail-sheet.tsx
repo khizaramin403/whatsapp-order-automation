@@ -23,6 +23,7 @@ import {
   useUpdateOrderStatus,
   useUpdatePaymentStatus,
 } from "@/hooks/use-orders";
+import { getApiErrorMessage } from "@/lib/api";
 import {
   Sheet,
   SheetContent,
@@ -97,6 +98,7 @@ export function OrderDetailSheet() {
   const tCard = useTranslations("orders.card");
   const tActions = useTranslations("orders.actions");
   const tDialogs = useTranslations("orders.dialogs");
+  const tErrors = useTranslations("errors");
   const locale = useLocale();
 
   // Selected order ID from global UI store
@@ -242,7 +244,7 @@ export function OrderDetailSheet() {
                 <AlertTitle>{t("error.title")}</AlertTitle>
                 <AlertDescription className="flex items-center justify-between gap-4 mt-2">
                   <span>
-                    {error instanceof Error ? error.message : t("error.description")}
+                    {getApiErrorMessage(error, tErrors)}
                   </span>
                   <Button variant="secondary" size="sm" onClick={() => refetch()}>
                     <RotateCcw className="h-4 w-4 me-1.5" />

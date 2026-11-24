@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCreateMenuItem, useUpdateMenuItem } from "@/hooks/use-menu";
+import { getApiErrorMessage } from "@/lib/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -91,6 +92,8 @@ function ItemFormContent({
   onClose: () => void;
 }) {
   const t = useTranslations("menu");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const locale = useLocale();
   const isEditing = Boolean(item);
 
@@ -246,8 +249,8 @@ function ItemFormContent({
         toast.success(t("toasts.itemCreated"));
       }
       onClose();
-    } catch {
-      toast.error(t("error.title"));
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, tErrors));
     }
   };
 
@@ -646,7 +649,7 @@ function ItemFormContent({
           disabled={isPending}
           className="h-9 px-4 text-xs font-semibold rounded-[8px]"
         >
-          {t("pagination.previous") === "Previous" ? "Cancel" : "إلغاء"}
+          {tCommon("cancel")}
         </Button>
         <Button
           type="submit"
