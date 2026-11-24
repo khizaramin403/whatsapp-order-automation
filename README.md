@@ -45,10 +45,15 @@ Verify that both containers are healthy:
 docker compose ps
 ```
 
-### 4. Run Initial Database Migrations
+### 4. Run Initial Database Migrations & Seed
 Apply the Prisma migration to PostgreSQL:
 ```powershell
 pnpm --filter @app/api prisma:migrate
+```
+
+Seed the database with the demo hotel, staff logins, menu items, and sample orders:
+```powershell
+pnpm --filter @app/api prisma:seed
 ```
 
 ### 5. Start Development Servers
@@ -59,6 +64,20 @@ pnpm dev
 Or start them individually in separate PowerShell windows:
 - **Web Dashboard**: `pnpm dev:web` (or `cd apps/web && pnpm dev`)
 - **API Backend**: `pnpm dev:api` (or `cd apps/api && pnpm dev`)
+
+---
+
+## Development logins
+
+Development accounts created by the seed script (`pnpm --filter @app/api prisma:seed`). All accounts use passwords hashed with bcrypt (cost 10).
+
+| Role | Name | Email | Password | Scope |
+|---|---|---|---|---|
+| `super_admin` | Super Administrator | `superadmin@demo.local` | `Password123!` | Global (no restaurant) |
+| `owner` | Tariq Mahmood | `owner@demo.local` | `Password123!` | Grand Continental Hotel |
+| `manager` | Ayesha Khan | `manager@demo.local` | `Password123!` | Grand Continental Hotel |
+| `chef` | Bilal Ahmed | `chef@demo.local` | `Password123!` | Grand Continental Hotel |
+| `rider` | Usman Ali | `rider@demo.local` | `Password123!` | Grand Continental Hotel |
 
 ---
 

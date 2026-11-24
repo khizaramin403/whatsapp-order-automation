@@ -14,6 +14,37 @@ enum Role {
   rider
 }
 
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  PREPARING
+  READY
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+  REJECTED
+  COMPLETED
+}
+
+enum OrderType {
+  delivery
+  dine_in
+  pickup
+}
+
+enum PaymentMethod {
+  cod
+  online
+}
+
+enum PaymentStatus {
+  pending
+  pending_check
+  verified
+  not_received
+  failed
+}
+
 model Restaurant {
   id               String   @id @default(uuid())
   name             String
@@ -21,14 +52,60 @@ model Restaurant {
   currency         String   @default("PKR")
   default_language String   @default("en")
   open_hours       Json?
-  delivery_fee     Int      @default(0)
+  delivery_fee     Int      @default(0) // Integer minor units
   is_active        Boolean  @default(true)
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
 
-  users User[]
+  // Extended settings from Section 11 & Shared types
+  minimum_order        Int      @default(0) // Integer minor units
+  delivery_area        String?
+  payment_account      String?
+  payment_instructions String?
+  bot_welcome_en       String?
+  bot_welcome_ar       String?
+  bot_welcome_ur       String?
+  bot_payment_en       String?
+  bot_payment_ar       String?
+  bot_payment_ur       String?
+  email_notifications  Boolean  @default(true)
+  daily_summary_email  Boolean  @default(false)
+  push_notifications   Boolean  @default(true)
+  sound_notifications  Boolean  @default(true)
+  notification_email   String?
+
+  // Relations
+  users                 User[]
+  whatsapp              RestaurantWhatsapp?
+  refresh_tokens        RefreshToken[]
+  menu_categories       MenuCategory[]
+  menu_items            MenuItem[]
+  menu_translations     MenuTranslation[]
+  customers             Customer[]
+  conversations         Conversation[]
+  messages              Message[]
+  orders                Order[]
+  order_items           OrderItem[]
+  order_events          OrderEvent[]
+  payment_proofs        PaymentProof[]
+  push_subscriptions    PushSubscription[]
+  notification_settings NotificationSetting[]
 
   @@map("restaurants")
+}
+
+model RestaurantWhatsapp {
+  id               String   @id @default(uuid())
+  restaurant_id    String   @unique
+  phone_number_id  String   @unique
+  waba_id          String
+  access_token_enc String
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+
+  @@map("restaurant_whatsapp")
 }
 
 model User {
@@ -44,8 +121,253 @@ model User {
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
 
-  restaurant Restaurant? @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  restaurant            Restaurant?           @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  refresh_tokens        RefreshToken[]
+  order_events          OrderEvent[]
+  push_subscriptions    PushSubscription[]
+  notification_settings NotificationSetting?
 
   @@index([restaurant_id])
   @@map("users")
+}
+
+model RefreshToken {
+  id            String    @id @default(uuid())
+  user_id       String
+  restaurant_id String?
+  token_hash    String    @unique
+  expires_at    DateTime
+  revoked_at    DateTime?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  user       User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  restaurant Restaurant? @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([restaurant_id])
+  @@map("refresh_tokens")
+}
+
+model MenuCategory {
+  id            String   @id @default(uuid())
+  restaurant_id String
+  sort_order    Int      @default(0)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  items      MenuItem[]
+
+  @@index([restaurant_id])
+  @@map("menu_categories")
+}
+
+model MenuItem {
+  id            String   @id @default(uuid())
+  restaurant_id String
+  category_id   String
+  price         Int      // Integer minor units (e.g. 58000 for Rs 580.00)
+  image_url     String?
+  is_available  Boolean  @default(true)
+  sort_order    Int      @default(0)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  restaurant  Restaurant   @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  category    MenuCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  order_items OrderItem[]
+
+  @@index([restaurant_id, category_id], map: "menu_items_rest_cat")
+  @@map("menu_items")
+}
+
+model MenuTranslation {
+  id            String   @id @default(uuid())
+  restaurant_id String
+  entity_type   String   // "category" | "item"
+  entity_id     String
+  language      String   // "en" | "ar" | "ur-Latn"
+  name          String
+  description   String?
+  aliases       String[] @default([])
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+
+  @@unique([restaurant_id, entity_type, entity_id, language])
+  @@index([restaurant_id, entity_type, entity_id])
+  @@map("menu_translations")
+}
+
+model Customer {
+  id            String   @id @default(uuid())
+  restaurant_id String
+  phone         String   // E.164 format (+923001234567)
+  name          String
+  language      String   @default("en")
+  last_address  String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  restaurant    Restaurant     @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  conversations Conversation[]
+  messages      Message[]
+  orders        Order[]
+
+  @@unique([restaurant_id, phone], map: "customers_rest_phone")
+  @@map("customers")
+}
+
+model Conversation {
+  id            String    @id @default(uuid())
+  restaurant_id String
+  customer_id   String
+  state         String    @default("START")
+  cart_json     Json?
+  context_json  Json?
+  human_until   DateTime?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  customer   Customer   @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+
+  @@index([restaurant_id])
+  @@index([customer_id])
+  @@map("conversations")
+}
+
+model Message {
+  id            String   @id @default(uuid())
+  restaurant_id String
+  customer_id   String
+  wa_message_id String?  @unique(map: "messages_wa_id")
+  direction     String   // "inbound" | "outbound"
+  type          String   // "text" | "interactive" | "image" | "location" etc.
+  body          String?
+  created_at    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  customer   Customer   @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+
+  @@index([restaurant_id, created_at(sort: Desc)], map: "messages_rest_created")
+  @@map("messages")
+}
+
+model Order {
+  id             String        @id @default(uuid())
+  restaurant_id  String
+  customer_id    String
+  number         String        // Per-hotel order number e.g. "1001"
+  type           OrderType
+  status         OrderStatus
+  payment_method PaymentMethod
+  payment_status PaymentStatus
+  subtotal       Int           // Integer minor units
+  delivery_fee   Int           @default(0) // Integer minor units
+  total          Int           // Integer minor units
+  address        String?
+  scheduled_for  DateTime?
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
+
+  restaurant     Restaurant     @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  customer       Customer       @relation(fields: [customer_id], references: [id], onDelete: Restrict)
+  items          OrderItem[]
+  events         OrderEvent[]
+  payment_proofs PaymentProof[]
+
+  @@unique([restaurant_id, number], map: "orders_rest_number_unique")
+  @@index([restaurant_id, status, created_at(sort: Desc)], map: "orders_rest_status_created")
+  @@index([restaurant_id, created_at(sort: Desc)], map: "orders_rest_created")
+  @@map("orders")
+}
+
+model OrderItem {
+  id             String   @id @default(uuid())
+  restaurant_id  String
+  order_id       String
+  menu_item_id   String
+  name_snapshot  String
+  price_snapshot Int      // Integer minor units
+  qty            Int
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  order      Order      @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  menu_item  MenuItem   @relation(fields: [menu_item_id], references: [id], onDelete: Restrict)
+
+  @@index([restaurant_id])
+  @@index([order_id])
+  @@index([menu_item_id])
+  @@map("order_items")
+}
+
+model OrderEvent {
+  id            String      @id @default(uuid())
+  restaurant_id String
+  order_id      String
+  status        OrderStatus
+  by_user_id    String?
+  note          String?
+  created_at    DateTime    @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  order      Order      @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  by_user    User?      @relation(fields: [by_user_id], references: [id], onDelete: SetNull)
+
+  @@index([restaurant_id])
+  @@index([order_id])
+  @@map("order_events")
+}
+
+model PaymentProof {
+  id            String   @id @default(uuid())
+  restaurant_id String
+  order_id      String
+  storage_key   String
+  created_at    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  order      Order      @relation(fields: [order_id], references: [id], onDelete: Cascade)
+
+  @@index([restaurant_id])
+  @@index([order_id])
+  @@map("payment_proofs")
+}
+
+model PushSubscription {
+  id            String   @id @default(uuid())
+  restaurant_id String?
+  user_id       String
+  endpoint      String   @unique
+  keys          Json?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  restaurant Restaurant? @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([restaurant_id])
+  @@index([user_id])
+  @@map("push_subscriptions")
+}
+
+model NotificationSetting {
+  id                 String   @id @default(uuid())
+  restaurant_id      String?
+  user_id            String   @unique
+  email_on_new_order Boolean  @default(true)
+  daily_summary      Boolean  @default(false)
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  restaurant Restaurant? @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([restaurant_id])
+  @@map("notification_settings")
 }
