@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authRouter } from "./auth.routes";
+import { orderRouter } from "./order.routes";
 
 export const apiV1Router = Router();
 
@@ -16,5 +17,8 @@ apiV1Router.get("/", (_req, res) => {
 
 // Authentication routes (/api/v1/auth)
 apiV1Router.use("/auth", authRouter);
+
+// Orders routes (/api/v1/orders)
+apiV1Router.use("/orders", orderRouter);
 
 export default apiV1Router;
